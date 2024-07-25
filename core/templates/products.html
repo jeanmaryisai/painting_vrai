@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+
+
+    {% include 'components/header.html' with background_image='images/birmingham-museums-trust-pWVJHDiAonU-unsplash.jpg' title='Piccasso Tableau' description='A oil Painting from Pablo Picasso   <br><a href="#" ata-scroll-to class="btn"> See Product</a>' %}
+
+    <!-- end page-header -->
+    <section class="content-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8">
+            <div class="row justify-content-center">
+              {% include 'components/product_card.html' with product_url='#' product_image='images/birmingham-museums-trust-pWVJHDiAonU-unsplash.jpg'  scroll_speed='-1' add_to_cart='add to cart' product_title='Artemisia Gentileschi talk with Maria' product_description='15 August – 11 painting' %}
+              
+              {% include 'components/product_card.html' with product_url='#' product_image='images/claudia-altamimi-esS6jZndcWA-unsplash.jpg'  scroll_speed='1' add_to_cart='50% off exhibitions' product_title='Arctic culture and climate Exhibition' product_description='22 Oct 2020 - 21 painting' %}
+              
+              {% include 'components/product_card.html' with product_url='#' product_image='images/birmingham-museums-trust-OdtLtgajtyc-unsplash.jpg'  scroll_speed='-0.5' add_to_cart='50% off exhibitions' product_title='Thomas Becket murder and the making of a saint' product_description='22 Apr 2023 - 22 painting' %}
+              
+              {% include 'components/product_card.html' with product_url='#' product_image='images/birmingham-museums-trust-pWVJHDiAonU-unsplash.jpg'  scroll_speed='-1' add_to_cart='add to cart' product_title='Artemisia Gentileschi talk with Maria' product_description='15 August – 11 painting' %}
+              
+              {% include 'components/product_card.html' with product_url='#' product_image='images/claudia-altamimi-esS6jZndcWA-unsplash.jpg'  scroll_speed='1' add_to_cart='50% off exhibitions' product_title='Arctic culture and climate Exhibition' product_description='22 Oct 2020 - 21 painting' %}
+              
+              {% include 'components/product_card.html' with product_url='#' product_image='images/birmingham-museums-trust-OdtLtgajtyc-unsplash.jpg'  scroll_speed='-0.5' add_to_cart='50% off exhibitions' product_title='Thomas Becket murder and the making of a saint' product_description='22 Apr 2023 - 22 painting' %}
+              
+              {% include 'components/product_card.html' with product_url='#' product_image='images/birmingham-museums-trust-pWVJHDiAonU-unsplash.jpg'  scroll_speed='-1' add_to_cart='add to cart' product_title='Artemisia Gentileschi talk with Maria' product_description='15 August – 11 painting' %}
+              
+              {% include 'components/product_card.html' with product_url='#' product_image='images/claudia-altamimi-esS6jZndcWA-unsplash.jpg'  scroll_speed='1' add_to_cart='50% off exhibitions' product_title='Arctic culture and climate Exhibition' product_description='22 Oct 2020 - 21 painting' %}
+              
+              {% include 'components/product_card.html' with product_url='#' product_image='images/birmingham-museums-trust-OdtLtgajtyc-unsplash.jpg'  scroll_speed='-0.5' add_to_cart='50% off exhibitions' product_title='Thomas Becket murder and the making of a saint' product_description='22 Apr 2023 - 22 painting' %}
+          
+          
+            </div>
+            <!-- end blog-post -->
+            <ul class="pagination">
+              <li class="page-item disabled"> <a class="page-link" href="#" tabindex="-1">Prev</a> </li>
+              <li class="page-item"><a class="page-link" href="#">1</a></li>
+              <li class="page-item active"> <a class="page-link" href="#">2</a> </li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item"> <a class="page-link" href="#">Next</a> </li>
+            </ul>
+            <!-- end pagination -->
+          </div>
+          <!-- end col-8 -->
+          <div class="col-lg-4">
+            <aside class="sidebar">
+              <div class="widget">
+                <h6 class="widget-title">SEARCH</h6>
+                <form>
+                  <input type="search" placeholder="Type here to search">
+                  <input type="submit" value="Search">
+                </form>
+              </div>
+              <!-- end widget -->
+              <div class="widget">
+                <h6 class="widget-title">CATEGORIES</h6>
+                <ul class="categories">
+                  <li><a href="#">Exhibitions</a></li>
+                  <li><a href="#">Art Galleries</a></li>
+                  <li><a href="#">Collections</a></li>
+                  <li><a href="#">Membership</a></li>
+                  <li><a href="#">Museums</a></li>
+                  <li><a href="#">Wandau Events</a></li>
+                  <li><a href="#">Fundraising</a></li>
+                </ul>
+              </div>
+              <!-- end widget -->
+
+              <div class="widget">
+                <h6 class="widget-title">GALLERY</h6>
+                <ul class="widget-gallery">
+                  <li><a href="images/carousel-image01.jpg" data-fancybox><img src="images/carousel-image01.jpg" alt="Image"></a></li>
+                  <li><a href="images/carousel-image02.jpg" data-fancybox><img src="images/carousel-image02.jpg" alt="Image"></a></li>
+                  <li><a href="images/carousel-image05.jpg" data-fancybox><img src="images/carousel-image05.jpg" alt="Image"></a></li>
+                  <li><a href="images/carousel-image04.jpg" data-fancybox><img src="images/carousel-image04.jpg" alt="Image"></a></li>
+                </ul>
+              </div>
+              <!-- end widget -->
+            </aside>
+            <!-- end sidebar -->
+          </div>
+          <!-- end col-4 -->
+        </div>
+        <!-- end row -->
+      </div>
+      <!-- end container -->
+    </section>
+    <!-- end content-section -->
+    <section class="content-section no-spacing" data-background="#94ffc4">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <div class="newsletter-box">
+              <div class="form">
+                <div class="titles">
+                  <h6>Subscribe Newsletter</h6>
+                  <h2>Sign up to get the
+                    latest news</h2>
+                </div>
+                <!-- end titles -->
+                <div class="inner">
+                  <input type="email" placeholder="Enter your e-mail address">
+                  <input type="submit" value="SIGN UP">
+                </div>
+                <!-- end inner -->
+                <small>Will be used in accordance with our <a href="#">Privacy Policy</a></small> </div>
+              <!-- end form -->
+              <figure class="newsletter-image" data-scroll data-scroll-speed="0.7"><img src="images/newsletter-image.png" alt="Image"></figure>
+            </div>
+            <!-- end newsletter-box -->
+          </div>
+          <!-- end col-12 -->
+        </div>
+        <!-- end row -->
+      </div>
+      <!-- end container -->
+    </section>
+    <!-- end content-section -->
+{% endblock %}

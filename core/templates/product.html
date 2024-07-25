@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+
+
+{% include 'components/header.html' with background_image='images/birmingham-museums-trust-pWVJHDiAonU-unsplash.jpg' title='Piccasso Tableau' description='A oil Painting from Pablo Picasso   <br><a href="#" ata-scroll-to class="btn"> See Product</a>' %}
+
+<section class="content-section no-spacing">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <figure class="image-box" data-scroll data-scroll-speed="1"> <img src="{% static 'images/birmingham-museums-trust-pWVJHDiAonU-unsplash.jpg' %}" alt="Image"> </figure>
+      </div>
+      <!-- end col-12 -->
+    </div>
+    <!-- end row -->
+  </div>
+  <!-- end container -->
+</section>
+
+<section class="content-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-5">
+        <div class="contact-box">
+          <p>Victoria and Albert Museum, Cromwell <br>
+            Road, London, SW7 2RL</p>
+        </div>
+        <!-- end contact-box -->
+        <a href="#" class="custom-button">Add To cart</a>
+  <div class="clearfix spacing-50"></div>
+  </div>
+      <!-- end col-5 -->
+      <div class="col-lg-7">
+        <div class="side-list">
+          <ul>
+            <li>Nearest Underground stations: South Kensington (5-minute walk), Gloucester Road (10-minute walk)
+            <li>Victoria Station (35-minute walk)</li>
+            <li>Bike-hire is available at Exhibition Road and Thurloe Place</li>
+            <li>Several bus routes stop at the museum – see tfl.gov.uk for details</li>
+    </ul>
+        </div>
+        <!-- end side-list -->
+      </div>
+      <!-- end col-7 -->
+    </div>
+    <!-- end row -->
+  </div>
+<br><br>
+  <div class="d-flex justify-content-center">
+    <a href="#" class="circle-button"
+      >Continue <br />
+      Shopping</a
+    >
+  </div>
+  <!-- end container -->
+</section>
+
+
+{% endblock %}

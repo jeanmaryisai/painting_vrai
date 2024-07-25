@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+
+{% include 'components/header.html' with background_image='images/birmingham-museums-trust-pWVJHDiAonU-unsplash.jpg' title='Marvens Villial\'s Work' description='Born in Haiti   ' %}
+
+
+<section class="content-section" data-background="#fffbf7">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6">
+        <div class="side-content left">
+          <h2>Alan Verati</h2>
+          <p>This section is a little bio of the actual life of the artist</p>
+        </div>
+        <!-- end side-content -->
+
+        </div>
+      <!-- end col-6 -->
+      <div class="col-lg-6">
+        <figure class="side-image" data-scroll data-scroll-speed="1"> <img src="{% static 'images/birmingham-museums-trust-pWVJHDiAonU-unsplash.jpg' %}"  style="width: 100%;
+          height: 7000 px;
+          object-fit: cover;" alt="Image"> </figure>
+      </div>
+      <!-- end col-6 -->
+    </div>
+    <!-- end row -->
+  </div>
+  <!-- end container -->
+</section>
+    <!-- end content-section -->
+	     <section class="content-section">
+      <div class="container">
+        
+        <div class="row justify-content-center">
+          {% include 'components/product_card.html' with product_url='#' product_image='images/birmingham-museums-trust-pWVJHDiAonU-unsplash.jpg'  scroll_speed='-1' add_to_cart='add to cart' product_title='Artemisia Gentileschi talk with Maria' product_description='15 August – 11 painting' %}
+              
+          {% include 'components/product_card.html' with product_url='#' product_image='images/claudia-altamimi-esS6jZndcWA-unsplash.jpg'  scroll_speed='1' add_to_cart='50% off exhibitions' product_title='Arctic culture and climate Exhibition' product_description='22 Oct 2020 - 21 painting' %}
+          
+          {% include 'components/product_card.html' with product_url='#' product_image='images/birmingham-museums-trust-OdtLtgajtyc-unsplash.jpg'  scroll_speed='-0.5' add_to_cart='50% off exhibitions' product_title='Thomas Becket murder and the making of a saint' product_description='22 Apr 2023 - 22 painting' %}
+          
+          {% include 'components/product_card.html' with product_url='#' product_image='images/birmingham-museums-trust-pWVJHDiAonU-unsplash.jpg'  scroll_speed='-1' add_to_cart='add to cart' product_title='Artemisia Gentileschi talk with Maria' product_description='15 August – 11 painting' %}
+          
+          {% include 'components/product_card.html' with product_url='#' product_image='images/claudia-altamimi-esS6jZndcWA-unsplash.jpg'  scroll_speed='1' add_to_cart='50% off exhibitions' product_title='Arctic culture and climate Exhibition' product_description='22 Oct 2020 - 21 painting' %}
+          {% include 'components/product_card.html' with product_url='#' product_image='images/birmingham-museums-trust-pWVJHDiAonU-unsplash.jpg'  scroll_speed='-1' add_to_cart='add to cart' product_title='Artemisia Gentileschi talk with Maria' product_description='15 August – 11 painting' %}
+              
+              {% include 'components/product_card.html' with product_url='#' product_image='images/claudia-altamimi-esS6jZndcWA-unsplash.jpg'  scroll_speed='1' add_to_cart='50% off exhibitions' product_title='Arctic culture and climate Exhibition' product_description='22 Oct 2020 - 21 painting' %}
+              
+              {% include 'components/product_card.html' with product_url='#' product_image='images/birmingham-museums-trust-OdtLtgajtyc-unsplash.jpg'  scroll_speed='-0.5' add_to_cart='50% off exhibitions' product_title='Thomas Becket murder and the making of a saint' product_description='22 Apr 2023 - 22 painting' %}
+              
+              {% include 'components/product_card.html' with product_url='#' product_image='images/birmingham-museums-trust-pWVJHDiAonU-unsplash.jpg'  scroll_speed='-1' add_to_cart='add to cart' product_title='Artemisia Gentileschi talk with Maria' product_description='15 August – 11 painting' %}
+              
+              {% include 'components/product_card.html' with product_url='#' product_image='images/claudia-altamimi-esS6jZndcWA-unsplash.jpg'  scroll_speed='1' add_to_cart='50% off exhibitions' product_title='Arctic culture and climate Exhibition' product_description='22 Oct 2020 - 21 painting' %}
+              
+			<!-- end col-4 -->
+        </div>
+        <!-- end row -->
+      </div>
+      <!-- end container -->
+    </section>
+    <!-- end content-section -->
+	  <section class="content-section" data-background="{% static 'images/birmingham-museums-trust-pWVJHDiAonU-unsplash.jpg' %}">
+      <div class="container">
+        <div class="row">
+		  <div class="col-lg-6">
+			<div class="note-box">
+			 <h2> Discover Collections</h2>
+<p>Become a member today to gain unlimited free entry
+to all of our blockbuster exhibitions at National
+Museums Wandau including AI: More than Human and
+Linda McCartney Retrospective. <strong>Join today</strong>!</p>
+			  </div>
+			  <!-- end note-box -->
+			</div>
+			<!-- end col-6 -->
+		  </div>
+        <!-- end row -->
+      </div>
+      <!-- end container -->
+    </section>
+    <!-- end content-section -->
+	   <section class="content-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+			  <div class="text-box">
+			  <h3>Collection Details</h3>
+				  <p>This exhibition is a rare chance to experience two of Yayoi Kusama’s Infinity Mirror Rooms. These immersive installations will transport you into Kusama’s unique vision of endless reflections.</p>
+
+<p>Infinity Mirrored Room – Filled with the Brilliance of Life is one of Kusama’s largest installations to date and was made for her 2012 retrospective at the gallery. It is shown alongside Chandelier of Grief, a room which creates the illusion of a boundless universe of rotating crystal chandeliers. </p>
+
+<p>A small presentation of photographs – some on display for the first time – provides historical context for the global phenomenon that Kusama’s mirrored rooms have become today.</p>
+			  </div>
+			  <!-- end text-box -->
+	  		</div>
+				<!--end col-12 -->
+		  </div>
+        <!-- end row -->
+      </div>
+      <!-- end container -->
+    </section>
+    <!-- end content-section -->
+  
+    {% endblock %}
