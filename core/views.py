@@ -3,7 +3,7 @@ from .models import Painting, Order, OrderItem, Review
 from django.contrib.auth.decorators import login_required
 
 def home(request):
-    return render(request, 'cart.html')
+    return render(request, 'account.html')
 
 def painting_list(request):
     paintings = Painting.objects.all()
