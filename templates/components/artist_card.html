@@ -1,0 +1,22 @@
+{% load static %}
+
+<!-- templates/image_icon_box.html -->
+<div class="col-lg-4">
+    <div class="image-icon-box" data-scroll data-scroll-speed="{{ scroll_speed }}">
+        <figure class="content-image">
+            <img src="{% static image_src %}" alt="Image" height="500" style="object-fit: cover;"/>
+        </figure>
+        <div class="content-box">
+            <b>{{ number }}.</b>
+            <h4>{{ title }}</h4>
+            <div class="expand">
+                <p>{{ description }}</p>
+                <a href="{{ link_url }}" class="custom-link">Learn More</a>
+            </div>
+            <!-- end expand -->
+        </div>
+        <!-- end content-box -->
+    </div>
+    <!-- end image-icon-box -->
+</div>
+<!-- end col-4 -->

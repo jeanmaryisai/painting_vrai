@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block modal %}
+
+{% include 'components/request_modal.html' %}
+
+
+{% endblock %}
+
+{% block body %}
+
+
+    {% include 'components/header.html' with background_image='images/birmingham-museums-trust-pWVJHDiAonU-unsplash.jpg' title='Marvens Villial' description='Born in Haiti   <br><a href="#" style="font-weight:bolder; font-size: x-large;" ata-scroll-to class="btn"> See Artist</a>' %}
+
+
+
+    <section class="content-section" data-background="#fffbf7">
+      <div class="container">
+        <div class="row  mb-4">
+          <div class="col-lg-7 col-md-6">
+              <div class="section-title text-left">
+                  <h2 style="font-size:xx-large;" >Our Artists are <br> the heart of our art.</h2>
+              </div>
+              <!-- end section-title -->
+          </div>
+          <!-- end col-6 -->
+          <div class="col-lg-4 col-md-6 ms-1">
+              <form class="d-flex justify-content-end align-items-start" action="#" method="GET">
+                  <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q">
+                  <input type="submit" value="Search">
+              </form>
+          </div>
+          <!-- end col-6 -->
+      </div>
+        <!-- end row -->
+        <div class="row justify-content-center">
+          {% include 'components/artist_card.html' with scroll_speed='0.5' image_src='images/europeana-5TK1F5VfdIk-unsplash.jpg' number='01' title="Check What's Open" description="Your safety is our first priority. Entry to the National Maritime Museum is still free, but to help us ensure social distancing." link_url="#" %}
+
+          {% include 'components/artist_card.html' with scroll_speed='1' image_src='images/rhondak-native-florida-folk-artist-_Yc7OtfFn-0-unsplash.jpg' number='02' title="Booking Online" description="Exhibition curator Venetia Porter presents this new exhibition of works by artists from Iran to Morocco drawn from the Museum collection." link_url="#" %}
+        
+          {% include 'components/artist_card.html' with scroll_speed='0.5' image_src='images/birmingham-museums-trust-GJHAB0gxvtg-unsplash.jpg' number='03' title="Keep Your Distance" description="Take a look at our past exhibitions and enjoy the articles, videos and photo galleries still available to view online." link_url="#" %}
+       
+        </div>
+        <!-- end row -->
+      </div>
+      <!-- end container -->
+    </section>
+    <!-- end content-section -->
+    {% include 'components/request.html' %}
+    <!-- end content-section -->
+    <!-- end content-section -->
+   
+
+{% endblock %}

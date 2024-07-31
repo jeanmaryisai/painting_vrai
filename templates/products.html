@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+
+
+    {% include 'components/header.html' with background_image='images/birmingham-museums-trust-pWVJHDiAonU-unsplash.jpg' title='Piccasso Tableau' description='A oil Painting from Pablo Picasso   <br><a href="#" ata-scroll-to class="btn"> See Product</a>' %}
+
+    <!-- end page-header -->
+    <section class="content-section">
+      <div class="container">
+        {% if query %}
+
+        <h2>Result for: <strong>{{query}}</strong></h2>
+
+        {% endif %}
+        <div class="row">
+          <div class="col-lg-8">
+            <div class="row justify-content-center">
+
+              {% for painting in page_obj %}
+              {% include 'components/product_card.html' with x= painting %}
+
+              {% endfor %}
+            </div>
+            <!-- end blog-post -->
+            <ul class="pagination">
+              {% if page_obj.has_previous %}
+                  <li class="page-item">
+                      <a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1">Prev</a>
+                  </li>
+              {% else %}
+                  <li class="page-item disabled">
+                      <a class="page-link" href="#" tabindex="-1">Prev</a>
+                  </li>
+              {% endif %}
+          
+              {% for num in page_obj.paginator.page_range %}
+                  {% if page_obj.number == num %}
+                      <li class="page-item active">
+                          <a class="page-link" href="#">{{ num }}</a>
+                      </li>
+                  {% elif num > page_obj.number|add:'-5' and num < page_obj.number|add:'5' %}
+                      <li class="page-item">
+                          <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                      </li>
+                  {% endif %}
+              {% endfor %}
+          
+              {% if page_obj.has_next %}
+                  <li class="page-item">
+                      <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                  </li>
+              {% else %}
+                  <li class="page-item disabled">
+                      <a class="page-link" href="#">Next</a>
+                  </li>
+              {% endif %}
+          </ul>
+          
+            <!-- end pagination -->
+          </div>
+          <!-- end col-8 -->
+          <div class="col-lg-4">
+            <aside class="sidebar">
+              <div class="widget">
+                <h6 class="widget-title">SEARCH</h6>
+                <form method="get" action="{% url 'painting_list' %}">
+                  <input type="search" name="q" placeholder="Type here to search" value="{{ query }}">
+                  <input type="submit" value="Search">
+              </form>
+              </div>
+              <!-- end widget -->
+              <div class="widget">
+                <h6 class="widget-title">CATEGORIES</h6>
+                <ul class="categories">
+                    {% for category in categories %}
+                        <li><a href="{% url 'painting_list' %}?q={{ category.name }}">{{ category.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+              <!-- end widget -->
+
+              <div class="widget">
+                <h6 class="widget-title">GALLERY</h6>
+                <ul class="widget-gallery">
+                  <li><a href="images/carousel-image01.jpg" data-fancybox><img src="images/carousel-image01.jpg" alt="Image"></a></li>
+                  <li><a href="images/carousel-image02.jpg" data-fancybox><img src="images/carousel-image02.jpg" alt="Image"></a></li>
+                  <li><a href="images/carousel-image05.jpg" data-fancybox><img src="images/carousel-image05.jpg" alt="Image"></a></li>
+                  <li><a href="images/carousel-image04.jpg" data-fancybox><img src="images/carousel-image04.jpg" alt="Image"></a></li>
+                </ul>
+              </div>
+              <!-- end widget -->
+            </aside>
+            <!-- end sidebar -->
+          </div>
+          <!-- end col-4 -->
+        </div>
+        <!-- end row -->
+      </div>
+      <!-- end container -->
+    </section>
+    <!-- end content-section -->
+
+{% endblock %}

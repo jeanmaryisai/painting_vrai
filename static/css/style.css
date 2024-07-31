@@ -857,7 +857,7 @@ button[type="submit"] i {
 }
 .navbar.light .navbar-button a {
   border: 3px solid transparent;
-  line-height: 56px;
+  line-height: 10px;
 }
 .navbar.light .navbar-button a:hover {
   border-color: #94ffc4;
@@ -997,17 +997,17 @@ button[type="submit"] i {
   cursor: pointer;
 }
 .navbar .navbar-button {
-  margin-left: 30px;
+  margin-left: 10px;
 }
 .navbar .navbar-button a {
   height: 60px;
-  line-height: 60px;
+  line-height: 30px;
   display: inline-block;
-  padding: 0 40px;
+  padding: 0 10px;
   background: #94ffc4;
   color: #080808;
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 30px;
+  font-weight:1500;
   -webkit-transition: .25s ease-in-out;
   -moz-transition: .25s ease-in-out;
   -ms-transition: .25s ease-in-out;

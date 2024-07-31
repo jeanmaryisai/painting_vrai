@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+
+
+{% include 'components/header.html' with background_image= obj.image.url title= obj.title description= A artwork made by    <br><a href="{% url 'artist' obj.artist.id %}" ata-scroll-to class="btn"> See all Artist Work</a>' %}
+
+<section class="content-section no-spacing">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <figure class="image-box" data-scroll data-scroll-speed="1"> <img src="{% static obj.image.url %}" alt="Image"> </figure>
+      </div>
+      <!-- end col-12 -->
+    </div>
+    <!-- end row -->
+  </div>
+  <!-- end container -->
+</section>
+
+<section class="content-section">
+  <div class="container">
+    <div class="row">
+			<div class="row align-items-center">
+		  	<div class="col-lg-6">
+					<div class="side-content left">
+            {% if obj.isNew %}
+				<small>New</small>
+            {% endif %}
+						<h2>{{obj.title}}</h2>
+						<p>{% for tag in obj.tags.all %}
+              <a href="{% url 'painting_list' %}?q={{ tag.name }}" class="badge bg-secondary" style="text-decoration: none; color: white;">
+                  #{{ tag.name }}
+              </a>{% if not forloop.last %}, {% endif %}
+          {% empty %}
+              <em>No tags available</em>
+          {% endfor %}</p>
+						<table>
+              <tr>
+                  <td>Name</td>
+                  <td>: {{ obj.title }}</td>
+              </tr>
+              <tr>
+                  <td>Canva</td>
+                  <td>: <span style="background-color: {{ obj.canvas_color }}; padding: 0 10px; color: white;">{{ obj.canvas_color }}</span></td>
+              </tr>
+              <tr>
+                  <td>Category</td>
+                  <td>: {{ obj.category.name }}</td>
+              </tr>
+              <tr>
+                  <td>Price</td>
+                  <td>: ${{ obj.price }}</td>
+              </tr>
+          </table>
+          
+				</div>
+				<!-- end side-content -->
+
+            <div class="side-icon-list">
+              <ul>
+                <li>
+                  <div class="content">
+                    <a href="{% url 'artist' obj.artist.id %}"><h5>{{obj.artist.name}}</h5></a>
+                    <p>{{obj.artist.name | slice:":10"}}<br><br>
+                      <div class="custom-link"><a href="{% url 'artist' obj.artist.id %}" style="text-decoration: none; cursor: pointer;">See all of his work</a></div></p>
+                  </div>
+                  <!-- end content -->
+                </li>
+              </ul>
+            </div>
+            <!-- end side-icon-list -->
+				</div>
+				<!-- end col-6 -->
+
+        <div class="col-lg-6">
+          <div class="side-list">
+            <p>{{obj.description}}</p>
+          </div>
+          <!-- end side-list -->
+        </div>
+				<!--end col-6 -->
+		  </div>
+      <!-- end col-5 -->
+      
+      <!-- end col-7 -->
+    </div>
+    <!-- end row -->
+  </div>
+<br><br>
+  <div class="d-flex justify-content-center">
+    <a href="{% url 'painting_list' %}" class="circle-button"
+      >Continue <br />
+      Shopping</a
+    >
+  </div>
+  <!-- end container -->
+</section>
+
+{% if reviews %}
+  <!-- end content-section -->
+  <section class="content-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="section-title text-center">
+            <figure><img src="images/title-shape.png" alt="Image"></figure>
+            <h6>Our best reviews about this painting</h6>
+            <h2>Review</h2>
+          </div>
+          <!-- end section-title -->
+        </div>
+        <!-- end col-12 -->
+    </div>
+    <div class="row">
+      {% for review in reviews %}
+      <div class="col-md-6">
+          <div class="testimonial-box">
+              <div class="content-box">
+                  <p>{{ review.comment }}</p>
+              </div>
+              <!-- end content-box -->
+              <h6>Review by {{ review.user }} - {{ review.created_at|date:"F j, Y" }}</h6>
+          </div>
+          <!-- end testimonial-box -->
+      </div>
+
+      {% endfor %}
+  </div>
+      <!-- end row -->
+    </div>
+  </section>
+  
+  {% endif %}
+
+
+{% endblock %}

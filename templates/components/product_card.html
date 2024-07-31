@@ -2,10 +2,10 @@
 
 <!-- product_card.html -->
 <div class="col-lg-4 col-md-6">
-    <div class="exhibition-box" data-scroll data-scroll-speed="{{ scroll_speed }}">
+    <div class="exhibition-box" data-scroll data-scroll-speed="1">
         <figure>
-            <a href="{{ product_url }}">
-                <img src="{% static  product_image  %}" alt="Image" class="img img-fluid" 
+            <a href="{% url 'painting' x.slug %}">
+                <img src="{{ x.image  }}" alt="Image" height="300"
                 style="   width: 100%;
                 height: 300 px;
                 object-fit: cover;"
@@ -15,13 +15,13 @@
                 <figure class="i">
                     <img src="{% static 'images/icon-info.png' %}" alt="Image">
                 </figure>
-                <span><a href="{{add_to_cart}}">add to cart</a></span>
+                <span><a href="{% url 'add_to_cart' x.id %}">add to cart</a></span>
             </div>
             <!-- end info -->
         </figure>
         <div class="content-box">
-            <h4><a href="{{ product_url }}">{{ product_title }}</a></h4>
-            <p>{{ product_description }}</p>
+            <h4><a href="{% url 'painting' x.slug %}">{{ x.title }}</a></h4>
+            <p>{{ x.description }}</p>
         </div>
         <!-- end content-box -->
     </div>

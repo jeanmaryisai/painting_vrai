@@ -1,0 +1,162 @@
+
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block style %}
+.modal-body form > .mb-3,
+.modal-body form > .form-check {
+    margin-bottom: 1rem; 
+}
+
+
+{% endblock %}
+
+
+{% block modal %}
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Inquiry for shipping Fee</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <h4>Billing Details</h4>
+              <form method="post" action="{% url 'address_inquiry' %}">
+                  {% csrf_token %}
+                  {{ form.non_field_errors }}
+                  {{ form.as_p }}
+                  <div class="form-check mb-3">
+                      {{ form.save_info }}
+                      {{ form.save_info.label_tag }}
+                      {{ form.save_info.errors }}
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" class="custom-button">Submit Resquest</button>
+                  </div>
+              </form>
+            </div>
+        </div>
+    </div>
+  </div>
+  
+
+{% endblock %}
+
+{% block body %}
+
+
+{% include 'components/header.html' with background_image='images/birmingham-museums-trust-pWVJHDiAonU-unsplash.jpg' title='Marvens Villial\'s Work' description='Born in Haiti   ' %}
+
+
+        <br /><br />
+
+     
+    
+  
+      
+        
+        <div class="container mt-5">
+
+          <div class="row justify-content-center">
+            <div class="col-lg-9">
+              <div class="section-title">
+                <figure>
+                  <img src="{% static 'images/title-shape.png' %}" alt="Image" />
+                </figure>
+                <h2>Cart</h2>
+              </div>
+              <!-- end section-title -->
+            </div>
+            <!-- end col-9 -->
+            <div class="col-lg-3">
+              <a href="#" class="circle-button"
+                >Continue <br />
+                Shopping</a
+              >
+            </div>
+            <!-- end col-3 -->
+          </div>
+
+          
+         
+         
+          <div class="table-responsive">
+              <table class="table table-bordered">
+                  <thead class="thead-light">
+                      <tr>
+                          <th scope="col">Produit</th>
+                          <th scope="col">Image</th>
+                          <th scope="col">Prix</th>
+                          <th scope="col">Quantité</th>
+                          <th scope="col">Total</th>
+                          <th scope="col">Action</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+
+                    {% for item in order.orderitem_set.all %}
+                    <tr>
+                        <td>{{ item.painting.title }}</td>
+                        <td><img src="{{ item.painting.image.url }}" class="product-img" alt="{{ item.painting.title }}"></td>
+                        <td>${{ item.painting.price }}</td>
+                        <td>{{ item.quantity }}</td>
+                        
+                        <td class="total-price">${{ item.quantity|multiply:item.painting.price }}</td>
+                        <td>{{ item.quantity }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">Your order is empty.</td>
+                    </tr>
+                    {% endfor %}
+                      
+                  </tbody>
+              </table>
+          </div>
+  
+          <div class="card mt-4">
+              <div class="card-body">
+                  <h5 class="card-title text-center">Total du Panier</h5>
+                  <ul class="list-group list-group-flush">
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                          Sous-total:
+                          <span id="subtotal">$35.00</span>
+                      </li>
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                          Livraison:
+                          <span>Gratuite</span>
+                      </li>
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                          Total:
+                          <span id="total">$35.00</span>
+                      </li>
+                  </ul>
+                  <div class="text-center mt-4">
+                      <!-- <a href="#" class="custom-button">Procéder au paiement</a> -->
+
+                      <!-- Button trigger modal -->
+                      <button type="button" class="custom-button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Inquiry for Shipping and others
+                    </button>
+                      
+                      
+             
+                  </div>
+              </div>
+          </div>
+      </div>
+        <br><br><br>
+<!-- <script type="text/javascript" >
+
+$('#btn').on('click', function () {
+  $('#exampleModal').modal('show')
+})
+
+</script> -->
+
+        
+        <!-- end content-section -->
+{% endblock %}
