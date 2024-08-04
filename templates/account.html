@@ -1,398 +1,643 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block style %}
+{% extends 'base.html' %} {% load static %} {% block style %}
 <style>
+  .nav-pills .nav-link {
+    border-radius: 0;
+  }
+
+  .tab-content {
+    border: 1px solid #dee2e6;
+    border-top: none;
+    padding: 20px;
+  }
+
+  .account-container {
+    margin-top: 50px;
+  }
+
+  @media (max-width: 768px) {
+    .nav-pills {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
     .nav-pills .nav-link {
-        border-radius: 0;
+      flex: 1;
+      text-align: center;
+      border-radius: 0;
     }
-
-    .tab-content {
-        border: 1px solid #dee2e6;
-        border-top: none;
-        padding: 20px;
-    }
-
-    .account-container {
-        margin-top: 50px;
-    }
-
-    @media (max-width: 768px) {
-        .nav-pills {
-            flex-direction: row;
-            flex-wrap: wrap;
-        }
-        .nav-pills .nav-link {
-            flex: 1;
-            text-align: center;
-            border-radius: 0;
-        }
-    }
+  }
 </style>
-{% endblock %}
+{% endblock %} {% block modal %}
 
-
-{% block modal %}
-
-          <!-- Edit Address Modal -->
-<div class="modal fade" id="editAddressModal" tabindex="-1" aria-labelledby="editAddressModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editAddressModalLabel">Edit Address</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+<!-- Edit Address Modal -->
+<div
+  class="modal fade"
+  id="editAddressModal"
+  tabindex="-1"
+  aria-labelledby="editAddressModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editAddressModalLabel">Edit Address</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h4>Billing Details</h4>
+        <form id="editAddressForm" method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="editFirstName" class="form-label">First Name</label>
+              <input type="text" class="form-control" id="editFirstName" placeholder="John" />
             </div>
-            <div class="modal-body">
-                <h4>Billing Details</h4>
-                <form id="editAddressForm">
-                    <div class="mb-3">
-                        <label for="editFirstName" class="form-label">First Name</label>
-                        <input type="text" class="form-control" id="editFirstName" placeholder="John">
-                    </div>
-                    <div class="mb-3">
-                        <label for="editLastName" class="form-label">Last Name</label>
-                        <input type="text" class="form-control" id="editLastName" placeholder="Doe">
-                    </div>
-                    <div class="mb-3">
-                        <label for="editEmail" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="editEmail" placeholder="email@example.com">
-                    </div>
-                    <div class="mb-3">
-                        <label for="editAddress" class="form-label">Address</label>
-                        <input type="text" class="form-control" id="editAddress" placeholder="1234 Main St">
-                    </div>
-                    <div class="mb-3">
-                        <label for="editAddress2" class="form-label">Address 2</label>
-                        <input type="text" class="form-control" id="editAddress2" placeholder="Apartment, studio, or floor">
-                    </div>
-                    <div class="mb-3">
-                        <label for="editCountry" class="form-label">Country</label>
-                        <select class="form-select" id="editCountry">
-                            <option value="" selected>Choose...</option>
-                            <option value="US">United States</option>
-                            <option value="CA">Canada</option>
-                            <option value="GB">United Kingdom</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editState" class="form-label">State</label>
-                        <select class="form-select" id="editState">
-                            <option value="" selected>Choose...</option>
-                            <option value="CA">California</option>
-                            <option value="TX">Texas</option>
-                            <option value="NY">New York</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editZip" class="form-label">Zip</label>
-                        <input type="text" class="form-control" id="editZip" placeholder="12345">
-                    </div>
-                    <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" id="editSaveInfo">
-                        <label class="form-check-label" for="editSaveInfo">
-                            Save this information for next time
-                        </label>
-                    </div>
-                </form>
+            <div class="mb-3">
+              <label for="editLastName" class="form-label">Last Name</label>
+              <input type="text" class="form-control" id="editLastName" placeholder="Doe" />
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="saveEditAddress()">Save changes</button>
+            <div class="mb-3">
+              <label for="editEmail" class="form-label">Email</label>
+              <input type="email" class="form-control" id="editEmail" placeholder="email@example.com" />
             </div>
-        </div>
+            <div class="mb-3">
+              <label for="editAddress" class="form-label">Address</label>
+              <input type="text" class="form-control" id="editAddress" placeholder="1234 Main St" />
+            </div>
+            <div class="mb-3">
+              <label for="editAddress2" class="form-label">Address 2</label>
+              <input type="text" class="form-control" id="editAddress2" placeholder="Apartment, studio, or floor" />
+            </div>
+            <div class="mb-3">
+              <label for="editCountry" class="form-label">Country</label>
+              <select class="form-select" id="editCountry">
+                <option value="" selected>Choose...</option>
+                <option value="US">United States</option>
+                <option value="CA">Canada</option>
+                <option value="GB">United Kingdom</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="editState" class="form-label">State</label>
+              <select class="form-select" id="editState">
+                <option value="" selected>Choose...</option>
+                <option value="CA">California</option>
+                <option value="TX">Texas</option>
+                <option value="NY">New York</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="editZip" class="form-label">Zip</label>
+              <input type="text" class="form-control" id="editZip" placeholder="12345" />
+            </div>
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="checkbox" id="default" />
+              <label class="form-check-label" for="default">
+                Save as Default
+              </label>
+            </div>
+          </form>
+          
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          onclick="saveEditAddress()"
+        >
+          Save changes
+        </button>
+      </div>
     </div>
+  </div>
 </div>
 
 <!-- Add Address Modal -->
-<div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addAddressModalLabel">Add New Address</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <h4>Billing Details</h4>
-                <form id="addAddressForm">
-                    <div class="mb-3">
-                        <label for="addFirstName" class="form-label">First Name</label>
-                        <input type="text" class="form-control" id="addFirstName" placeholder="John">
-                    </div>
-                    <div class="mb-3">
-                        <label for="addLastName" class="form-label">Last Name</label>
-                        <input type="text" class="form-control" id="addLastName" placeholder="Doe">
-                    </div>
-                    <div class="mb-3">
-                        <label for="addEmail" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="addEmail" placeholder="email@example.com">
-                    </div>
-                    <div class="mb-3">
-                        <label for="addAddress" class="form-label">Address</label>
-                        <input type="text" class="form-control" id="addAddress" placeholder="1234 Main St">
-                    </div>
-                    <div class="mb-3">
-                        <label for="addAddress2" class="form-label">Address 2</label>
-                        <input type="text" class="form-control" id="addAddress2" placeholder="Apartment, studio, or floor">
-                    </div>
-                    <div class="mb-3">
-                        <label for="addCountry" class="form-label">Country</label>
-                        <select class="form-select" id="addCountry">
-                            <option value="" selected>Choose...</option>
-                            <option value="US">United States</option>
-                            <option value="CA">Canada</option>
-                            <option value="GB">United Kingdom</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="addState" class="form-label">State</label>
-                        <select class="form-select" id="addState">
-                            <option value="" selected>Choose...</option>
-                            <option value="CA">California</option>
-                            <option value="TX">Texas</option>
-                            <option value="NY">New York</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="addZip" class="form-label">Zip</label>
-                        <input type="text" class="form-control" id="addZip" placeholder="12345">
-                    </div>
-                    <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" id="addSaveInfo">
-                        <label class="form-check-label" for="addSaveInfo">
-                            Save this information for next time
-                        </label>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="addNewAddress()">Add Address</button>
-            </div>
-        </div>
+<div
+  class="modal fade"
+  id="addAddressModal"
+  tabindex="-1"
+  aria-labelledby="addAddressModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addAddressModalLabel">Add New Address</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h4>Billing Details</h4>
+        <form id="addAddressForm" method="post" action="{% url 'add_address' %}">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="addFirstName" class="form-label">First Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="addFirstName"
+              name="first_name"
+              placeholder="John"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="addLastName" class="form-label">Last Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="addLastName"
+              name="last_name"
+              placeholder="Doe"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="addEmail" class="form-label">Email</label>
+            <input
+              type="email"
+              class="form-control"
+              id="addEmail"
+              name="email"
+              placeholder="email@example.com"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="addAddress" class="form-label">Address</label>
+            <input
+              type="text"
+              class="form-control"
+              id="addAddress"
+              name="address"
+              placeholder="1234 Main St"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="addAddress2" class="form-label">Address 2</label>
+            <input
+              type="text"
+              class="form-control"
+              id="addAddress2"
+              name="address2"
+              placeholder="Apartment, studio, or floor"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="addCountry" class="form-label">Country</label>
+            <select class="form-select" id="addCountry" name="country">
+              <option value="" selected>Choose...</option>
+              <option value="US">United States</option>
+              <option value="CA">Canada</option>
+              <option value="GB">United Kingdom</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="addState" class="form-label">State</label>
+            <select class="form-select" id="addState" name="state">
+              <option value="" selected>Choose...</option>
+              <option value="CA">California</option>
+              <option value="TX">Texas</option>
+              <option value="NY">New York</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="addZip" class="form-label">Zip</label>
+            <input
+              type="text"
+              class="form-control"
+              id="addZip"
+              name="zip_code"
+              placeholder="12345"
+            />
+          </div>
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="addDefault" name="default" />
+            <label class="form-check-label" for="addDefault">
+              Save as Default
+            </label>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          onclick="document.getElementById('addAddressForm').submit();"
+        >
+          Save changes
+        </button>
+      </div>
     </div>
+  </div>
 </div>
 
 
-{% endblock %}
-
-{% block body %}
-{% include 'components/header.html' with background_image='images/birmingham-museums-trust-pWVJHDiAonU-unsplash.jpg' title='Marvens Villial\'s Work' description='Born in Haiti   ' %}
-
+{% endblock %} {% block body %} {% include 'components/header.html' with
+background_image='images/birmingham-museums-trust-pWVJHDiAonU-unsplash.jpg'
+title='Marvens Villial\'s Work' description='Born in Haiti ' %}
 
 <div class="container account-container">
-    <h2 class="text-center mb-5">My Account</h2>
-    <div class="row">
-        <div class="col-md-3 mb-3 custom-menu">
-            <ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                <li class="nav-item">
-                    <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false">Messages</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="true">Profile Details</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="v-pills-addresses-tab" data-toggle="pill" href="#v-pills-addresses" role="tab" aria-controls="v-pills-addresses" aria-selected="false">Addresses</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="v-pills-orders-tab" data-toggle="pill" href="#v-pills-orders" role="tab" aria-controls="v-pills-orders" aria-selected="false">Orders</a>
-                </li>
-                
-                <li class="nav-item">
-                    <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="v-pills-wishlist-tab" data-toggle="pill" href="#v-pills-wishlist" role="tab" aria-controls="v-pills-wishlist" aria-selected="false">Wishlist</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="v-pills-notifications-tab" data-toggle="pill" href="#v-pills-notifications" role="tab" aria-selected="false">Log out</a>
-                </li>
-            </ul>
-        </div>
-        <div class="col-md-9">
-            <div class="tab-content" id="v-pills-tabContent">
-                <!-- Profile Details Tab -->
-                <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
-                    <h3>Profile Details</h3>
-                    <form>
-                        <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" class="form-control" id="name" placeholder="Enter your name">
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" class="form-control" id="email" placeholder="Enter your email">
-                        </div>
-                        <div class="form-group">
-                            <label for="phone">Phone</label>
-                            <input type="text" class="form-control" id="phone" placeholder="Enter your phone number">
-                        </div>
-                        <br>
-                        <button type="submit" class="custom-button">Modify</button>
-                    </form>
-                </div>
+  <h2 class="text-center mb-5">My Account</h2>
+  <div class="row">
+    <div class="col-md-3 mb-3 custom-menu">
+      <ul
+        class="nav flex-column nav-pills"
+        id="v-pills-tab"
+        role="tablist"
+        aria-orientation="vertical"
+      >
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          id="v-pills-messages-tab"
+          data-toggle="pill"
+          href="#v-pills-messages"
+          role="tab"
+          aria-controls="v-pills-messages"
+          aria-selected="false"
+          onclick="markAllMessagesAsRead()"
+        >
+          Messages
+          {% if user.notifications.filter(is_message=True, is_read=False).exists %}
+          <span class="badge badge-danger">●</span>
+          {% endif %}
+        </a>
+      </li>
+        <li class="nav-item">
+          <a
+            class="nav-link active"
+            id="v-pills-profile-tab"
+            data-toggle="pill"
+            href="#v-pills-profile"
+            role="tab"
+            aria-controls="v-pills-profile"
+            aria-selected="true"
+            >Profile Details</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            id="v-pills-addresses-tab"
+            data-toggle="pill"
+            href="#v-pills-addresses"
+            role="tab"
+            aria-controls="v-pills-addresses"
+            aria-selected="false"
+            >Addresses</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            id="v-pills-orders-tab"
+            data-toggle="pill"
+            href="#v-pills-orders"
+            role="tab"
+            aria-controls="v-pills-orders"
+            aria-selected="false"
+            >Orders</a
+          >
+        </li>
 
-                <!-- Addresses Tab -->
-                <div class="tab-pane fade" id="v-pills-addresses" role="tabpanel" aria-labelledby="v-pills-addresses-tab">
-                    <h3>Addresses</h3>
-                    <div class="address-list">
-                        <!-- Example Address -->
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title">Home Address</h5>
-                                <p class="card-text">1234 Main St, Anytown, USA</p>
-                                <p class="card-text"><strong>Status:</strong> Confirmed</p>
-                                <p class="card-text"><strong>Fee:</strong> $5.00</p>
-                                <a href="#" class="btn btn-info" onclick="openEditModal('Home Address', '1234 Main St, Anytown, USA', 'Confirmed', '5.00')">Edit</a>
-                                <a href="#" class="btn btn-danger">Delete</a>
-                            </div>
-                        </div>
-                    </div>
-                    <button class="btn btn-success mt-3" onclick="openAddModal()">Add New Address</button>
-                </div>
-                
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            id="v-pills-settings-tab"
+            data-toggle="pill"
+            href="#v-pills-settings"
+            role="tab"
+            aria-controls="v-pills-settings"
+            aria-selected="false"
+            >Settings</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            id="v-pills-wishlist-tab"
+            data-toggle="pill"
+            href="#v-pills-wishlist"
+            role="tab"
+            aria-controls="v-pills-wishlist"
+            aria-selected="false"
+            >Wishlist</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            id="v-pills-notifications-tab"
+            data-toggle="pill"
+            href="#{% url 'logout' %}"
+            role="tab"
+            aria-selected="false"
 
-                
-
-                <!-- Orders Tab -->
-                <div class="tab-pane fade" id="v-pills-orders" role="tabpanel" aria-labelledby="v-pills-orders-tab">
-                    <h3>Orders</h3>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Order ID</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                                <th>Total</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Example Order -->
-                            <tr>
-                                <td>12345</td>
-                                <td>2023-07-20</td>
-                                <td>Shipped</td>
-                                <td>$100.00</td>
-                                <td>
-                                    <a href="#" class="btn btn-info btn-sm">View</a>
-                                    <a href="#" class="btn btn-danger btn-sm">Cancel</a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Messages Tab -->
-                <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
-                    <h3>Messages</h3>
-                    <ul class="list-group">
-                        <!-- Example Message -->
-                        <li class="list-group-item">
-                            <h5>Message Subject</h5>
-                            <p>Message content goes here...</p>
-                            <small class="text-muted">Received on 2023-07-20</small>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Settings Tab -->
-                <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
-                    <h3>Settings</h3>
-                    <form>
-                        <div class="form-group">
-                            <label for="oldPassword">Password</label>
-                            <input type="password" class="form-control" id="oldPassword" placeholder="Enter your current password">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="password" class="form-control" id="password" placeholder="Enter new password">
-                        </div>
-                        <div class="form-group">
-                            <label for="confirm-password">Confirm Password</label>
-                            <input type="password" class="form-control" id="confirm-password" placeholder="Confirm new password">
-                        </div>
-                        <br>
-                        <button type="submit" class="custom-button">Save</button>
-                    </form>
-                </div>
-
-                <!-- Wishlist Tab -->
-                <div class="tab-pane fade" id="v-pills-wishlist" role="tabpanel" aria-labelledby="v-pills-wishlist-tab">
-                    <h3>Wishlist</h3>
-                    <ul class="list-group">
-                        <!-- Example Wishlist Item -->
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <a href=""> <strong>Wishlist Item 1</strong> </a>
-                            
-                            
-
-                        
-
-                            <div>
-
-                                <button class="btn btn-info btn-sm">Move to cart</button>
-                            <button class="btn btn-danger btn-sm">Remove</button>
-
-                            </div>
-
-                            
-                        </li>
-                    </ul>
-                </div>
-
-          
-
-            </div>
-        </div>
+            h
+            >Log out</a
+          >
+        </li>
+      </ul>
     </div>
-</div><br><br>
-{% endblock %}
+    <div class="col-md-9">
+      <div class="tab-content" id="v-pills-tabContent">
+        <!-- Profile Details Tab -->
+        <div
+          class="tab-pane fade show active"
+          id="v-pills-profile"
+          role="tabpanel"
+          aria-labelledby="v-pills-profile-tab"
+        >
+          <h3>Profile Details</h3>
+          <form>
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="name"
+                placeholder="Enter your name"
+              />
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                placeholder="Enter your email"
+              />
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone</label>
+              <input
+                type="text"
+                class="form-control"
+                id="phone"
+                placeholder="Enter your phone number"
+              />
+            </div>
+            <br />
+            <button type="submit" class="custom-button">Modify</button>
+          </form>
+        </div>
 
-{% block js %}
+        <!-- Addresses Tab -->
+        <div
+          class="tab-pane fade"
+          id="v-pills-addresses"
+          role="tabpanel"
+          aria-labelledby="v-pills-addresses-tab"
+        >
+          <h3>Addresses</h3>
+          <div class="address-list">
+            {% for x in addresses %}
+            <!-- Example Address -->
+            <div class="card mb-3">
+              <div class="card-body">
+                <h5 class="card-title">
+                  {% if x.default %} Primary Address {% else %} Secondary Address{% endif %}
+                </h5>
+                <p class="card-text">{{ x.address | slice: ":20" }}</p>
+                <p class="card-text">{{ address.country }}, {{ address.state }}, {{ address.zip_code }} </p>
+                <p class="card-text"><strong>Status:</strong> {{x.status}}</p>
+                {% if x.shipping_price %}
+
+                <p class="card-text"><strong>Fee:</strong> $5.00</p>
+
+                {% endif %}
+                <a href="#" class="btn btn-info"
+       onclick="openEditModal(
+           '{{ address.id }}',
+           '{{ address.first_name }}',
+           '{{ address.last_name }}',
+           '{{ address.email }}',
+           '{{ address.address }}',
+           '{{ address.address2 }}',
+           '{{ address.country }}',
+           '{{ address.state }}',
+           '{{ address.zip_code }}',
+           {{ address.default|yesno:"true,false" }},
+       )">
+       Edit
+    </a>
+
+                {% if not address.default %}
+                <a
+                  href="{% url 'set_default_address' address.id %}"
+                  class="btn btn-info"
+                  >Define as Default</a
+                >
+                {% endif %}
+                <a
+                  href="{% url 'delete_address' address.id %}"
+                  class="btn btn-danger"
+                  >Delete</a
+                >
+                <form method="post" action="{% url 'assign_address' %}">
+                  <input type="hidden" value="{{ address.id }}" name="address">
+                <button type="submit" class="btn btn-primary">Assign new address</button>
+              </form>
+              </div>
+            </div>
+
+            {% endfor %}
+          </div>
+          <button class="btn btn-success mt-3" onclick="openAddModal()">
+            Add New Address
+          </button>
+        </div>
+
+        <!-- Orders Tab -->
+        <div
+          class="tab-pane fade"
+          id="v-pills-orders"
+          role="tabpanel"
+          aria-labelledby="v-pills-orders-tab"
+        >
+          <h3>Orders</h3>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Total</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Example Order -->
+
+              {% for x in Orders %}
+              <tr>
+                <td>{{x.uuid}}</td>
+                <td>{{x.get_status_date}}</td>
+                <td>{{x.status}}</td>
+                <td>${{x.total}}</td>
+                <td>
+                  <a href="{% url 'custom_order' x.uuid %}" class="btn btn-info btn-sm">View</a>
+                </td>
+              </tr>
+
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Messages Tab -->
+        <div
+          class="tab-pane fade"
+          id="v-pills-messages"
+          role="tabpanel"
+          aria-labelledby="v-pills-messages-tab"
+        >
+          <h3>Messages</h3>
+          <ul class="list-group">
+            <!-- Example Message -->
+            {% for message in messages %}
+            <li class="list-group-item {% if not message.is_read %}font-weight-bold{% endif %}">
+              <h5>{{ message.title }}</h5>
+              <p>{{ message.message }}</p>
+              <small class="text-muted">Received on {{ message.created_at }}</small>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <!-- Settings Tab -->
+        <div
+          class="tab-pane fade"
+          id="v-pills-settings"
+          role="tabpanel"
+          aria-labelledby="v-pills-settings-tab"
+        >
+          <h3>Settings</h3>
+          <form method="post" action="{% url 'change_password' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="custom-button">Save</button>
+          </form>
+        </div>
+
+        <!-- Wishlist Tab -->
+        <div
+          class="tab-pane fade"
+          id="v-pills-wishlist"
+          role="tabpanel"
+          aria-labelledby="v-pills-wishlist-tab"
+        >
+          <h3>Wishlist</h3>
+          <ul class="list-group">
+            <!-- Example Wishlist Item -->
+            {% for painting in user.favorite_paintings.all %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <a href="{% url 'painting_detail' painting.slug %}"><strong>{{ painting.title }}</strong></a>
+      <div>
+        <form action="{% url 'move_to_cart' painting.id %}" method="post" style="display: inline;">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-info btn-sm">Move to cart</button>
+        </form>
+        <form action="{% url 'remove_from_wishlist' painting.id %}" method="post" style="display: inline;">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+        </form>
+      </div>
+    </li>
+    {% empty %}
+    <li class="list-group-item">Your wishlist is empty.</li>
+    {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<br /><br />
+{% endblock %} {% block js %}
 
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script type="text/javascript" >
-function openEditModal(title, address, status, fee) {
-    document.getElementById('editFirstName').value = title.split(' ')[0]; // Example split
-    document.getElementById('editLastName').value = title.split(' ')[1]; // Example split
-    document.getElementById('editEmail').value = ''; // Fill with appropriate data
-    document.getElementById('editAddress').value = address;
-    document.getElementById('editAddress2').value = ''; // Fill with appropriate data
-    document.getElementById('editCountry').value = ''; // Fill with appropriate data
-    document.getElementById('editState').value = ''; // Fill with appropriate data
-    document.getElementById('editZip').value = ''; // Fill with appropriate data
-    document.getElementById('editSaveInfo').checked = false; // Fill with appropriate data
-    $('#editAddressModal').modal('show');
+<script type="text/javascript">
+  function openEditModal(id, firstName, lastName, email, address, address2, country, state, zip, saveAsDefault) {
+  document.getElementById("editFirstName").value = firstName;
+  document.getElementById("editLastName").value = lastName;
+  document.getElementById("editEmail").value = email;
+  document.getElementById("editAddress").value = address;
+  document.getElementById("editAddress2").value = address2;
+  document.getElementById("editCountry").value = country;
+  document.getElementById("editState").value = state;
+  document.getElementById("editZip").value = zip;
+  document.getElementById("default").checked = saveAsDefault;
+
+  // Set the action URL with the address ID
+  document.getElementById("editAddressForm").action = `/address/edit/${id}/`;
+
+  $("#editAddressModal").modal("show");
 }
+
 
 function openAddModal() {
-    document.getElementById('addFirstName').value = '';
-    document.getElementById('addLastName').value = '';
-    document.getElementById('addEmail').value = '';
-    document.getElementById('addAddress').value = '';
-    document.getElementById('addAddress2').value = '';
-    document.getElementById('addCountry').value = '';
-    document.getElementById('addState').value = '';
-    document.getElementById('addZip').value = '';
-    document.getElementById('addSaveInfo').checked = false;
-    $('#addAddressModal').modal('show');
+  document.getElementById("addFirstName").value = "";
+  document.getElementById("addLastName").value = "";
+  document.getElementById("addEmail").value = "";
+  document.getElementById("addAddress").value = "";
+  document.getElementById("addAddress2").value = "";
+  document.getElementById("addCountry").value = "";
+  document.getElementById("addState").value = "";
+  document.getElementById("addZip").value = "";
+  document.getElementById("addDefault").checked = false;
+  $("#addAddressModal").modal("show");
 }
 
-function saveEditAddress() {
+
+  function saveEditAddress() {
     // Logic to save the edited address
-    $('#editAddressModal').modal('hide');
-}
+    $("#editAddressModal").modal("hide");
+  }
 
-function addNewAddress() {
+  function addNewAddress() {
     // Logic to add a new address
-    $('#addAddressModal').modal('hide');
-}
-
+    $("#addAddressModal").modal("hide");
+  }
 </script>
 
+<script>
+    function markAllMessagesAsRead() {
+      fetch("{% url 'mark_all_messages_as_read' %}", {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}',
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          // Remove the red dot indicator
+          document.querySelector('#v-pills-messages-tab .badge').style.display = 'none';
+          // Remove bold styling from unread messages
+          document.querySelectorAll('#v-pills-messages .list-group-item.font-weight-bold').forEach(item => {
+            item.classList.remove('font-weight-bold');
+          });
+        }
+      });
+    }
+  </script>
 
 {% endblock %}

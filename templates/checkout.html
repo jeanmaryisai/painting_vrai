@@ -1,156 +1,134 @@
-
-
-
-{% extends 'base.html' %}
-{% load static %}
-
-{% block body %}
-
-{% include 'components/header.html' with background_image='images/birmingham-museums-trust-pWVJHDiAonU-unsplash.jpg' title='Marvens Villial\'s Work' description='Born in Haiti   ' %}
-
+{% extends 'base.html' %} {% load static %} {% block body %} {% include
+'components/header.html' with
+background_image='images/birmingham-museums-trust-pWVJHDiAonU-unsplash.jpg'
+title='Marvens Villial\'s Work' description='Born in Haiti ' %}
 
 <div class="container mt-5">
-    <h3 class="text-center mb-4">Checkout</h3>
+  <h3 class="text-center mb-4">Checkout</h3>
 
-    <div class="row">
-        <!-- Billing Details -->
-        <div class="col-lg-6">
-            <h4>Billing Details</h4>
-            <form>
-                <div class="mb-3">
-                    <label for="firstName" class="form-label">First Name</label>
-                    <input type="text" class="form-control" id="firstName" placeholder="John">
-                </div>
-                <div class="mb-3">
-                    <label for="lastName" class="form-label">Last Name</label>
-                    <input type="text" class="form-control" id="lastName" placeholder="Doe">
-                </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="email" placeholder="email@example.com">
-                </div>
-                <div class="mb-3">
-                    <label for="address" class="form-label">Address</label>
-                    <input type="text" class="form-control" id="address" placeholder="1234 Main St">
-                </div>
-                <div class="mb-3">
-                    <label for="address2" class="form-label">Address 2</label>
-                    <input type="text" class="form-control" id="address2" placeholder="Apartment, studio, or floor">
-                </div>
-                <div class="mb-3">
-                    <label for="country" class="form-label">Country</label>
-                    <select class="form-select" id="country">
-                        <option value="" selected>Choose...</option>
-                        <option value="US">United States</option>
-                        <option value="CA">Canada</option>
-                        <option value="GB">United Kingdom</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="state" class="form-label">State</label>
-                    <select class="form-select" id="state">
-                        <option value="" selected>Choose...</option>
-                        <option value="CA">California</option>
-                        <option value="TX">Texas</option>
-                        <option value="NY">New York</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="zip" class="form-label">Zip</label>
-                    <input type="text" class="form-control" id="zip" placeholder="12345">
-                </div>
-                <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" id="save-info">
-                    <label class="form-check-label" for="save-info">
-                        Save this information for next time
-                    </label>
-                </div>
-            </form>
+  <div class="row">
+    <!-- Billing Details -->
+    <div class="col-lg-6">
+      <h4>Selected Billing Addresses</h4>
+
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">
+            {% if x.default %} Primary Address {% else %} Secondary address {% endif %}
+          </h5>
+          <p class="card-text">{{ x.address | slice: ":20" }}</p>
+          <p class="card-text">
+            {{ address.country }}, {{ address.state }}, {{ address.zip_code }}
+          </p>
+          <p class="card-text"><strong>Status:</strong> {{x.status}}</p>
+          {% if x.shipping_price %}
+
+          <p class="card-text"><strong>Fee:</strong> $5.00</p>
+
+          {% endif %}
+
+          {% if not address.default %}
+          <a
+            href="{% url 'set_default_address' address.id %}"
+            class="btn btn-info"
+            >Define as Default</a
+          >
+          {% endif %}
+          <a href="{% url 'delete_address' address.id %}" class="btn btn-danger"
+            >Delete</a
+          >
         </div>
 
-        <!-- Order Summary -->
-        <div class="col-lg-6">
-            <h4>Your Order</h4>
-            <ul class="list-group mb-3">
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 class="my-0">Product name</h6>
-                        <small class="text-muted">Brief description</small>
-                    </div>
-                    <span class="text-muted">$12</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 class="my-0">Second product</h6>
-                        <small class="text-muted">Brief description</small>
-                    </div>
-                    <span class="text-muted">$8</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 class="my-0">Third item</h6>
-                        <small class="text-muted">Brief description</small>
-                    </div>
-                    <span class="text-muted">$5</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 class="my-0">Promo code</h6>
-                        <small class="text-muted">EXAMPLECODE</small>
-                    </div>
-                    <span class="text-success">−$5</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span>Total (USD)</span>
-                    <strong>$20</strong>
-                </li>
-            </ul>
+        <h6>Other addresses</h6>
 
-            <form class="card p-2">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Promo code">
-                    <button type="submit" class="btn btn-secondary">Redeem</button>
-                </div>
-            </form>
-
-            <hr class="my-4">
-
-            <h4>Payment</h4>
-            <div class="my-3">
-                <div class="form-check">
-                    <input id="credit" name="paymentMethod" type="radio" class="form-check-input" checked required>
-                    <label class="form-check-label" for="credit">Credit card</label>
-                </div>
-                <div class="form-check">
-                    <input id="debit" name="paymentMethod" type="radio" class="form-check-input" required>
-                    <label class="form-check-label" for="debit">Debit card</label>
-                </div>
-                <div class="form-check">
-                    <input id="paypal" name="paymentMethod" type="radio" class="form-check-input" required>
-                    <label class="form-check-label" for="paypal">Paypal</label>
-                </div>
+        <form method="post" action="{% url 'assign_address' %}">
+          {% csrf_token %}
+          <div class="card mb-3">
+            <div class="card-header">
+              Choose a Different Address
             </div>
-            <form>
-                <div class="mb-3">
-                    <label for="cc-name" class="form-label">Name on card</label>
-                    <input type="text" class="form-control" id="cc-name" placeholder="Full name as displayed on card" required>
-                </div>
-                <div class="mb-3">
-                    <label for="cc-number" class="form-label">Credit card number</label>
-                    <input type="text" class="form-control" id="cc-number" placeholder="1234 5678 9012 3456" required>
-                </div>
-                <div class="mb-3">
-                    <label for="cc-expiration" class="form-label">Expiration</label>
-                    <input type="text" class="form-control" id="cc-expiration" placeholder="MM/YY" required>
-                </div>
-                <div class="mb-3">
-                    <label for="cc-cvv" class="form-label">CVV</label>
-                    <input type="text" class="form-control" id="cc-cvv" placeholder="123" required>
-                </div>
-                <button class="btn btn-primary w-100" type="submit">Continue to checkout</button>
-            </form>
-        </div>
+            <div class="card-body">
+              <select class="form-select" name="address">
+                {% for address in addresses %}
+                  <option value="{{ address.id }}" {% if order.address and order.address.id == address.id %}selected{% endif %}>
+                    {{ address | slice: ":20"}} - ${{ address.shipping_price }}
+                  </option>
+                {% endfor %}
+              </select>
+              <p><a href="{% url 'account' %}#address">Add a new address</a></p>
+            </div>
+          </div>
+        
+          <button type="submit" class="btn btn-primary">Assign new address</button>
+        </form>
+      </div>
     </div>
+
+    <!-- Order Summary -->
+    <div class="col-lg-6">
+      <h4>Your Order</h4>
+      <ul class="list-group mb-3">
+
+        {% for item in order.orderitem_set.all %}
+        <li
+          class="list-group-item d-flex justify-content-between align-items-center"
+        >
+          <div>
+            <h6 class="my-0">{{ item.painting.title }}</h6>
+            <!-- <small class="text-muted">Brief description</small> -->
+          </div>
+          <span class="text-muted">${{ item.painting.price }}</span>
+        </li>
+
+        {% endfor %}
+
+        <li
+        class="list-group-item d-flex justify-content-between align-items-right"
+      >
+        <span>Subotal (USD)</span>
+        <strong>${{ order.subtotal }}</strong>
+      </li>
+        <li
+        class="list-group-item d-flex justify-content-between align-items-right"
+      >
+        <span>Discount (USD)</span>
+        <strong>${{ order.discount }}</strong>
+      </li>
+      
+      <li
+      class="list-group-item d-flex justify-content-between align-items-right"
+    >
+      <span>Shipping Fee (USD)</span>
+      <strong>${{order.shipping_address.shipping_price}}</strong>
+    </li>
+        <li
+          class="list-group-item d-flex justify-content-between align-items-right"
+        >
+          <span>Total (USD)</span>
+          <strong>${{order.total}}</strong>
+        </li>
+      </ul>
+
+      <form class="card p-2" action="{% url 'redeem_promo_code' %}" method="post">
+        {% csrf_token %}
+        <div class="input-group">
+          <input type="text" name="promo_code" class="form-control" placeholder="Promo code" />
+          <button type="submit" class="btn btn-secondary">Redeem</button>
+        </div>
+      </form>
+
+      <hr class="my-4" />
+
+      <h4>Payment</h4>
+      <div class="my-3">
+        <a href="{% url 'checkout' %}" class="custom-button">
+          Proceed to payment
+        </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </div>
 
 {% endblock %}

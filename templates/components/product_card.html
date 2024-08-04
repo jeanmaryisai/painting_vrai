@@ -17,6 +17,12 @@
                 </figure>
                 <span><a href="{% url 'add_to_cart' x.id %}">add to cart</a></span>
             </div>
+            <div class="info">
+                <figure class="i">
+                    <img src="{% static 'images/icon-info.png' %}" alt="Image">
+                </figure>
+                <span><a href="{% url 'add_to_wishlist' x.id %}">Add to wishlist</a></span>
+            </div>
             <!-- end info -->
         </figure>
         <div class="content-box">
