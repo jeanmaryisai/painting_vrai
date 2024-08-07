@@ -1,4 +1,4 @@
-from .models import Painting, Order, OrderItem, Review, PromoCode, PromoCodeUsage, Category, Address,Notification
+from .models import Painting, Order, OrderItem, Review, PromoCode, PromoCodeUsage, Category,Artist, Address,Notification
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
@@ -8,6 +8,8 @@ from .forms import AddAddressForm, AddressForm
 from django.contrib import messages
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
+from django.views.generic import ListView
+
 
 def address_inquiry(request):
     if request.method == 'POST':
@@ -21,40 +23,71 @@ def address_inquiry(request):
         form = AddressForm()
     return render(request, 'address_form.html', {'form': form})
 
-def home(request):
+def home(request,id):
     return render(request, 'about.html')
 
 
 
-def painting_list(request):
-
-    categories = Category.objects.all()
-    context={'categories': categories}
-    paintings = Painting.objects.filter(show=True)
-    try:
-        query = request.GET.get('q')
-        paintings = Painting.objects.filter(
+class PaintingListView(ListView):
+    model = Painting
+    template_name = 'products.html'
+    context_object_name = 'paintings'
+    paginate_by = 15  # Number of items per page
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        context['query'] = self.request.GET.get('q')
+        return context
+    
+    def get_queryset(self):
+        queryset = Painting.objects.filter(show=True)
+        query = self.request.GET.get('q')
+        
+        if query:
+            queryset = queryset.filter(
                 Q(title__icontains=query) |
                 Q(description__icontains=query) |
                 Q(artist__name__icontains=query) |
                 Q(category__name__icontains=query) |
-                Q(tags__name__icontains=query),
-                show=True
+                Q(tags__name__icontains=query)
             ).distinct()
-        context['query']=query
         
-    except:
-        pass
-           
+        return queryset
+    
+class ArtistListView(ListView):
+    model = Artist
+    template_name = 'artists.html'
+    context_object_name = 'artists'
+    paginate_by = 15  # Number of items per page
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['query'] = self.request.GET.get('q')
+        return context
+    
+    def get_queryset(self):
+        queryset = Artist.objects.all()
+        query = self.request.GET.get('q')
+        
+        if query:
+            queryset = queryset.filter(
+                Q(name__icontains=query) |
+                Q(bio__icontains=query) |
+                Q(birth_date__icontains=query) 
+            ).distinct()
+        
+        return queryset
 
-    paginator = Paginator(paintings, 15)  # Affiche 15 peintures par page
+def artist_detail(request, id):
+    artist = get_object_or_404(Artist, id=id)
+    paintings = artist.painting_set.all()
+
+    paginator = Paginator(paintings, 20)  # Show 20 paintings per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    context['context']=page_obj
 
-
-    return render(request, 'products.html', context)
-
+    return render(request, 'artist.html', {'obj': artist, 'page_obj': page_obj})
 
 
 def painting_detail(request, slug):
@@ -239,16 +272,21 @@ def change_password(request):
 @login_required
 def add_to_wishlist(request, painting_id):
     painting = get_object_or_404(Painting, id=painting_id)
-    request.user.favorite_paintings.add(painting)
-    messages.success(request, f'{painting.title} has been added to your wishlist.')
-    return redirect('wishlist')
+    if request.user not in painting.fav.all():
+        painting.fav.add(request.user)
+        messages.success(request, f'the painting {painting.title} has been added to your wishlist.')
+    else:
+        messages.error(request, f'{painting.title} has already been added to your wishlist.')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
 
 @login_required
 def remove_from_wishlist(request, painting_id):
     painting = get_object_or_404(Painting, id=painting_id)
     request.user.favorite_paintings.remove(painting)
     messages.success(request, f'{painting.title} has been removed from your wishlist.')
-    return redirect('wishlist')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
 
 @login_required
 def move_to_cart(request, painting_id):
@@ -262,7 +300,8 @@ def move_to_cart(request, painting_id):
         order_item.save()
     
     messages.success(request, f'{painting.title} has been moved to your cart.')
-    return redirect('wishlist')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
 
 @login_required
 def assign_address(request):

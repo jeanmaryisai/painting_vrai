@@ -4,8 +4,8 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     # path('', views.home, name='painting_list'),
-    path('shop/', views.painting_list, name='painting_list'),
-    path('painting/<slug:slug>/', views.painting_detail, name='painting_detail'),
+    path('shop/', views.PaintingListView.as_view(), name='painting_list'),
+    path('painting/<slug:slug>/', views.painting_detail, name='painting'),
     path('cart/', views.cart, name='cart'),
     path('address/edit/<int:address_id>/', views.edit_address, name='edit_address'),
     path('address/add/', views.add_address, name='add_address'),
@@ -26,6 +26,8 @@ urlpatterns = [
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'), name='password_reset_complete'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('assign_address/', views.assign_address, name='assign_address'),
+    path('artist/', views.ArtistListView.as_view(), name='artist_list'),
+    path('artist/<int:id>', views.artist_detail, name='artist'),
 
     path('redeem-promo-code/', views.redeem_promo_code_view, name='redeem_promo_code'),
 

@@ -18,8 +18,13 @@
           <div class="col-lg-8">
             <div class="row justify-content-center">
 
-              {% for painting in page_obj %}
-              {% include 'components/product_card.html' with x= painting %}
+              {% for painting in page_obj %} 
+              {% include 'components/product_card.html' with title=painting.title description=painting.description image=painting.image.url slug=painting.slug id=painting.id %}
+
+              {% empty %}
+
+              <h2>No painting yet !</h2>
+              <br><br>
 
               {% endfor %}
             </div>
@@ -66,7 +71,7 @@
               <div class="widget">
                 <h6 class="widget-title">SEARCH</h6>
                 <form method="get" action="{% url 'painting_list' %}">
-                  <input type="search" name="q" placeholder="Type here to search" value="{{ query }}">
+                  <input type="search" name="q" placeholder="Type here to search" >
                   <input type="submit" value="Search">
               </form>
               </div>

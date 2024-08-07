@@ -4,14 +4,14 @@
 {% block body %}
 
 
-{% include 'components/header.html' with background_image= obj.image.url title= obj.title description= A artwork made by    <br><a href="{% url 'artist' obj.artist.id %}" ata-scroll-to class="btn"> See all Artist Work</a>' %}
+{% include 'components/header.html' with background_image=obj.image.url title=obj.title description='A artwork made by <strong>{{obj.artist.name}}</strong> ' %}
 
 <section class="content-section no-spacing">
   <div class="container">
     <div class="row">
       <div class="col-12">
         <figure class="image-box" data-scroll data-scroll-speed="1"> <img src="{% static obj.image.url %}" alt="Image"> </figure>
-      </div>
+      </div><
       <!-- end col-12 -->
     </div>
     <!-- end row -->
@@ -41,10 +41,10 @@
                   <td>Name</td>
                   <td>: {{ obj.title }}</td>
               </tr>
-              <tr>
+              <!-- <tr>
                   <td>Canva</td>
                   <td>: <span style="background-color: {{ obj.canvas_color }}; padding: 0 10px; color: white;">{{ obj.canvas_color }}</span></td>
-              </tr>
+              </tr> -->
               <tr>
                   <td>Category</td>
                   <td>: {{ obj.category.name }}</td>
@@ -77,6 +77,15 @@
         <div class="col-lg-6">
           <div class="side-list">
             <p>{{obj.description}}</p>
+            <p class="d-flex align-items-center justify-content-right">
+              <a class="custom-link m-3" href="{% url 'add_to_wishlist' obj.id %}">Add to wishlist</a>
+                
+
+              <a class="custom-button m-3" href="{% url 'add_to_cart' obj.id %}">add to cart</a>
+  
+                
+
+            </p>
           </div>
           <!-- end side-list -->
         </div>

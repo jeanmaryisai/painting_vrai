@@ -11,7 +11,7 @@
             <h4>{{ title }}</h4>
             <div class="expand">
                 <p>{{ description }}</p>
-                <a href="{{ link_url }}" class="custom-link">Learn More</a>
+                <a href="{% url 'artist' link_url %}" class="custom-link">Learn More</a>
             </div>
             <!-- end expand -->
         </div>

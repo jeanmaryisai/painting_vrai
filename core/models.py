@@ -5,7 +5,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import timedelta
-from colorfield.fields import ColorField
+# from colorfield.fields import ColorField
+
 
 
 
@@ -60,8 +61,8 @@ class Painting(models.Model):
     tags=models.ManyToManyField(Tag)
     slug = models.SlugField(unique=True)
     show=models.BooleanField(default=True)
-    canvas_color = ColorField(default='#FFFFFF')
-    fav=models.ManyToManyField(User)
+    # canvas_color = ColorField(default='#FFFFFF')
+    fav=models.ManyToManyField(User,blank=True)
 
     def __str__(self):
         return self.title
@@ -72,6 +73,12 @@ class Painting(models.Model):
 
 
 class Address(models.Model):
+    STATUS_CHOICES = (
+        ('CONFIRMED', 'Confirmed'),
+        ('PENDING', 'Pending'),
+        ('REFUSED', 'Refused'),
+    )
+
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='addresses')
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -82,13 +89,14 @@ class Address(models.Model):
     state = models.CharField(max_length=100)
     zip_code = models.CharField(max_length=20)
     message = models.TextField(blank=True, null=True)
-    save_info = models.BooleanField(default=False)
     shipping_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    default=models.BooleanField(default=True)
+    default = models.BooleanField(default=False)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDING')
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} - {self.address}"
+
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -97,7 +105,7 @@ class Order(models.Model):
     shipped_at = models.DateTimeField(null=True,blank=True)
     delivered_at = models.DateTimeField(null=True,blank=True)
     paintings = models.ManyToManyField(Painting, through='OrderItem')
-    address=models.ForeignKey(Address,null=True,Blank=True,on_delete=models.SET_NULL)
+    address=models.ForeignKey(Address,null=True,blank=True,on_delete=models.SET_NULL)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     promo_code = models.ForeignKey(PromoCode, null=True, blank=True, on_delete=models.SET_NULL)
     status_choices = (
@@ -180,29 +188,4 @@ class Notification(models.Model):
 
     class Meta:
         ordering = ['-created_at']
-
-class Address(models.Model):
-    STATUS_CHOICES = (
-        ('CONFIRMED', 'Confirmed'),
-        ('PENDING', 'Pending'),
-        ('REFUSED', 'Refused'),
-    )
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='addresses')
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    email = models.EmailField()
-    address = models.CharField(max_length=255)
-    address2 = models.CharField(max_length=255, blank=True, null=True)
-    country = models.CharField(max_length=100)
-    state = models.CharField(max_length=100)
-    zip_code = models.CharField(max_length=20)
-    message = models.TextField(blank=True, null=True)
-    shipping_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    default = models.BooleanField(default=False)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDING')
-
-    def __str__(self):
-        return f"{self.first_name} {self.last_name} - {self.address}"
 
