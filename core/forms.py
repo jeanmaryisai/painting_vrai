@@ -8,7 +8,7 @@ class AddressForm(forms.ModelForm):
         model = Address
         fields = [
  'first_name', 'last_name', 'email', 'address', 'address2', 
-            'country', 'state', 'zip_code', 'message', 'default'
+            'country', 'state', 'zip_code', 'message','default'
         ]
         # widgets = {
         #     'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'John', 'id': 'firstName'}),

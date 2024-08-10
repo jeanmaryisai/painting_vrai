@@ -1,19 +1,152 @@
-{% extends 'base.html' %} {% load static %} {% block style %} .modal-body form >
-.mb-3, .modal-body form > .form-check { margin-bottom: 1rem; } {% endblock %} {%
-block modal %} {% include 'components/inquiry' with form=form %} {% endblock %}
-{% block body %} {% include 'components/header.html' with
-background_image='images/birmingham-museums-trust-pWVJHDiAonU-unsplash.jpg'
-title='Marvens Villial\'s Work' description='Born in Haiti ' %}
+{% extends 'base.html' %}
+{% load static %} 
 
+
+{% block style %}
+
+
+
+<style>
+  .card{
+    margin: auto;
+    max-width: 950px;
+    width: 90%;
+    box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 1rem;
+    border: transparent;
+  }
+  @media(max-width:767px){
+    .card{
+        margin: 3vh auto;
+    }
+  }
+  .cart{
+    background-color: #fff;
+    padding: 4vh 5vh;
+    border-bottom-left-radius: 1rem;
+    border-top-left-radius: 1rem;
+  }
+  @media(max-width:767px){
+    .cart{
+        padding: 4vh;
+        border-bottom-left-radius: unset;
+        border-top-right-radius: 1rem;
+    }
+  }
+  .summary{
+    background-color: #ddd;
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    padding: 4vh;
+    color: rgb(65, 65, 65);
+  }
+  @media(max-width:767px){
+    .summary{
+    border-top-right-radius: unset;
+    border-bottom-left-radius: 1rem;
+    }
+  }
+  .summary .col-2{
+    padding: 0;
+  }
+  .summary .col-10
+  {
+    padding: 0;
+  }.row{
+    margin: 0;
+  }
+  .title b{
+    font-size: 1.5rem;
+  }
+  .main{
+    margin: 0;
+    padding: 2vh 0;
+    width: 100%;
+  }
+  .col-2, .col{
+    padding: 0 1vh;
+  }
+  a{
+    padding: 0 1vh;
+  }
+  .close{
+    margin-left: auto;
+    font-size: 0.7rem;
+  }
+
+  .back-to-shop{
+    margin-top: 4.5rem;
+  }
+
+  form{
+    padding: 2vh 0;
+  }
+  select{
+    border: 1px solid rgba(0, 0, 0, 0.137);
+    padding: 1.5vh 1vh;
+    margin-bottom: 4vh;
+    outline: none;
+    width: 100%;
+    background-color: rgb(247, 247, 247);
+  }
+  input{
+    border: 1px solid rgba(0, 0, 0, 0.137);
+    padding: 1vh;
+    margin-bottom: 4vh;
+    outline: none;
+    width: 100%;
+    background-color: rgb(247, 247, 247);
+  }
+  input:focus::-webkit-input-placeholder
+  {
+      color:transparent;
+  }
+  .btn{
+    background-color: #000;
+    border-color: #000;
+    color: white;
+    width: 100%;
+    font-size: 0.7rem;
+    margin-top: 4vh;
+    padding: 1vh;
+    border-radius: 0;
+  }
+  .btn:focus{
+    box-shadow: none;
+    outline: none;
+    box-shadow: none;
+    color: white;
+    -webkit-box-shadow: none;
+    -webkit-user-select: none;
+    transition: none; 
+  }
+  .btn:hover{
+    color: white;
+  }
+  a{
+    color: black; 
+  }
+  a:hover{
+    color: black;
+    text-decoration: none;
+  }
+  #code{
+    background-image: linear-gradient(to left, rgba(255, 255, 255, 0.253) , rgba(255, 255, 255, 0.185)), url("https://img.icons8.com/small/16/000000/long-arrow-right.png");
+    background-repeat: no-repeat;
+    background-position-x: 95%;
+    background-position-y: center;
+  }
+</style>
+{% endblock %}
+
+{% block body %} 
 <br /><br />
 
 <div class="container mt-5">
   <div class="row justify-content-center">
     <div class="col-lg-9">
       <div class="section-title">
-        <figure>
-          <img src="{% static 'images/title-shape.png' %}" alt="Image" />
-        </figure>
+
         <h2>{% if old %} Order {{order.uuid}} {% else %} Cart{% endif %}</h2>
       </div>
       <!-- end section-title -->
@@ -49,13 +182,14 @@ title='Marvens Villial\'s Work' description='Born in Haiti ' %}
               src="{{ item.painting.image.url }}"
               class="product-img"
               alt="{{ item.painting.title }}"
+              height="50"
             />
           </td>
           <td>${{ item.painting.price }}</td>
           <td>
             <div class="input-group">
                 {% if not old %}
-              <a href="{% url 'remove_single_from_cart' painting_id %}">
+              <a href="{% url 'remove_single_from_cart' item.painting.id %}">
                 <button
                   class="btn btn-outline-secondary btn-decrement"
                   type="button"
@@ -68,7 +202,7 @@ title='Marvens Villial\'s Work' description='Born in Haiti ' %}
               <div class="form-control text-center">{{ item.quantity }}</div>
               
               {% if not old %}
-              <a href="{% url 'add_to_cart' painting_id %}">
+              <a href="{% url 'add_to_cart' item.painting.id %}">
                 <button
                   class="btn btn-outline-secondary btn-increment"
                   type="button"
@@ -85,7 +219,7 @@ title='Marvens Villial\'s Work' description='Born in Haiti ' %}
           <td>
             <a
               href="{% url 'remove_from_cart' item.painting.id  %}"
-              class="btn btn-primary"
+              class=""
               >Remove</a
             >
           </td>
@@ -113,24 +247,23 @@ title='Marvens Villial\'s Work' description='Born in Haiti ' %}
         <li
           class="list-group-item d-flex justify-content-between align-items-center"
         >
-          {% if order.shipping_address %} Shipping:
+          {% if order.shipping_addressshipping_price %} Shipping fee:
 
           <span
-            >${{order.shipping_address}}
+            >${{order.shipping_addressshipping_price}}
             <small
-              ><button
-                type="button"
+              ><a
                 class="btn btn-secondary"
                 data-toggle="tooltip"
                 data-html="true"
                 title="{{order.shipping_address.addess}}"
               >
                 See Adress detail
-              </button>
+      </a>
             </small></span
           >
           {% else %}
-          <span>No adress attach to this order or default address</span>
+          <span>No confirmed adress attach to this order or default address</span>
           {% endif %}
         </li>
         <li
@@ -154,21 +287,19 @@ title='Marvens Villial\'s Work' description='Born in Haiti ' %}
         <!-- <a href="#" class="custom-button">Procéder au paiement</a> -->
 
         <!-- Button trigger modal -->
-        {% if not old %} {% if order.shipping_address%}
+        {% if not old %} {% if order.shipping_address.shipping_price%}
 
         <a href="{% url  'checkout'  %}" class="custom-button"
           >Proceed to checkout</a
         >
 
         {% else %}
-        <button
-          type="button"
+        <a href="{% url 'account' %}#address"
           class="custom-button"
-          data-bs-toggle="modal"
-          data-bs-target="#exampleModal"
+          
         >
           Inquiry for address Shipping fee
-        </button>
+      </a>
         {% endif %} 
         {% else %}
 
@@ -179,6 +310,58 @@ title='Marvens Villial\'s Work' description='Born in Haiti ' %}
   </div>
 </div>
 <br /><br /><br />
+
+
+
+<div class="card">
+  <div class="row">
+      <div class="col-md-8 cart">
+          <div class="title">
+              <div class="row">
+                  <div class="col"><h4><b>Shopping Cart</b></h4></div>
+                  <div class="col align-self-center text-right text-muted">{{order.orderitem_set.all.count}} items</div>
+              </div>
+          </div>
+          {% for item in order.orderitem_set.all %}
+          
+          <div class="row border-top border-bottom">
+              <div class="row main align-items-center">
+                  <div class="col-2"><img class="img-fluid" alt="{{ item.painting.title }}" src="{{ item.painting.image.url }}"></div>
+                  <div class="col">
+                      <div class="row text-muted">Shirt</div>
+                      <div class="row">{{ item.painting.title }}</div>
+                  </div>
+                  <div class="col">
+                      <a href="% url 'remove_single_from_cart' item.painting.id %}">-</a><a href="#" class="border">1{{ item.quantity }}</a><a href="{% url 'add_to_cart' item.painting.id %}">+</a>
+                  </div>
+                  <div class="col">&euro; {{ item.painting.price }} <a href="{% url 'remove_from_cart' item.painting.id  %}" > <span class="close">&#10005;</span> </a> </div>
+              </div>
+          </div>
+       {% endfor %}
+          <div class="back-to-shop"><a href="{% url 'painting_list' %}">&leftarrow;</a><span class="text-muted">Back to shop</span></div>
+      </div>
+      <div class="col-md-4 summary">
+          <div><h5><b>Summary</b></h5></div>
+          <hr>
+          <div class="row">
+              <div class="col" style="padding-left:0;">ITEMS 3</div>
+              <div class="col text-right">&euro; 132.00</div>
+          </div>
+          <form>
+              <p>SHIPPING</p>
+              <select><option class="text-muted">Standard-Delivery- &euro;5.00</option></select>
+              <p>GIVE CODE</p>
+              <input id="code" placeholder="Enter your code">
+          </form>
+          <div class="row" style="border-top: 1px solid rgba(0,0,0,.1); padding: 2vh 0;">
+              <div class="col">TOTAL PRICE</div>
+              <div class="col text-right">&euro; 137.00</div>
+          </div>
+          <button class="btn">CHECKOUT</button>
+      </div>
+  </div>
+  
+</div>
 <!-- <script type="text/javascript" >
 
 $('#btn').on('click', function () {

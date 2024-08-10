@@ -86,6 +86,7 @@ def artist_detail(request, id):
     paginator = Paginator(paintings, 20)  # Show 20 paintings per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+    page_obj.end_index
 
     return render(request, 'artist.html', {'obj': artist, 'page_obj': page_obj})
 
@@ -134,7 +135,7 @@ def checkout(request):
     return render(request, 'checkout.html', context)
 
 @login_required
-def remove_single_item_from_cart(request, painting_id):
+def remove_single_from_cart(request, painting_id):
     order = Order.objects.filter(user=request.user, status='PENDING').first()
     painting = get_object_or_404(Painting, id=painting_id)
     order_item = get_object_or_404(OrderItem, order=order, painting=painting)
@@ -166,14 +167,36 @@ def clear_cart(request):
 
 @login_required
 def account(request):
+
+    if request.method == 'POST':
+        if request.POST.get('assign_address'):
+            address_id = request.POST.get('assign_address')
+            order = Order.objects.get(user=request.user, status='PENDING')
+            address = get_object_or_404(Address, id=address_id, user=request.user)
+            if not address.state == 'CONFIRMED':
+                messages.error(request, 'You can only assign addresses that are already Confirmed')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+            order.address = address
+            order.save()                
+            messages.info(request,'Your new address has been set for the current order')       
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+
+
+    msj=Notification.objects.filter(user=request.user,is_message=True)
     context={
-        'addresses':Address.objects.filter(user=request.user),
-        'Orders':Order.objects.filter(user=request.user).exclude(status='PENDING'),
-        'messages':Notification.objects.filter(user=request.user,is_message=True),
-        'wishlist': request.user.favorite_paintings.all(),
+        'addresses':Address.objects.filter(user=request.user).order_by('-default'),
+        'Orders':Order.objects.filter(user=request.user).order_by('-created_at'),
+        'active_order': Order.objects.get(user=request.user, status='PENDING'),
+        'messages2':msj,
+        'wishlist': Painting.objects.filter(fav__id=request.user.id),
         'form':PasswordChangeForm(request.user)
 
     }
+
+    if msj.filter(is_read=False).exists:
+        context['newMsj']=True
+
 
     return render(request,'account.html',context)
       
@@ -182,11 +205,11 @@ def account(request):
 def delete_address(request, address_id):
     address = get_object_or_404(Address, id=address_id, user=request.user)
     if address.default:
-        messages.error(request, "Cannot delete the default address.")
+        messages.error(request, "Cannot delete the default address. Set another Adress to default first")
     else:
         address.delete()
         messages.success(request, "Address deleted successfully.")
-    return redirect('address_list')
+    return redirect('account')
 
 @login_required
 def set_default_address(request, address_id):
@@ -199,7 +222,7 @@ def set_default_address(request, address_id):
         address.default = True
         address.save()
         messages.success(request, "Default address set successfully.")
-    return redirect('address_list')
+    return redirect('account')
 
 @login_required
 def edit_address(request, address_id):
@@ -208,17 +231,15 @@ def edit_address(request, address_id):
     if request.method == "POST":
         form = AddressForm(request.POST, instance=address)
         if form.is_valid():
-            if form.cleaned_data['save_as_default']:
+            print('valid')
+            if form.cleaned_data['default']:
                 # Set all other addresses as non-default
-                Address.objects.filter(user=request.user, save_as_default=True).update(save_as_default=False)
+                Address.objects.filter(user=request.user, save_as_default=True).update(default=False)
             form.save()
             messages.success(request, "Address updated successfully.")
-            return redirect('address_list')  # Adjust this to the appropriate view
-    else:
-        form = AddressForm(instance=address)
-
-    return render(request, 'edit_address.html', {'form': form})
-
+        else:
+            print('not valid')
+    return redirect('account')
 
 @login_required
 def add_address(request):
@@ -234,7 +255,7 @@ def add_address(request):
             # TODO:Sent email
 
             messages.success(request, "Address added successfully.")
-            return redirect('address_list')  # Adjust this to the appropriate view
+            return redirect('account')  # Adjust this to the appropriate view
     else:
         form = AddAddressForm()
 
@@ -300,20 +321,6 @@ def move_to_cart(request, painting_id):
         order_item.save()
     
     messages.success(request, f'{painting.title} has been moved to your cart.')
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
-
-
-@login_required
-def assign_address(request):
-    if request.method == 'POST':
-        
-        address_id = request.POST.get('address')
-        if address_id:
-            order = Order.objects.get(user=request.user, status='PENDING')
-            address = get_object_or_404(Address, id=address_id, user=request.user, status='CONFIRMED')
-            order.address = address
-            order.save()
-            messages.info(request,'Your new address has been set for the current order')       
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 @login_required

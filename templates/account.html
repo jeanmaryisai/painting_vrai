@@ -1,31 +1,5 @@
 {% extends 'base.html' %} {% load static %} {% block style %}
-<style>
-  .nav-pills .nav-link {
-    border-radius: 0;
-  }
 
-  .tab-content {
-    border: 1px solid #dee2e6;
-    border-top: none;
-    padding: 20px;
-  }
-
-  .account-container {
-    margin-top: 50px;
-  }
-
-  @media (max-width: 768px) {
-    .nav-pills {
-      flex-direction: row;
-      flex-wrap: wrap;
-    }
-    .nav-pills .nav-link {
-      flex: 1;
-      text-align: center;
-      border-radius: 0;
-    }
-  }
-</style>
 {% endblock %} {% block modal %}
 
 <!-- Edit Address Modal -->
@@ -55,27 +29,27 @@
             {% csrf_token %}
             <div class="mb-3">
               <label for="editFirstName" class="form-label">First Name</label>
-              <input type="text" class="form-control" id="editFirstName" placeholder="John" />
+              <input type="text" class="form-control" id="editFirstName" placeholder="John" name="first_name"/>
             </div>
             <div class="mb-3">
               <label for="editLastName" class="form-label">Last Name</label>
-              <input type="text" class="form-control" id="editLastName" placeholder="Doe" />
+              <input type="text" class="form-control" id="editLastName" placeholder="Doe" name="last_name" />
             </div>
             <div class="mb-3">
               <label for="editEmail" class="form-label">Email</label>
-              <input type="email" class="form-control" id="editEmail" placeholder="email@example.com" />
+              <input type="email" class="form-control" id="editEmail" placeholder="email@example.com" name="email" />
             </div>
             <div class="mb-3">
               <label for="editAddress" class="form-label">Address</label>
-              <input type="text" class="form-control" id="editAddress" placeholder="1234 Main St" />
+              <input type="text" class="form-control" id="editAddress" placeholder="1234 Main St"  name="address"/>
             </div>
             <div class="mb-3">
               <label for="editAddress2" class="form-label">Address 2</label>
-              <input type="text" class="form-control" id="editAddress2" placeholder="Apartment, studio, or floor" />
+              <input type="text" class="form-control" id="editAddress2" placeholder="Apartment, studio, or floor" name="address2" />
             </div>
             <div class="mb-3">
               <label for="editCountry" class="form-label">Country</label>
-              <select class="form-select" id="editCountry">
+              <select class="form-select" id="editCountry" name="country">
                 <option value="" selected>Choose...</option>
                 <option value="US">United States</option>
                 <option value="CA">Canada</option>
@@ -84,7 +58,7 @@
             </div>
             <div class="mb-3">
               <label for="editState" class="form-label">State</label>
-              <select class="form-select" id="editState">
+              <select class="form-select" id="editState" name="state">
                 <option value="" selected>Choose...</option>
                 <option value="CA">California</option>
                 <option value="TX">Texas</option>
@@ -92,16 +66,16 @@
               </select>
             </div>
             <div class="mb-3">
-              <label for="editZip" class="form-label">Zip</label>
-              <input type="text" class="form-control" id="editZip" placeholder="12345" />
+              <label for="editZip" class="form-label" >Zip</label>
+              <input type="text" class="form-control" name="zip_code" id="editZip" placeholder="12345" />
             </div>
             <div class="form-check mb-3">
-              <input class="form-check-input" type="checkbox" id="default" />
+              <input class="form-check-input"  name="default" type="checkbox" id="default" />
               <label class="form-check-label" for="default">
                 Save as Default
               </label>
             </div>
-          </form>
+          
           
       </div>
       <div class="modal-footer">
@@ -109,12 +83,11 @@
           Close
         </button>
         <button
-          type="button"
+          type="submit"
           class="btn btn-primary"
-          onclick="saveEditAddress()"
         >
           Save changes
-        </button>
+        </button></form>
       </div>
     </div>
   </div>
@@ -248,12 +221,26 @@
 </div>
 
 
-{% endblock %} {% block body %} {% include 'components/header.html' with
-background_image='images/birmingham-museums-trust-pWVJHDiAonU-unsplash.jpg'
-title='Marvens Villial\'s Work' description='Born in Haiti ' %}
-
+{% endblock %} {% block body %} 
 <div class="container account-container">
-  <h2 class="text-center mb-5">My Account</h2>
+  {% if messages %}
+        <div class="container mt-3 d-flex align-items-center" >
+            {% for message in messages %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                  {% if message.tags %}<strong>{{ message.tags|upper }} : </strong>{% else %}Info{% endif %}{{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+
+            </div>
+    {% endif %}
+  
+
+  <h1 class="text-center mb-5">My Account
+
+
+
+  </h1>
   <div class="row">
     <div class="col-md-3 mb-3 custom-menu">
       <ul
@@ -274,7 +261,7 @@ title='Marvens Villial\'s Work' description='Born in Haiti ' %}
           onclick="markAllMessagesAsRead()"
         >
           Messages
-          {% if user.notifications.filter(is_message=True, is_read=False).exists %}
+          {% if newMsj %}
           <span class="badge badge-danger">●</span>
           {% endif %}
         </a>
@@ -367,12 +354,25 @@ title='Marvens Villial\'s Work' description='Born in Haiti ' %}
           <h3>Profile Details</h3>
           <form>
             <div class="form-group">
-              <label for="name">Name</label>
+              <label for="f_ame">Name</label>
+              <input
+              name="f_ame" type="text"
+                type="text"
+                class="form-control"
+                id="f_name"
+                placeholder="Enter your name"
+                value="{{request.user.first_name}}"
+              />
+            </div>
+            <div class="form-group">
+              <label for="l_name">Name</label>
               <input
                 type="text"
                 class="form-control"
-                id="name"
-                placeholder="Enter your name"
+                id="l_name"
+                name="l_name"
+                placeholder="{{request.user.last_name}}"
+                value="{{request.user.last_name}}"
               />
             </div>
             <div class="form-group">
@@ -382,6 +382,7 @@ title='Marvens Villial\'s Work' description='Born in Haiti ' %}
                 class="form-control"
                 id="email"
                 placeholder="Enter your email"
+                value="{{request.user.email}}"
               />
             </div>
             <div class="form-group">
@@ -414,52 +415,65 @@ title='Marvens Villial\'s Work' description='Born in Haiti ' %}
                 <h5 class="card-title">
                   {% if x.default %} Primary Address {% else %} Secondary Address{% endif %}
                 </h5>
-                <p class="card-text">{{ x.address | slice: ":20" }}</p>
-                <p class="card-text">{{ address.country }}, {{ address.state }}, {{ address.zip_code }} </p>
+                <p class="card-text">{{ x.address | slice:":20" }}</p>
+                <p class="card-text">{{ x.country }}, {{ x.state }}, {{ x.zip_code }} </p>
                 <p class="card-text"><strong>Status:</strong> {{x.status}}</p>
+                {% if active_order.address == x  %}
+                <strong>This address is assign to the cureent order</strong> <br>
+                {% endif %}
+                
                 {% if x.shipping_price %}
-
+              
                 <p class="card-text"><strong>Fee:</strong> $5.00</p>
 
                 {% endif %}
                 <a href="#" class="btn btn-info"
        onclick="openEditModal(
-           '{{ address.id }}',
-           '{{ address.first_name }}',
-           '{{ address.last_name }}',
-           '{{ address.email }}',
-           '{{ address.address }}',
-           '{{ address.address2 }}',
-           '{{ address.country }}',
-           '{{ address.state }}',
-           '{{ address.zip_code }}',
+           '{{ x.id }}',
+           '{{ x.first_name }}',
+           '{{ x.last_name }}',
+           '{{ x.email }}',
+           '{{ x.address }}',
+           '{{ x.address2 }}',
+           '{{ x.country }}',
+           '{{ x.state }}',
+           '{{ x.zip_code }}',
            {{ address.default|yesno:"true,false" }},
        )">
        Edit
     </a>
 
-                {% if not address.default %}
+                {% if not x.default %}
                 <a
-                  href="{% url 'set_default_address' address.id %}"
+                  href="{% url 'default-address' x.id %}"
                   class="btn btn-info"
                   >Define as Default</a
                 >
                 {% endif %}
                 <a
-                  href="{% url 'delete_address' address.id %}"
+                  href="{% url 'delete-address' x.id %}"
                   class="btn btn-danger"
                   >Delete</a
                 >
-                <form method="post" action="{% url 'assign_address' %}">
-                  <input type="hidden" value="{{ address.id }}" name="address">
-                <button type="submit" class="btn btn-primary">Assign new address</button>
+                
+                {% if not active_order.address == x  %}
+                
+                
+                <form method="post" action="">
+                  {% csrf_token %}
+                  <input type="hidden" value="{{ x.id }}" name="assign_address">
+                <button type="submit" class="btn btn-primary mt-2">Assign as address of the current order</button>
               </form>
+              {% endif %}
+              
+
               </div>
             </div>
 
             {% endfor %}
           </div>
-          <button class="btn btn-success mt-3" onclick="openAddModal()">
+
+          <button class="btn btn-success m-3" onclick="openAddModal()">
             Add New Address
           </button>
         </div>
@@ -489,7 +503,7 @@ title='Marvens Villial\'s Work' description='Born in Haiti ' %}
               <tr>
                 <td>{{x.uuid}}</td>
                 <td>{{x.get_status_date}}</td>
-                <td>{{x.status}}</td>
+                <td>{% if x.status == "PENDING" %}Active order {% else %}{{x.status}} {% endif %}</td>
                 <td>${{x.total}}</td>
                 <td>
                   <a href="{% url 'custom_order' x.uuid %}" class="btn btn-info btn-sm">View</a>
@@ -511,7 +525,7 @@ title='Marvens Villial\'s Work' description='Born in Haiti ' %}
           <h3>Messages</h3>
           <ul class="list-group">
             <!-- Example Message -->
-            {% for message in messages %}
+            {% for message in messages2 %}
             <li class="list-group-item {% if not message.is_read %}font-weight-bold{% endif %}">
               <h5>{{ message.title }}</h5>
               <p>{{ message.message }}</p>
@@ -544,19 +558,89 @@ title='Marvens Villial\'s Work' description='Born in Haiti ' %}
           aria-labelledby="v-pills-wishlist-tab"
         >
           <h3>Wishlist</h3>
+
+          <table class="table table-bordered">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">Produit</th>
+                <th scope="col">Image</th>
+                <th scope="col">Prix</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in wishlist %}
+              <tr>
+                <td>{{ item.title }}</td>
+                <td>
+                  <img
+                    src="{{ item.image.url }}"
+                    class="product-img"
+                    alt="{{ item.title }}"
+                    height="50"
+                  />
+                </td>
+                <td>${{ item.price }}</td>
+                <td>
+                  <div class="input-group">
+                      {% if not old %}
+                    <a href="{% url 'remove_single_from_cart' item.painting.id %}">
+                      <button
+                        class="btn btn-outline-secondary btn-decrement"
+                        type="button"
+                      >
+                        -
+                      </button>
+      
+                      
+                    </a>{% endif %}
+                    <div class="form-control text-center">{{ item.quantity }}</div>
+                    
+                    {% if not old %}
+                    <a href="{% url 'add_to_cart' item.painting.id %}">
+                      <button
+                        class="btn btn-outline-secondary btn-increment"
+                        type="button"
+                      >
+                        +
+                      </button>
+                    </a>{% endif %}
+                  </div>
+                </td>
+      
+                <td class="total-price">${{ item.total}}</td>
+      
+                {% if not old %}
+                <td>
+                  <a
+                    href="{% url 'remove_from_cart' item.painting.id  %}"
+                    class=""
+                    >Remove</a
+                  >
+                </td>
+                {% endif %}
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="5" class="text-center">Your Wishlist is empty.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+
           <ul class="list-group">
             <!-- Example Wishlist Item -->
-            {% for painting in user.favorite_paintings.all %}
+            {% for painting in wishlist %}
     <li class="list-group-item d-flex justify-content-between align-items-center">
-      <a href="{% url 'painting_detail' painting.slug %}"><strong>{{ painting.title }}</strong></a>
-      <div>
+      <a href="{% url 'painting' painting.slug %}"><strong>{{ painting.title }}</strong></a>
+      <div class='d-flex'>
         <form action="{% url 'move_to_cart' painting.id %}" method="post" style="display: inline;">
           {% csrf_token %}
-          <button type="submit" class="btn btn-info btn-sm">Move to cart</button>
+          <button type="submit" class="btn btn-info ">Move to cart</button>
         </form>
         <form action="{% url 'remove_from_wishlist' painting.id %}" method="post" style="display: inline;">
           {% csrf_token %}
-          <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+          <button type="submit" class="btn btn-danger ">Remove</button>
         </form>
       </div>
     </li>

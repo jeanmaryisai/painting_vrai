@@ -91,7 +91,7 @@ class Address(models.Model):
     message = models.TextField(blank=True, null=True)
     shipping_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    default = models.BooleanField(default=False)
+    default = models.BooleanField(default=False, null=True, blank=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDING')
 
     def __str__(self):
@@ -139,17 +139,17 @@ class Order(models.Model):
 
     @property
     def shipping_address(self):
+        if not self.address:
+            return Address.objects.get(user=self.user, default=True)
+           
         if self.address.shipping_price: return self.address
         
-        if not self.address:
-            address= Address.objects.get(user=self.user, default=True)
-            if address.exists:
-                return address
+
         return False
 
     def total(self):
-        if self.address.shipping_price:return self.shipping_address.shipping_price+self.subtotal-self.discount
-        else: return self.subtotal-self.discount
+        try:return self.shipping_address.shipping_price+self.subtotal-self.discount
+        except: return self.subtotal-self.discount
         
 
     def __str__(self):
