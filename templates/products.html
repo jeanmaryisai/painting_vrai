@@ -8,7 +8,8 @@
 
     <!-- end page-header -->
     <section class="content-section">
-      <div class="container">
+      <div class="container"
+      >{% include "components/messages.html" with messages=messages %} 
         {% if query %}
 
         <h2>Result for: <strong>{{query}}</strong></h2>

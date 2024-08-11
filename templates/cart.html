@@ -1,87 +1,82 @@
-{% extends 'base.html' %}
-{% load static %} 
-
-
-{% block style %}
-
-
+{% extends 'base.html' %} {% load static %} {% block style %}
 
 <style>
-  .card{
+  .card {
     margin: auto;
-    max-width: 950px;
+    max-width: 1200px;
     width: 90%;
     box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     border-radius: 1rem;
     border: transparent;
   }
-  @media(max-width:767px){
-    .card{
-        margin: 3vh auto;
+  @media (max-width: 767px) {
+    .card {
+      margin: 3vh auto;
     }
   }
-  .cart{
+  .cart {
     background-color: #fff;
     padding: 4vh 5vh;
     border-bottom-left-radius: 1rem;
     border-top-left-radius: 1rem;
   }
-  @media(max-width:767px){
-    .cart{
-        padding: 4vh;
-        border-bottom-left-radius: unset;
-        border-top-right-radius: 1rem;
+  @media (max-width: 767px) {
+    .cart {
+      padding: 4vh;
+      border-bottom-left-radius: unset;
+      border-top-right-radius: 1rem;
     }
   }
-  .summary{
+  .summary {
     background-color: #ddd;
     border-top-right-radius: 1rem;
     border-bottom-right-radius: 1rem;
     padding: 4vh;
     color: rgb(65, 65, 65);
   }
-  @media(max-width:767px){
-    .summary{
-    border-top-right-radius: unset;
-    border-bottom-left-radius: 1rem;
+  @media (max-width: 767px) {
+    .summary {
+      border-top-right-radius: unset;
+      border-bottom-left-radius: 1rem;
     }
   }
-  .summary .col-2{
+  .summary .col-2 {
     padding: 0;
   }
-  .summary .col-10
-  {
+  .summary .col-10 {
     padding: 0;
-  }.row{
+  }
+  .row {
     margin: 0;
   }
-  .title b{
+  .title b {
     font-size: 1.5rem;
   }
-  .main{
+  .main {
     margin: 0;
     padding: 2vh 0;
     width: 100%;
   }
-  .col-2, .col{
+  .col-2,
+  .col {
     padding: 0 1vh;
   }
-  a{
+  a {
     padding: 0 1vh;
   }
-  .close{
+  .close {
     margin-left: auto;
     font-size: 0.7rem;
   }
 
-  .back-to-shop{
+  .back-to-shop {
     margin-top: 4.5rem;
   }
 
-  form{
+  form {
     padding: 2vh 0;
   }
-  select{
+  select {
     border: 1px solid rgba(0, 0, 0, 0.137);
     padding: 1.5vh 1vh;
     margin-bottom: 4vh;
@@ -89,7 +84,7 @@
     width: 100%;
     background-color: rgb(247, 247, 247);
   }
-  input{
+  input {
     border: 1px solid rgba(0, 0, 0, 0.137);
     padding: 1vh;
     margin-bottom: 4vh;
@@ -97,11 +92,10 @@
     width: 100%;
     background-color: rgb(247, 247, 247);
   }
-  input:focus::-webkit-input-placeholder
-  {
-      color:transparent;
+  input:focus::-webkit-input-placeholder {
+    color: transparent;
   }
-  .btn{
+  .btn {
     background-color: #000;
     border-color: #000;
     color: white;
@@ -111,49 +105,54 @@
     padding: 1vh;
     border-radius: 0;
   }
-  .btn:focus{
+  .btn:focus {
     box-shadow: none;
     outline: none;
     box-shadow: none;
     color: white;
     -webkit-box-shadow: none;
     -webkit-user-select: none;
-    transition: none; 
+    transition: none;
   }
-  .btn:hover{
+  .btn:hover {
     color: white;
   }
-  a{
-    color: black; 
+  a {
+    color: black;
   }
-  a:hover{
+  a:hover {
     color: black;
     text-decoration: none;
   }
-  #code{
-    background-image: linear-gradient(to left, rgba(255, 255, 255, 0.253) , rgba(255, 255, 255, 0.185)), url("https://img.icons8.com/small/16/000000/long-arrow-right.png");
+  #code {
+    background-image: linear-gradient(
+        to left,
+        rgba(255, 255, 255, 0.253),
+        rgba(255, 255, 255, 0.185)
+      ),
+      url("https://img.icons8.com/small/16/000000/long-arrow-right.png");
     background-repeat: no-repeat;
     background-position-x: 95%;
     background-position-y: center;
   }
 </style>
-{% endblock %}
-
-{% block body %} 
+{% endblock %} {% block body %}
+        
+   
+<br><br>
 <br /><br />
 
-<div class="container mt-5">
+<div class="container mt-5">{% include "components/messages.html" with messages=messages %} 
   <div class="row justify-content-center">
     <div class="col-lg-9">
       <div class="section-title">
-
         <h2>{% if old %} Order {{order.uuid}} {% else %} Cart{% endif %}</h2>
       </div>
       <!-- end section-title -->
     </div>
     <!-- end col-9 -->
     <div class="col-lg-3">
-      <a href="#" class="circle-button"
+      <a href="{% url 'painting_list' %}" class="circle-button"
         >Continue <br />
         Shopping</a
       >
@@ -161,207 +160,141 @@
     <!-- end col-3 -->
   </div>
 
-  <div class="table-responsive">
-    <table class="table table-bordered">
-      <thead class="thead-light">
-        <tr>
-          <th scope="col">Produit</th>
-          <th scope="col">Image</th>
-          <th scope="col">Prix</th>
-          <th scope="col">Quantité</th>
-          <th scope="col">Total</th>
-          <th scope="col">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for item in order.orderitem_set.all %}
-        <tr>
-          <td>{{ item.painting.title }}</td>
-          <td>
+
+
+<br />
+
+<div class="card">
+  <div class="row">
+    <div class="col-md-8 cart">
+      <div class="title">
+        <div class="row">
+          <div class="col">
+            <h4><b>Shopping Cart</b></h4>
+          </div>
+          <div class="col align-self-center text-right text-muted">
+            {{order.orderitem_set.all.count}} items
+          </div>
+        </div>
+      </div>
+      {% for item in order.orderitem_set.all %}
+
+      <div class="row border-top border-bottom">
+        <div class="row main align-items-center">
+          <div class="col-2">
             <img
-              src="{{ item.painting.image.url }}"
-              class="product-img"
+              class="img-fluid"
               alt="{{ item.painting.title }}"
-              height="50"
+              src="{{ item.painting.image.url }}"
             />
-          </td>
-          <td>${{ item.painting.price }}</td>
-          <td>
-            <div class="input-group">
-                {% if not old %}
-              <a href="{% url 'remove_single_from_cart' item.painting.id %}">
-                <button
-                  class="btn btn-outline-secondary btn-decrement"
-                  type="button"
-                >
-                  -
-                </button>
-
-                
-              </a>{% endif %}
-              <div class="form-control text-center">{{ item.quantity }}</div>
-              
-              {% if not old %}
-              <a href="{% url 'add_to_cart' item.painting.id %}">
-                <button
-                  class="btn btn-outline-secondary btn-increment"
-                  type="button"
-                >
-                  +
-                </button>
-              </a>{% endif %}
-            </div>
-          </td>
-
-          <td class="total-price">${{ item.total}}</td>
-
-          {% if not old %}
-          <td>
-            <a
-              href="{% url 'remove_from_cart' item.painting.id  %}"
-              class=""
-              >Remove</a
+          </div>
+          <div class="col">
+            {% comment %}
+            <div class="row text-muted">Shirt</div>
+            {% endcomment %}
+            <a href="{% url 'painting' item.painting.slug  %}">
+              <div class="row">{{ item.painting.title }}</div></a
             >
-          </td>
+          </div>
+          <div class="col">
+  {% if not old %}
+            <a href="{% url 'remove_single_from_cart' item.painting.id %}">-</a
+            ><a href="#" class="border"> {{ item.quantity }}</a
+            ><a href="{% url 'add_to_cart' item.painting.id %}">+</a>
+            {% else %} {{ item.quantity }}{% endif %}
+          </div>
+          <div class="col">
+            $ {{ item.painting.price }} {% if not old %}
+            <a href="{% url 'remove_from_cart' item.painting.id  %}">
+              <span class="close">&#10005;</span>
+            </a>
+          </div>
           {% endif %}
-        </tr>
-        {% empty %}
-        <tr>
-          <td colspan="5" class="text-center">Your order is empty.</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-
-  <div class="card mt-4">
-    <div class="card-body">
-      <h5 class="card-title text-center">Total du Panier</h5>
-      <ul class="list-group list-group-flush">
-        <li
-          class="list-group-item d-flex justify-content-between align-items-center"
-        >
-          Subtotal:
-          <span id="subtotal">{{order.subtotal}}</span>
-        </li>
-        <li
-          class="list-group-item d-flex justify-content-between align-items-center"
-        >
-          {% if order.shipping_addressshipping_price %} Shipping fee:
-
-          <span
-            >${{order.shipping_addressshipping_price}}
-            <small
-              ><a
-                class="btn btn-secondary"
-                data-toggle="tooltip"
-                data-html="true"
-                title="{{order.shipping_address.addess}}"
-              >
-                See Adress detail
-      </a>
-            </small></span
-          >
-          {% else %}
-          <span>No confirmed adress attach to this order or default address</span>
-          {% endif %}
-        </li>
-        <li
-          class="list-group-item d-flex justify-content-between align-items-center"
-        >
-          Total:
-          <span id="total">{{order.total}}</span>
-        </li>
-
-        {% if old %}
-        <li
+        </div>
+      </div>
+      {% endfor %}
+      <a href="{% url 'painting_list' %}">
+        <div class="back-to-shop">
+          &leftarrow;<span class="text-muted">Back to shop</span>
+        </div></a
+      >
+    </div>
+    <div class="col-md-4 summary">
+      <div>
+        <h5><b>Summary</b></h5>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="col" style="padding-left: 0">
+          ITEMS {{order.orderitem_set.all.count}}
+        </div>
+        <div class="col text-right">&euro; {{order.subtotal}}</div>
+      </div>
+      {% if old %}
+      <p>SHIPPING: <br>
+      {{order.shipping_address.shipping_price}}</p>
+      <li
           class="list-group-item d-flex justify-content-between align-items-center"
         >
           Status:
           <span id="total">{{order.status}}</span>
         </li>
 
-        {% endif %}
-      </ul>
-      <div class="text-center mt-4">
-        <!-- <a href="#" class="custom-button">Procéder au paiement</a> -->
+        <a href="{% url 'account' %}" class="custom-button"
+          >Return to account</a
+        >
+{% else %}
 
-        <!-- Button trigger modal -->
-        {% if not old %} {% if order.shipping_address.shipping_price%}
 
-        <a href="{% url  'checkout'  %}" class="custom-button"
+
+      <form>
+        <p>SHIPPING</p>
+        {% csrf_token %}
+        <select name='address'>
+          {% for address in addresses %}
+
+          <option class="text-muted" value="{{address.id}}"  
+          {% if order.shipping_address == address %}selected{% endif %}
+          >
+            {{address.address | slice:":12"}} - ${{address.shipping_price}}
+          </option>
+
+          {% empty %}
+
+            <option class="text-muted" value="0">No confirmed address attach to this order or default address</option>
+
+          {% endfor %}
+        </select>
+
+        <p>GIVE CODE</p>
+        <input id="code" name='coupon' placeholder="Enter your code" />
+
+        <div
+          class="row"
+          style="border-top: 1px solid rgba(0, 0, 0, 0.1); padding: 2vh 0"
+        >
+          <div class="col">TOTAL PRICE</div>
+          <div class="col text-right">${{order.total}}</div>
+        </div>
+
+        {% if order.shipping_address.shipping_price%}
+
+        <a href="{% url  'checkout'  %}" class="btn"
           >Proceed to checkout</a
         >
 
         {% else %}
-        <a href="{% url 'account' %}#address"
-          class="custom-button"
-          
-        >
+        <a href="{% url 'account' %}#address" class="btn">
           Inquiry for address Shipping fee
-      </a>
+        </a>
         {% endif %} 
-        {% else %}
+      </form>
 
-        <a href="{% url 'account' %}" class="custom-button">Return to account</a>
-        {% endif %}
-      </div>
+
+{% endif %}
     </div>
   </div>
-</div>
-<br /><br /><br />
-
-
-
-<div class="card">
-  <div class="row">
-      <div class="col-md-8 cart">
-          <div class="title">
-              <div class="row">
-                  <div class="col"><h4><b>Shopping Cart</b></h4></div>
-                  <div class="col align-self-center text-right text-muted">{{order.orderitem_set.all.count}} items</div>
-              </div>
-          </div>
-          {% for item in order.orderitem_set.all %}
-          
-          <div class="row border-top border-bottom">
-              <div class="row main align-items-center">
-                  <div class="col-2"><img class="img-fluid" alt="{{ item.painting.title }}" src="{{ item.painting.image.url }}"></div>
-                  <div class="col">
-                      <div class="row text-muted">Shirt</div>
-                      <div class="row">{{ item.painting.title }}</div>
-                  </div>
-                  <div class="col">
-                      <a href="% url 'remove_single_from_cart' item.painting.id %}">-</a><a href="#" class="border">1{{ item.quantity }}</a><a href="{% url 'add_to_cart' item.painting.id %}">+</a>
-                  </div>
-                  <div class="col">&euro; {{ item.painting.price }} <a href="{% url 'remove_from_cart' item.painting.id  %}" > <span class="close">&#10005;</span> </a> </div>
-              </div>
-          </div>
-       {% endfor %}
-          <div class="back-to-shop"><a href="{% url 'painting_list' %}">&leftarrow;</a><span class="text-muted">Back to shop</span></div>
-      </div>
-      <div class="col-md-4 summary">
-          <div><h5><b>Summary</b></h5></div>
-          <hr>
-          <div class="row">
-              <div class="col" style="padding-left:0;">ITEMS 3</div>
-              <div class="col text-right">&euro; 132.00</div>
-          </div>
-          <form>
-              <p>SHIPPING</p>
-              <select><option class="text-muted">Standard-Delivery- &euro;5.00</option></select>
-              <p>GIVE CODE</p>
-              <input id="code" placeholder="Enter your code">
-          </form>
-          <div class="row" style="border-top: 1px solid rgba(0,0,0,.1); padding: 2vh 0;">
-              <div class="col">TOTAL PRICE</div>
-              <div class="col text-right">&euro; 137.00</div>
-          </div>
-          <button class="btn">CHECKOUT</button>
-      </div>
-  </div>
-  
-</div>
+</div><br />
 <!-- <script type="text/javascript" >
 
 $('#btn').on('click', function () {

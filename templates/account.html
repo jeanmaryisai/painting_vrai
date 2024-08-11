@@ -222,18 +222,11 @@
 
 
 {% endblock %} {% block body %} 
+        
+   
+<br><br>
 <div class="container account-container">
-  {% if messages %}
-        <div class="container mt-3 d-flex align-items-center" >
-            {% for message in messages %}
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                  {% if message.tags %}<strong>{{ message.tags|upper }} : </strong>{% else %}Info{% endif %}{{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            {% endfor %}
-
-            </div>
-    {% endif %}
+   {% include "components/messages.html" with messages=messages %} 
   
 
   <h1 class="text-center mb-5">My Account
@@ -249,7 +242,7 @@
         role="tablist"
         aria-orientation="vertical"
       >
-      <li class="nav-item">
+      {% comment %} <li class="nav-item">
         <a
           class="nav-link"
           id="v-pills-messages-tab"
@@ -265,19 +258,8 @@
           <span class="badge badge-danger">●</span>
           {% endif %}
         </a>
-      </li>
-        <li class="nav-item">
-          <a
-            class="nav-link active"
-            id="v-pills-profile-tab"
-            data-toggle="pill"
-            href="#v-pills-profile"
-            role="tab"
-            aria-controls="v-pills-profile"
-            aria-selected="true"
-            >Profile Details</a
-          >
-        </li>
+      </li> {% endcomment %}
+
         <li class="nav-item">
           <a
             class="nav-link"
@@ -332,7 +314,7 @@
             class="nav-link"
             id="v-pills-notifications-tab"
             data-toggle="pill"
-            href="#{% url 'logout' %}"
+            href="{% url 'account_logout' %}"
             role="tab"
             aria-selected="false"
 
@@ -344,61 +326,6 @@
     </div>
     <div class="col-md-9">
       <div class="tab-content" id="v-pills-tabContent">
-        <!-- Profile Details Tab -->
-        <div
-          class="tab-pane fade show active"
-          id="v-pills-profile"
-          role="tabpanel"
-          aria-labelledby="v-pills-profile-tab"
-        >
-          <h3>Profile Details</h3>
-          <form>
-            <div class="form-group">
-              <label for="f_ame">Name</label>
-              <input
-              name="f_ame" type="text"
-                type="text"
-                class="form-control"
-                id="f_name"
-                placeholder="Enter your name"
-                value="{{request.user.first_name}}"
-              />
-            </div>
-            <div class="form-group">
-              <label for="l_name">Name</label>
-              <input
-                type="text"
-                class="form-control"
-                id="l_name"
-                name="l_name"
-                placeholder="{{request.user.last_name}}"
-                value="{{request.user.last_name}}"
-              />
-            </div>
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input
-                type="email"
-                class="form-control"
-                id="email"
-                placeholder="Enter your email"
-                value="{{request.user.email}}"
-              />
-            </div>
-            <div class="form-group">
-              <label for="phone">Phone</label>
-              <input
-                type="text"
-                class="form-control"
-                id="phone"
-                placeholder="Enter your phone number"
-              />
-            </div>
-            <br />
-            <button type="submit" class="custom-button">Modify</button>
-          </form>
-        </div>
-
         <!-- Addresses Tab -->
         <div
           class="tab-pane fade"
@@ -441,7 +368,7 @@
            {{ address.default|yesno:"true,false" }},
        )">
        Edit
-    </a>
+          </a>
 
                 {% if not x.default %}
                 <a
@@ -464,6 +391,8 @@
                   <input type="hidden" value="{{ x.id }}" name="assign_address">
                 <button type="submit" class="btn btn-primary mt-2">Assign as address of the current order</button>
               </form>
+              {%  elif not active_order.addree and x.default %} 
+              
               {% endif %}
               
 
@@ -516,7 +445,7 @@
         </div>
 
         <!-- Messages Tab -->
-        <div
+        {% comment %} <div
           class="tab-pane fade"
           id="v-pills-messages"
           role="tabpanel"
@@ -533,7 +462,7 @@
             </li>
             {% endfor %}
           </ul>
-        </div>
+        </div> {% endcomment %}
 
         <!-- Settings Tab -->
         <div
@@ -542,12 +471,28 @@
           role="tabpanel"
           aria-labelledby="v-pills-settings-tab"
         >
-          <h3>Settings</h3>
-          <form method="post" action="{% url 'change_password' %}">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="custom-button">Save</button>
-          </form>
+        <div class="container mt-5">
+          <h2 class="mb-4">Account Settings</h2>
+          <div class="list-group list-group-flush">
+              <a href="{% url 'account_email' %}" class="list-group-item list-group-item-action">
+                  <i class="bi bi-envelope"></i> Manage Email Addresses
+              </a>
+              <a href="{% url 'account_change_password' %}" class="list-group-item list-group-item-action">
+                  <i class="bi bi-key"></i> Change Password
+              </a>
+              <a href="{% url 'account_set_password' %}" class="list-group-item list-group-item-action">
+                  <i class="bi bi-shield-lock"></i> Set a Password (for social accounts)
+              </a>
+              
+              <a href="{% url 'socialaccount_connections' %}" class="list-group-item list-group-item-action">
+                Manage Social Accounts
+            </a>
+            {% comment %} <a href="{% url 'account_inactive' %}" class="list-group-item list-group-item-action btn-danger" style="background: #8b0000">
+                  <i class="bi bi-x-circle"></i> Deactivate the account
+              </a> {% endcomment %}
+              
+          </div>
+      </div>
         </div>
 
         <!-- Wishlist Tab -->
@@ -583,42 +528,24 @@
                 <td>${{ item.price }}</td>
                 <td>
                   <div class="input-group">
-                      {% if not old %}
-                    <a href="{% url 'remove_single_from_cart' item.painting.id %}">
-                      <button
-                        class="btn btn-outline-secondary btn-decrement"
-                        type="button"
-                      >
-                        -
-                      </button>
-      
                       
-                    </a>{% endif %}
-                    <div class="form-control text-center">{{ item.quantity }}</div>
+                    <a
+                    href="{% url 'move_to_cart' item.id  %}"
+                    class=""
+                    >Move to cart</a
+                  >
+                  <br />
+                  <a
+                    href="{% url 'remove_from_wishlist' item.id  %}"
+                    class=""
+                    >Remove from wishlist</a
+                  >
                     
-                    {% if not old %}
-                    <a href="{% url 'add_to_cart' item.painting.id %}">
-                      <button
-                        class="btn btn-outline-secondary btn-increment"
-                        type="button"
-                      >
-                        +
-                      </button>
-                    </a>{% endif %}
                   </div>
                 </td>
       
-                <td class="total-price">${{ item.total}}</td>
+               
       
-                {% if not old %}
-                <td>
-                  <a
-                    href="{% url 'remove_from_cart' item.painting.id  %}"
-                    class=""
-                    >Remove</a
-                  >
-                </td>
-                {% endif %}
               </tr>
               {% empty %}
               <tr>
@@ -627,27 +554,6 @@
               {% endfor %}
             </tbody>
           </table>
-
-          <ul class="list-group">
-            <!-- Example Wishlist Item -->
-            {% for painting in wishlist %}
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-      <a href="{% url 'painting' painting.slug %}"><strong>{{ painting.title }}</strong></a>
-      <div class='d-flex'>
-        <form action="{% url 'move_to_cart' painting.id %}" method="post" style="display: inline;">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-info ">Move to cart</button>
-        </form>
-        <form action="{% url 'remove_from_wishlist' painting.id %}" method="post" style="display: inline;">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-danger ">Remove</button>
-        </form>
-      </div>
-    </li>
-    {% empty %}
-    <li class="list-group-item">Your wishlist is empty.</li>
-    {% endfor %}
-          </ul>
         </div>
       </div>
     </div>

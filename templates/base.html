@@ -63,7 +63,17 @@
       rel="apple-touch-icon"
     />
     <link href="{% static 'ico/favicon.png' %} " rel="shortcut icon" />
-    
+    <style>
+button {
+
+  color: #ffffff;
+        background-color: rgb(0, 0, 0);
+        border: none;
+        padding: 10px 20px;
+        margin: 60px
+}
+
+    </style>
 
     <!-- CSS FILES -->
     <link rel="stylesheet" href=" {% static 'css/fontawesome.min.css' %}" />
@@ -128,6 +138,8 @@
         border: none;
         
       }
+
+
     </style>
     
     {% block style %}{% endblock %}
@@ -304,9 +316,6 @@
 
 
    
-        
-   
-        <br><br>
 
 {% block body %}
 

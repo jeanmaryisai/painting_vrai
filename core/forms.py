@@ -2,6 +2,23 @@
 
 from django import forms
 from .models import Address
+from django.contrib.auth.models import User
+from django.core.validators import validate_email
+
+class UserUpdateForm(forms.ModelForm):
+    first_name = forms.CharField(max_length=30, required=True)
+    last_name = forms.CharField(max_length=30, required=True)
+    email = forms.EmailField(max_length=254, required=True, validators=[validate_email])
+
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
+            raise forms.ValidationError('This email address is already in use.')
+        return email
 
 class AddressForm(forms.ModelForm):
     class Meta:

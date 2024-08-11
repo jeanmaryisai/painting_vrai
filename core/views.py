@@ -9,6 +9,10 @@ from django.contrib import messages
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.views.generic import ListView
+from django.contrib.auth.forms import PasswordChangeForm
+from .forms import UserUpdateForm
+from django.contrib.auth import update_session_auth_hash
+
 
 
 def address_inquiry(request):
@@ -109,8 +113,9 @@ def add_to_cart(request, painting_id):
 
 @login_required
 def cart(request):
-    order = get_object_or_404(Order, user=request.user, status='PENDING')
-    return render(request, 'cart.html', {'order': order})
+    order,created = Order.objects.get_or_create(user=request.user, status='PENDING')
+
+    return render(request, 'cart.html', {'order': order,'addresses':Address.objects.filter(user=request.user,status='CONFIRMED').order_by('-default'),})
 
 @login_required
 def checkout(request):
@@ -187,10 +192,11 @@ def account(request):
     context={
         'addresses':Address.objects.filter(user=request.user).order_by('-default'),
         'Orders':Order.objects.filter(user=request.user).order_by('-created_at'),
-        'active_order': Order.objects.get(user=request.user, status='PENDING'),
+        'active_order': Order.objects.get_or_create(user=request.user, status='PENDING'),
         'messages2':msj,
         'wishlist': Painting.objects.filter(fav__id=request.user.id),
-        'form':PasswordChangeForm(request.user)
+        'p_form':PasswordChangeForm(request.user)
+        ,'u_form': UserUpdateForm(request.user)
 
     }
 
@@ -304,24 +310,22 @@ def add_to_wishlist(request, painting_id):
 @login_required
 def remove_from_wishlist(request, painting_id):
     painting = get_object_or_404(Painting, id=painting_id)
-    request.user.favorite_paintings.remove(painting)
-    messages.success(request, f'{painting.title} has been removed from your wishlist.')
+    painting.fav.remove(request.user)  
+    messages.success(request,f'The painting {painting.title} has been removed from your wishlist')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
 @login_required
 def move_to_cart(request, painting_id):
     painting = get_object_or_404(Painting, id=painting_id)
-    request.user.favorite_paintings.remove(painting)
+    painting.fav.remove(request.user)  
+
+    messages.success(request,f'The painting {painting.title} has been removed from your wishlist')
+
+    return add_to_cart(request,painting.id)
     
-    order, created = Order.objects.get_or_create(user=request.user, status='PENDING')
-    order_item, created = OrderItem.objects.get_or_create(order=order, painting=painting)
-    if not created:
-        order_item.quantity += 1
-        order_item.save()
+
     
-    messages.success(request, f'{painting.title} has been moved to your cart.')
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 @login_required
 def redeem_promo_code_view(request):
@@ -338,9 +342,14 @@ def redeem_promo_code_view(request):
                 messages.success(request, f'Promo code {promo_code} applied successfully!')
             else:
                 messages.error(request, 'You have reached the usage limit for this promo code.')
+                return redirect('checkout')
         except PromoCode.DoesNotExist:
             messages.error(request, 'Invalid promo code.')
+            return redirect('checkout')
 
-    return redirect('checkout')
+    
+
+
+
 
 

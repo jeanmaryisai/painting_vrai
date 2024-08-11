@@ -4,10 +4,12 @@
 {% block body %}
 
 
-{% include 'components/header.html' with background_image=obj.image.url title=obj.title description='A artwork made by <strong>{{obj.artist.name}}</strong> ' %}
+{% include 'components/header.html' with background_image=obj.image.url title=obj.title description='A artwork made by <strong>{{obj.artist.name}}</strong>'%}
 
 <section class="content-section no-spacing">
-  <div class="container">
+  <div class="container"
+  >
+  {% include "components/messages.html" with messages=messages %} 
     <div class="row">
       <div class="col-12">
         <figure class="image-box" data-scroll data-scroll-speed="1"> <img src="{% static obj.image.url %}" alt="Image"> </figure>

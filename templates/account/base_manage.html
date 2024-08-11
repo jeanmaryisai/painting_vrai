@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+
+        
+   
+<br><br>
+<section class="content-section">
+    <div class="container">
+        {% include "components/messages.html" with messages=messages %} 
+
+{% block content %}{% endblock %}
+
+    </div></section>
+
+{% endblock %}
+
+{% block }
