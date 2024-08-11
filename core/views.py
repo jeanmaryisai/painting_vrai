@@ -113,6 +113,10 @@ def add_to_cart(request, painting_id):
 
 @login_required
 def cart(request):
+    if request.method == 'POST':
+        redeem_promo_code_view(request)
+        
+
     order,created = Order.objects.get_or_create(user=request.user, status='PENDING')
 
     return render(request, 'cart.html', {'order': order,'addresses':Address.objects.filter(user=request.user,status='CONFIRMED').order_by('-default'),})
@@ -122,6 +126,7 @@ def checkout(request):
     order = get_object_or_404(Order, user=request.user, status='PENDING')
     
     if request.method == 'POST':
+        
         order.status = 'PROCESSING'
         order.save()
         messages.success(request,'Your order have been place successfully')
@@ -329,7 +334,7 @@ def move_to_cart(request, painting_id):
 
 @login_required
 def redeem_promo_code_view(request):
-    if request.method == 'POST':
+    if request.POST.get('promo_code') and not (request.POST.get('promo_code')==""):
         promo_code = request.POST.get('promo_code')
         order = Order.objects.get(user=request.user, status='PENDING')  # or however you get the current order
 
@@ -342,10 +347,10 @@ def redeem_promo_code_view(request):
                 messages.success(request, f'Promo code {promo_code} applied successfully!')
             else:
                 messages.error(request, 'You have reached the usage limit for this promo code.')
-                return redirect('checkout')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
         except PromoCode.DoesNotExist:
             messages.error(request, 'Invalid promo code.')
-            return redirect('checkout')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
     
 
