@@ -159,12 +159,6 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTIFICATION_METHOD = 'email'
 LOGIN_URL = '/auth/login/'
 
-#payPal settings
-
-# PAYPAL_RECEIVER_EMAIL = 'sb-p7vc018063228@business.example.com'
-# PAYPAL_TEST = True
-# PAYPAL_CLIENT_ID = 'AYqNE3Z6VdCvPXR8aL44wpFlEJBA1ojyuzSbijDkV_J3Bb9Oft4bLA0wu72w8b38VOK6zCZX0uCeaswh'
-# PAYPAL_SECRET_KEY = 'EOtyhhRouUiBfkN9tv9DJUMrvsd-YkDKpWUPv-_g15wk5uhAG4VIWpMGLsCI8rbXqLRXqPjwrddll4E0'
 
 
 # stripe settings
