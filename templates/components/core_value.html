@@ -1,0 +1,105 @@
+
+{% load static %}
+<section class="content-section">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12">
+        <div class="section-title text-center">
+          <figure>
+            <img src="{% static 'images/title-shape.png'%}" alt="Image" />
+          </figure>
+          <h6>Our core values</h6>
+          <h2>Theses are our core values in the company</h2>
+        </div>
+        <!-- end section-title -->
+      </div>
+      <!-- end col-12 -->
+    </div>
+    <!-- end row -->
+  </div>
+  <div class="container">
+
+      <!-- end row -->
+      <div class="row text-center">
+          <div class="col-lg-4 mb-4">
+              <div class="core-value-box" style="background-image: url('{{ setting.core_value_1_image.url }}');">
+                  <div class="core-value-content">
+                      <h4 class="core-value-title">{{ setting.core_value_1_title }}</h4>
+                      <p class="core-value-description">{{ setting.core_value_1_title_description }}</p>
+                  </div>
+              </div>
+              <!-- end core-value-box -->
+          </div>
+          <!-- end col-lg-4 -->
+          <div class="col-lg-4 mb-4">
+              <div class="core-value-box" style="background-image: url('{{ setting.core_value_2_image.url }}');">
+                  <div class="core-value-content">
+                      <h4 class="core-value-title">{{ setting.core_value_2_title }}</h4>
+                      <p class="core-value-description">{{ setting.core_value_2_title_description }}</p>
+                  </div>
+              </div>
+              <!-- end core-value-box -->
+          </div>
+          <!-- end col-lg-4 -->
+          <div class="col-lg-4 mb-4">
+              <div class="core-value-box" style="background-image: url('{{ setting.core_value_3_image.url }}');">
+                  <div class="core-value-content">
+                      <h4 class="core-value-title">{{ setting.core_value_3_title }}</h4>
+                      <p class="core-value-description">{{ setting.core_value_3_title_description }}</p>
+                  </div>
+              </div>
+              <!-- end core-value-box -->
+          </div>
+          <!-- end col-lg-4 -->
+      </div>
+      <!-- end row -->
+  </div>
+  <!-- end container -->
+</section>
+
+<style>
+  .core-value-box {
+      position: relative;
+      padding: 60px 30px;
+      background-size: cover;
+      background-position: center;
+      border-radius: 0px;
+      color: white;
+      text-align: center;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      height:400px;
+  }
+
+  .core-value-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5); /* Dark overlay */
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7)); /* Gradient overlay */
+      z-index: 1;
+      transition: background 0.3s ease-in-out;
+  }
+
+
+
+  .core-value-content {
+      position: relative;
+      z-index: 2;
+  }
+
+  .core-value-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 15px;
+  }
+
+  .core-value-description {
+      font-size: 16px;
+      line-height: 1.6;
+  }
+</style>

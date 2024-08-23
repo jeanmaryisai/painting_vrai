@@ -4220,7 +4220,23 @@ button[type="submit"] i {
 }
 
 
+.gradient {
+  position: relative;
+  z-index: -1;
+}
 
+.gradient::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.671); /* Dark overlay */
+  background: linear-gradient(to right, rgb(255, 255, 255), rgba(255, 255, 255, 0)); /* Gradient overlay */
+  z-index: 0;
+  transition: background 0.3s ease-in-out;
+}
 
 
 

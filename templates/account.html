@@ -431,7 +431,19 @@
               {% for x in Orders %}
               <tr>
                 <td>{{x.uuid}}</td>
-                <td>{{x.get_status_date}}</td>
+                <td>Since {% if x.status == "PENDING" %}
+                  {{ x.created_at }}
+                {% elif x.status == "PROCESSING" %}
+                  {{ x.payed_at|default:"N/A" }}
+                {% elif x.status == "SHIPPED" %}
+                  {{ x.shipped_at|default:"N/A" }}
+                {% elif x.status == "DELIVERED" %}
+                  {{ x.delivered_at|default:"N/A" }}
+                {% elif x.status == "CANCELLED" %}
+                  Order Cancelled
+                {% else %}
+                  Unknown Status
+                {% endif %}</td>
                 <td>{% if x.status == "PENDING" %}Active order {% else %}{{x.status}} {% endif %}</td>
                 <td>${{x.total}}</td>
                 <td>
@@ -608,26 +620,7 @@ function openAddModal() {
 </script>
 
 <script>
-    function markAllMessagesAsRead() {
-      fetch("{% url 'mark_all_messages_as_read' %}", {
-        method: 'POST',
-        headers: {
-          'X-CSRFToken': '{{ csrf_token }}',
-          'Content-Type': 'application/json',
-        },
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.status === 'success') {
-          // Remove the red dot indicator
-          document.querySelector('#v-pills-messages-tab .badge').style.display = 'none';
-          // Remove bold styling from unread messages
-          document.querySelectorAll('#v-pills-messages .list-group-item.font-weight-bold').forEach(item => {
-            item.classList.remove('font-weight-bold');
-          });
-        }
-      });
-    }
+   
   </script>
 
 {% endblock %}

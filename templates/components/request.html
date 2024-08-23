@@ -1,11 +1,16 @@
 <section class="content-section">
     <div class="video-bg">
       <video
-        src="{% static 'videos/video.mp4'}"
+        src="{{url}}"
         loop
         autoplay
         playsinline
         muted
+        style="
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);"
       ></video>
     </div>
     <!-- end video-bg -->

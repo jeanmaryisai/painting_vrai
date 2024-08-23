@@ -11,7 +11,7 @@
 {% block body %}
 
 
-    {% include 'components/header.html' with background_image='images/birmingham-museums-trust-pWVJHDiAonU-unsplash.jpg' title='Marvens Villial' description='Born in Haiti   <br><a href="#" style="font-weight:bolder; font-size: x-large;" ata-scroll-to class="btn"> See Artist</a>' %}
+    {% include 'components/header.html' with background_image=setting.home_artist_1.profile.url  title=setting.home_artist_1.name description=setting.home_artist_1.bio %}
 
 
 
@@ -42,7 +42,7 @@
         {% endif %}
 
         {% for x in artists %}
-          {% include 'components/artist_card.html' with scroll_speed='1' image_src=x.profile number=forloop.counter title=x.name description=x.bio link_url=x.id %}
+          {% include 'components/artist_card.html' with scroll_speed='1' image_src=x.profile.url number=forloop.counter title=x.name description=x.bio link_url=x.id %}
 
 {% empty %}
 <h2>No Artist yet</h2>

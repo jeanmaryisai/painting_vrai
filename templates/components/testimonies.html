@@ -1,0 +1,39 @@
+{% load static %}
+<section
+class="content-section no-bottom-spacing bottom-white"
+data-background="#fffbf7"
+>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="section-title text-center">
+        <figure>
+          <img src="{% static 'images/title-shape.png' %}" alt="Image" />
+        </figure>
+        <h2>
+          Testemonies 
+        </h2>
+      </div>
+      <!-- end section-title -->
+    </div>
+    {% for x in testimonies %}
+    <!-- end col-12 -->
+    <div class="col-lg-4 col-md-6">
+      <div class="text-content" data-scroll data-scroll-speed="-1">
+        <h6>{{x.author  }}</h6>
+        <p>
+          {{x.content}}
+        </p>
+      </div>
+      <!-- end text-content -->
+    </div>
+    {% endfor %}
+    <!-- end col-4 -->
+  </div>
+  <!-- end row -->
+</div>
+<!-- end container -->
+<div class="clearfix spacing-100"></div>
+
+<!-- end horizontal-scroll -->
+</section>

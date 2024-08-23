@@ -1,6 +1,5 @@
 from django.urls import path
 from . import views
-from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('default-address/<int:address_id>/', views.set_default_address, name='default-address'),
@@ -8,10 +7,17 @@ urlpatterns = [
     
     
     path('', views.home, name='home'),
+    path('about/', views.about, name='about'),
+    path('contact/', views.contact, name='contact'),
     path('shop/', views.PaintingListView.as_view(), name='painting_list'),
     path('painting/<slug:slug>/', views.painting_detail, name='painting'),
     path('cart/', views.cart, name='cart'),
     path('checkout/', views.checkout, name='checkout'),
+    path('payment/', views.payment, name='payment'),
+  
+    path('payment/cancel/', views.payment_cancel, name='payment_cancel'),
+    path('payment/processing/', views.process_payment, name='process_payment'),
+    path('webhook', views.stripe_webhook, name='stripe_webhook'),
     
 
 
@@ -26,11 +32,10 @@ urlpatterns = [
 
     path('address/edit/<int:address_id>/', views.edit_address, name='edit_address'),
     path('address/add/', views.add_address, name='add_address'),
-    path('address_inquiry/', views.address_inquiry, name='address_inquiry'),
+    # path('address_inquiry/', views.address_inquiry, name='address_inquiry'),
 
 
     
-    path('notifications/mark_all_as_read/', views.mark_all_messages_as_read, name='mark_all_messages_as_read'),
     path('redeem-promo-code/', views.redeem_promo_code_view, name='redeem_promo_code'),
 
 
@@ -39,17 +44,14 @@ urlpatterns = [
     path('wishlist/move-to-cart/<int:painting_id>/', views.move_to_cart, name='move_to_cart'),
    
 
-    # path('change-password/', views.change_password, name='change_password'),
-    # path('password_reset/', auth_views.PasswordResetView.as_view(template_name='registration/password_reset_form.html'), name='password_reset'),
-    # path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='registration/password_reset_done.html'), name='password_reset_done'),
-    # path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='registration/password_reset_confirm.html'), name='password_reset_confirm'),
-    # path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'), name='password_reset_complete'),
-    # path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('account', views.account, name='account'),
    
 
     path('artist/', views.ArtistListView.as_view(), name='artist_list'),
     path('artist/<int:id>', views.artist_detail, name='artist'),
+
+    # #PayPal IPN
+    # path('paypal',include('paypal.standard.ipn.urls')),
     
 
 ]

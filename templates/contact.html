@@ -2,7 +2,7 @@
  {% load static %}
   {% block body %} 
   
-  {% include 'components/header.html' with background_image='images/birmingham-museums-trust-pWVJHDiAonU-unsplash.jpg' title='Marvens Villial\'s Work' description='Born in Haiti '  %}
+  {% include 'components/header.html' with background_image=setting.hero_contact_image.url title='Contact us' description=setting.contact_description  %}
 
 <section class="content-section" data-background="#fffbf7">
   <div class="container">
@@ -10,7 +10,7 @@
     <div class="row justify-content-center">
       <div class="col-12">
         <div class="section-title text-center">
-          <figure><img src="images/title-shape.png" alt="Image" /></figure>
+          <figure><img src="{% static 'images/title-shape.png' %}" alt="Image" /></figure>
           <h2>
             Help us to respond to <br />
             you more quickly
@@ -22,53 +22,46 @@
       <div class="col-lg-5">
         <div class="contact-box">
           <h6>Main Contact Number</h6>
-          <p>020 3461 4444 (Monday to Friday, 9am to 5pm)</p>
+            
+          
+          <p><a href="tel:{{setting.phone }}">{{setting.phone}}</a> (Monday to Friday, 9am to 5pm)</p>
           <p>
             Please use this number if you know the name of the person or
-            department you would like to contact. Or you can fax 020 3461 4771.
+            department you would like to contact.
           </p>
         </div>
         <!-- end contact-box -->
         <div class="contact-box">
           <h6>General enquiries</h6>
           <p>
-            <a href="#">enquiries@wandau.co.uk</a> 020 3461 4878 (Monday to
-            Friday: 10:00 - 17:00).
+            <a href="mailto:{{setting.email}}"></a>(Monday to
+            Friday: 10:00 - 17:00) respond expected in1 to 3 buisness hours.
           </p>
         </div>
-        <!-- end contact-box -->
-        <div class="contact-box">
-          <h6>Media enquiries</h6>
-          <p>
-            <a href="#">sponsor@wandau.co.uk</a> The person or department you
-            would like to contact
-          </p>
-        </div>
+    
         <!-- end contact-box -->
       </div>
       <!-- end col-5 -->
       <div class="col-lg-5">
         <div class="contact-form">
-          <div class="mb-3">
-            <input type="text" placeholder="Complete Name" />
-          </div>
-          <!-- end mb-3 -->
-          <div class="mb-3">
-            <input type="text" placeholder="E-mail Address" />
-          </div>
-          <!-- end mb-3 -->
-          <div class="mb-3">
-            <input type="text" placeholder="Phone Number" />
-          </div>
-          <!-- end mb-3 -->
-          <div class="mb-3">
-            <textarea placeholder="Your Message"></textarea>
-          </div>
-          <!-- end mb-3 -->
-          <div class="mb-3">
-            <input type="submit" value="Send Us" />
-          </div>
-          <!-- end mb-3 -->
+          <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                {{ form.name.label_tag }} <br>{{ form.name }}
+            </div>
+            <div class="mb-3">
+                {{ form.email.label_tag }} <br>{{ form.email }}
+            </div>
+            <div class="mb-3">
+                {{ form.phone.label_tag }} {{ form.phone }}
+            </div>
+            <div class="mb-3">
+                {{ form.message.label_tag }} {{ form.message }}
+            </div>
+            <div class="mb-3">
+                <input type="submit" value="Send Us" class="btn btn-primary" />
+            </div>
+        </form>
         </div>
         <!-- end contact-form -->
       </div>

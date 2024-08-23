@@ -1,4 +1,4 @@
-from .models import Painting, Order, OrderItem, Review, PromoCode, PromoCodeUsage, Category,Artist, Address,Notification
+from .models import Painting, Order, OrderItem, Review, PromoCode,Testemonial, Faq,PromoCodeUsage, Category,Artist, Address,Notification
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
@@ -7,28 +7,55 @@ from django.http import HttpResponseRedirect,JsonResponse
 from .forms import AddAddressForm, AddressForm
 from django.contrib import messages
 from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth import update_session_auth_hash
 from django.views.generic import ListView
 from django.contrib.auth.forms import PasswordChangeForm
-from .forms import UserUpdateForm
-from django.contrib.auth import update_session_auth_hash
+from django.conf import settings 
+from django.views.decorators.csrf import csrf_exempt
+import uuid
+import stripe
+from django.contrib.auth.models import User
+import json
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.core.mail import send_mail
+from django.conf import settings
+from .forms import ContactRequestForm
 
-
-
-def address_inquiry(request):
+def contact(request):
     if request.method == 'POST':
-        form = AddressForm(request.POST)
+        form = ContactRequestForm(request.POST)
         if form.is_valid():
-            address = form.save(commit=False)
-            address.user = request.user
-            address.save()
-            return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))  # Redirect to the same page
-    else:
-        form = AddressForm()
-    return render(request, 'address_form.html', {'form': form})
+            contact_request = form.save()
 
-def home(request,id):
-    return render(request, 'about.html')
+            # Send a confirmation email
+            send_mail(
+                subject=f"New Contact Request from {contact_request.name}",
+                message=(
+                    f"Name: {contact_request.name}\n"
+                    f"Email: {contact_request.email}\n"
+                    f"Phone: {contact_request.phone}\n\n"
+                    f"Message:\n{contact_request.message}"
+                ),
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[settings.DEFAULT_FROM_EMAIL],
+            )
+
+            # Redirect to a thank you page or show a success message
+            messages.success(request, 'Thank you for contacting us. We will respond shortly.')
+            return redirect('contact')
+    else:
+        form = ContactRequestForm()
+
+    return render(request, 'contact.html', {'form': form})
+
+def about(request):
+    return render(request, 'about.html',{'faq': Faq.objects.filter(show=True)})
+
+def home(request):
+    return render(request, 'index.html',{'testimonies': Testemonial.objects.all()})
+
+
+
 
 
 
@@ -101,6 +128,9 @@ def painting_detail(request, slug):
     
     return render(request, 'product.html', {'obj': painting,'reviews':reviews})
 
+
+
+
 @login_required
 def add_to_cart(request, painting_id):
     painting = get_object_or_404(Painting, pk=painting_id)
@@ -113,37 +143,10 @@ def add_to_cart(request, painting_id):
 
 @login_required
 def cart(request):
-    if request.method == 'POST':
-        redeem_promo_code_view(request)
-        
-
     order,created = Order.objects.get_or_create(user=request.user, status='PENDING')
 
-    return render(request, 'cart.html', {'order': order,'addresses':Address.objects.filter(user=request.user,status='CONFIRMED').order_by('-default'),})
-
-@login_required
-def checkout(request):
-    order = get_object_or_404(Order, user=request.user, status='PENDING')
-    
-    if request.method == 'POST':
-        
-        order.status = 'PROCESSING'
-        order.save()
-        messages.success(request,'Your order have been place successfully')
-        return redirect('account')
-    
-    
-    addresses=Address.objects.filter(user=request.user,shipping_price__isNull=False,status= 'Confirmed')
-    if not addresses.exists:
-        messages.error(request, 'You do not have a confirmed Address please add an Address or if you have already added one, please wait for the administrator to confirm it')
-        return redirect('account')
-    if not order.address:
-        x=get_object_or_404(Address, user=request.user, default=True)
-    else:
-        x=order.address
-    context={'order': order,'addresses':addresses.exclude(id=x.id),'x':x}
-    return render(request, 'checkout.html', context)
-
+    return render(request, 'cart.html', {'order': order,
+                                         'addresses':Address.objects.filter(user=request.user,status='CONFIRMED').order_by('-default'),})
 @login_required
 def remove_single_from_cart(request, painting_id):
     order = Order.objects.filter(user=request.user, status='PENDING').first()
@@ -176,6 +179,56 @@ def clear_cart(request):
     return redirect('cart')
 
 @login_required
+def add_to_wishlist(request, painting_id):
+    painting = get_object_or_404(Painting, id=painting_id)
+    if request.user not in painting.fav.all():
+        painting.fav.add(request.user)
+        messages.success(request, f'the painting {painting.title} has been added to your wishlist.')
+    else:
+        messages.error(request, f'{painting.title} has already been added to your wishlist.')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+@login_required
+def remove_from_wishlist(request, painting_id):
+    painting = get_object_or_404(Painting, id=painting_id)
+    painting.fav.remove(request.user)  
+    messages.success(request,f'The painting {painting.title} has been removed from your wishlist')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+@login_required
+def move_to_cart(request, painting_id):
+    painting = get_object_or_404(Painting, id=painting_id)
+    painting.fav.remove(request.user)  
+
+    messages.success(request,f'The painting {painting.title} has been removed from your wishlist')
+
+    return add_to_cart(request,painting.id)
+    
+
+@login_required
+def redeem_promo_code_view(request):
+    if request.POST.get('promo_code') and (request.POST.get('promo_code')!= ""):
+        order = Order.objects.get(user=request.user, status='PENDING')
+        promo_code = request.POST.get('promo_code')
+        try:
+            code = PromoCode.objects.get(code=promo_code, active=True)
+            if PromoCodeUsage.objects.filter(promo_code=code, user=request.user).count() < code.usage_limit:
+                PromoCodeUsage.objects.create(promo_code=code, user=request.user)
+                order.promo_code = code
+                order.save()
+                messages.success(request, f'Promo code {promo_code} applied successfully!')
+            else:
+                messages.error(request, 'You have reached the usage limit for this promo code.')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+        except PromoCode.DoesNotExist:
+            messages.error(request, 'Invalid promo code.')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+    
+
+
+
+@login_required
 def account(request):
 
     if request.method == 'POST':
@@ -201,7 +254,7 @@ def account(request):
         'messages2':msj,
         'wishlist': Painting.objects.filter(fav__id=request.user.id),
         'p_form':PasswordChangeForm(request.user)
-        ,'u_form': UserUpdateForm(request.user)
+        # ,'u_form': UserUpdateForm(request.user)
 
     }
 
@@ -210,8 +263,13 @@ def account(request):
 
 
     return render(request,'account.html',context)
-      
-
+@login_required
+def custom_order(request,uuid):
+    order = get_object_or_404(Order, uuid=uuid )
+    if order.status=='PENDING':
+        return redirect('cart')
+    return render(request, 'cart.html', {'order': order,'old':True})
+    
 @login_required
 def delete_address(request, address_id):
     address = get_object_or_404(Address, id=address_id, user=request.user)
@@ -263,7 +321,7 @@ def add_address(request):
                 Address.objects.filter(user=request.user, default=True).update(default=False)
             address.save()
 
-            # TODO:Sent email
+            # TODO:Sent email to the customer and the admin about the new address
 
             messages.success(request, "Address added successfully.")
             return redirect('account')  # Adjust this to the appropriate view
@@ -272,89 +330,187 @@ def add_address(request):
 
     return render(request, 'add_address.html', {'form': form})
 
+
+
+
 @login_required
-def custom_order(request,uuid):
-    order = get_object_or_404(Order, uuid=uuid )
-    if order.status=='PENDING':
+def checkout(request):
+    if request.method == 'POST':
+        order=get_object_or_404(Order, user=request.user, status='PENDING')
+        if order.orderitem_set.count() == 0:
+            messages.error(request, 'Your cart is empty. Please add some items')
+            return redirect('painting_list')
+        address=get_object_or_404(Address, id=request.POST.get('address'))
+        if address.status != 'CONFIRMED':
+                messages.error(request, 'Invalid Address. Please select a confirmed address')
+                return redirect('cart')
+        
+        
+        redeem_promo_code_view(request)
+        order.address = address
+        order.save()
+
+        # # Create a paypal form
+        # paypal_dict = {
+        #     'business': settings.PAYPAL_RECEIVER_EMAIL,
+        #     'amount': order.total,
+        #     'item_name': 'Art Shop',
+        #     'invoice': str(order.uuid),
+        #     'currency_code': 'CAD',
+        #     'no_shipping': '2',
+        #     'return': request.build_absolute_uri(reverse('cart')),
+        #     'cancel_return': request.build_absolute_uri(reverse('cart')),
+        #     'notify_url': request.build_absolute_uri(reverse('paypal-ipn')),
+        # }
+
+        # form = ExtPayPalPaymentsForm(initial=paypal_dict)
+
+
+        return render(request, 'checkout.html', {'order': order,
+                                                #  'form': form,
+                                                 'addresses':Address.objects.filter(user=request.user,status='CONFIRMED').order_by('-default').exclude(id=order.address.id)})
+    else:
         return redirect('cart')
-    return render(request, 'cart.html', {'order': order,'old':True})
+
 
 @login_required
-def mark_all_messages_as_read(request):
-    if request.method == 'POST':
-        messages = Notification.objects.filter(user=request.user, is_message=True, is_read=False)
-        messages.update(is_read=True)
-        return JsonResponse({'status': 'success'})
-    return JsonResponse({'status': 'fail'})
+def payment(request):
+    if  request.method == 'POST':
+        order = get_object_or_404(Order, user=request.user, status='PENDING')
+        if order.orderitem_set.count() == 0:
+            messages.error(request, 'Your cart is empty. Please add some items')
+            return redirect('painting_list')
+        if order.address.status != 'CONFIRMED':
+                messages.error(request, 'Invalid Address. Please select a confirmed address')
+                return redirect('cart')
 
+
+        YOUR_DOMAIN='http://127.0.0.1:8000'
+        stripe.api_key = settings.STRIPE_SECRET_KEY_TEST
+        try:
+            
+            line_items = []
+            for item in order.orderitem_set.all():
+                line_items.append({
+                    'price_data': {
+                        'currency': 'usd',
+                        'unit_amount': int(item.painting.price * 100),  # Stripe expects amount in cents
+                        'product_data': {
+                            'name': item.painting.title,
+                            # 'images': [item.painting.image.url],  # Assuming `image` is a URL field
+                        },
+                    },
+                    'quantity': item.quantity,
+                })
+            line_items.append({
+                    'price_data': {
+                        'currency': 'usd',
+                        'unit_amount': int(order.shipping_address.shipping_price * 100),  # Stripe expects amount in cents
+                        'product_data': {
+                            'name': 'Shipping Address',
+                            # 'images': [item.painting.image.url],  # Assuming `image` is a URL field
+                        },
+                    },
+                    'quantity': 1,
+                })
+            checkout_session = stripe.checkout.Session.create(
+                  payment_intent_data={
+                      'metadata':{
+                    'order_uuid': order.uuid,
+                    'user_email': request.user.email,
+                 },
+                 },
+                line_items=line_items,
+                customer_email=request.user.email,
+                # saved_payment_method_options={"payment_method_save": "enabled"},
+                mode='payment',
+               
+                consent_collection={"terms_of_service": "required"},
+                custom_text={
+                    "terms_of_service_acceptance": {
+                    "message": "I agree to the [Terms of Service](https://example.com/terms)",
+                    },
+                },
+                # automatic_tax={"enabled": True},
+                # ui_mode="embedded",
+                
+                success_url=YOUR_DOMAIN+'/payment/processing/',
+                cancel_url=YOUR_DOMAIN+'/payment/cancel/',
+            )
+        except Exception as e:
+            print(e)  # Log the error for debugging
+            messages.error(request,e)
+            return redirect('cart')
+
+        return redirect(checkout_session.url, code=303)
+
+    else:
+        return redirect('cart')
 @login_required
-def change_password(request):
-    if request.method == 'POST':
-        form = PasswordChangeForm(request.user, request.POST)
-        if form.is_valid():
-            user = form.save()
-            update_session_auth_hash(request, user)  # Important, to update the session with the new password
-            messages.success(request, 'Your password was successfully updated!')
-            return redirect('login')
-        else:
-            messages.error(request, 'Please correct the error below.')
+def payment_cancel(request):
+    messages.error(request,"Your transaction has been cancelled.")
     return redirect('account')
 
 
+
 @login_required
-def add_to_wishlist(request, painting_id):
-    painting = get_object_or_404(Painting, id=painting_id)
-    if request.user not in painting.fav.all():
-        painting.fav.add(request.user)
-        messages.success(request, f'the painting {painting.title} has been added to your wishlist.')
+def process_payment(request):
+    messages.success(request,"Your transaction is in progress.")
+    return redirect('account')
+
+@csrf_exempt
+def stripe_webhook(request):
+  stripe.api_key = settings.STRIPE_SECRET_KEY_TEST
+  payload = request.body
+  event = None
+
+  try:
+    event = stripe.Event.construct_from(
+      json.loads(payload), stripe.api_key
+    )
+  except ValueError as e:
+    messages.error(request, f'Invalid payload: {e}')
+    # Invalid payload
+    return HttpResponse(status=400)
+
+  # Handle the event
+  if event.type == 'payment_intent.succeeded':
+    payment_intent = event.data.object 
+    user= get_object_or_404(User, email =payment_intent['metadata']['user_email'])
+    order = get_object_or_404(Order, uuid =payment_intent['metadata']['order_uuid'], status='PENDING', user=user)
+    total=order.total()*100
+    
+    if order.orderitem_set.count() == 0:
+            messages.error(request, 'There was a probleme in the process of your order please contact the enterprise directly, your seems have paid for an empty cart')
+            messages.error(request, 'Your transaction has been cancelled. Your order has been flagged as Problematic')
+            order.status = 'PROBLEMATIC'
+            print(1)
+    elif order.address.status != 'CONFIRMED':
+        messages.error(request, 'There was a probleme in the process of your order please contact the enterprise directly, your seems have paid for an order with no confirmed address')
+        messages.error(request, 'Your transaction has been cancelled. Your order has been flagged as Problematic')
+        order.status = 'PROBLEMATIC'
+        print(2)
+    
+    elif int(payment_intent['amount']) != int(total):
+        messages.error(request, 'There was a probleme in the process of your order please contact the enterprise directly, there was a problem regarding the amount paid')
+        messages.error(request, 'Your transaction has been cancelled. Your order has been flagged as Problematic')
+        order.status = 'PROBLEMATIC'
+        print(3)
     else:
-        messages.error(request, f'{painting.title} has already been added to your wishlist.')
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+        order.status = 'PROCESSING'
+        print(order.total(), payment_intent['amount'])
+        messages.success(request, 'Your transaction has been completed successfully. You will receive an email confirmation shortly.')
+        Order.objects.create(user=user,status='PENDING') 
+        print(4)
+    order.save()
+    print(payment_intent)
+  elif event.type == 'payment_method.attached':
+    payment_method = event.data.object # contains a stripe.PaymentMethod
+    messages.error(request,'PaymentMethod was attached to a Customer!')
+  # ... handle other event types
+  else:
+    print('Unhandled event type {}'.format(event.type))
 
-
-@login_required
-def remove_from_wishlist(request, painting_id):
-    painting = get_object_or_404(Painting, id=painting_id)
-    painting.fav.remove(request.user)  
-    messages.success(request,f'The painting {painting.title} has been removed from your wishlist')
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
-
-
-@login_required
-def move_to_cart(request, painting_id):
-    painting = get_object_or_404(Painting, id=painting_id)
-    painting.fav.remove(request.user)  
-
-    messages.success(request,f'The painting {painting.title} has been removed from your wishlist')
-
-    return add_to_cart(request,painting.id)
-    
-
-    
-
-@login_required
-def redeem_promo_code_view(request):
-    if request.POST.get('promo_code') and not (request.POST.get('promo_code')==""):
-        promo_code = request.POST.get('promo_code')
-        order = Order.objects.get(user=request.user, status='PENDING')  # or however you get the current order
-
-        try:
-            code = PromoCode.objects.get(code=promo_code, active=True)
-            if PromoCodeUsage.objects.filter(promo_code=code, user=request.user).count() < code.usage_limit:
-                PromoCodeUsage.objects.create(promo_code=code, user=request.user)
-                order.promo_code = code
-                order.save()
-                messages.success(request, f'Promo code {promo_code} applied successfully!')
-            else:
-                messages.error(request, 'You have reached the usage limit for this promo code.')
-                return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
-        except PromoCode.DoesNotExist:
-            messages.error(request, 'Invalid promo code.')
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
-
-    
-
-
-
+  return HttpResponse(status=200)
 
 

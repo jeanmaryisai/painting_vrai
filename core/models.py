@@ -5,6 +5,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import timedelta
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 # from colorfield.fields import ColorField
 
 
@@ -97,6 +99,35 @@ class Address(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name} - {self.address}"
 
+    def clean(self):
+        # Call the parent clean method to ensure built-in validations are respected
+        super().clean()
+
+        # Example 2: Ensure shipping price is positive if set
+        if self.shipping_price is not None and self.shipping_price <= 0:
+            raise ValidationError(_('Shipping price must be a positive number.'))
+        
+        if self.status == 'CONFIRMED' and self.shipping_price is None:
+            raise ValidationError(_('Shipping price must be provided for addresses marked as CONFIRMED.'))
+
+        # Example 3: Ensure that at least one address field is provided
+        if not self.address and not self.address2:
+            raise ValidationError(_('At least one address field must be provided.'))
+
+        # Example 4: Ensure that no two addresses for the same user are set as default
+        if self.default:
+            existing_defaults = Address.objects.filter(user=self.user, default=True).exclude(pk=self.pk)
+            if existing_defaults.exists():
+                raise ValidationError(_('Only one address can be set as default per user.'))
+
+        # Example 5: Custom validation for zip code length based on country
+        if self.country == "USA" and len(self.zip_code) != 5:
+            raise ValidationError(_('In the USA, ZIP code must be exactly 5 digits.'))
+
+        # Example 6: Ensure the status is not REFUSED if it’s marked as the default address
+        if self.default and self.status == 'REFUSED':
+            raise ValidationError(_('Default address cannot have a status of REFUSED.'))
+
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -114,6 +145,8 @@ class Order(models.Model):
         ('SHIPPED', 'Shipped'),
         ('DELIVERED', 'Delivered'),
         ('CANCELLED', 'Cancelled'),
+        ('REFUNDED', 'Refunded'),
+        ('PROBLEMATIC', 'Problematic'),
     )
     status = models.CharField(max_length=20, choices=status_choices, default='PENDING')
     
@@ -148,12 +181,26 @@ class Order(models.Model):
         return False
 
     def total(self):
+        if self.subtotal == 0: return 0
         try:return self.shipping_address.shipping_price+self.subtotal-self.discount
         except: return self.subtotal-self.discount
         
 
     def __str__(self):
         return f'Order #{self.pk} - {self.user.username}'
+    
+    def save(self, *args, **kwargs):
+        # Automatically set the dates based on the status
+        if self.status == 'PROCESSING' and not self.payed_at:
+            self.payed_at = timezone.now()
+
+        if self.status == 'SHIPPED' and not self.shipped_at:
+            self.shipped_at = timezone.now()
+
+        if self.status == 'DELIVERED' and not self.delivered_at:
+            self.delivered_at = timezone.now()
+        # Finally, save the object
+        super().save(*args, **kwargs)
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
@@ -188,4 +235,103 @@ class Notification(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+
+class Faq(models.Model):
+    question = models.TextField()
+    answer = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    show = models.BooleanField(default=True)
+    def __str__(self):
+        return self.question
+    
+class Testemonial(models.Model):
+    author = models.CharField(max_length=255)
+    content = models.TextField()
+    def __str__(self):
+        return f'Testimonial by {self.author} - {self.content[:100]}...'
+
+
+class Setting(models.Model):
+    name = models.CharField(max_length=255)
+    home_painting_hero_1= models.ForeignKey(Painting, on_delete=models.CASCADE, related_name='home_painting_1',)
+    home_painting_hero_2= models.ForeignKey(Painting, on_delete=models.CASCADE, related_name='home_painting_2', )
+    home_painting_hero_3= models.ForeignKey(Painting, on_delete=models.CASCADE, related_name='home_painting_3', )
+    home_painting_list_1= models.ForeignKey(Painting, on_delete=models.CASCADE, related_name='home_painting_4',)
+    home_painting_list_2= models.ForeignKey(Painting, on_delete=models.CASCADE, related_name='home_painting_5',)
+    home_painting_list_3= models.ForeignKey(Painting, on_delete=models.CASCADE, related_name='home_painting_6',)
+    home_artist_1= models.ForeignKey(Artist, on_delete=models.CASCADE, related_name='home_artist_1',)
+    home_artist_2= models.ForeignKey(Artist, on_delete=models.CASCADE, related_name='home_artist_2',)
+    home_artist_3= models.ForeignKey(Artist, on_delete=models.CASCADE, related_name='home_artist_3',)
+
+    home_image_section_1=models.ImageField(upload_to='settings/home_image_section')
+    become_seller_video=models.FileField(upload_to='settings/become_seller_video')
+    
+
+    
+    home_story_1_image=models.ImageField(upload_to='settings/home_story_1_image')
+    home_story_1_title=models.CharField(max_length=255)
+    home_story_2_image=models.ImageField(upload_to='settings/home_story_2_image')
+    home_story_2_title=models.CharField(max_length=255)
+    home_story_3_image=models.ImageField(upload_to='settings/home_story_3_image')
+    home_story_3_title=models.CharField(max_length=255)
+    home_story_4_image=models.ImageField(upload_to='settings/home_story_4__image')
+    home_story_4_title=models.CharField(max_length=255)
+    home_story_5_image=models.ImageField(upload_to='settings/home_story_5_image')
+    home_story_5_title=models.CharField(max_length=255)
+
+    core_value_1_title=models.CharField(max_length=255)
+    core_value_1_title_description=models.TextField()
+    core_value_1_image=models.ImageField(upload_to='settings/core_value_1_image')
+    core_value_2_title=models.CharField(max_length=255)
+    core_value_2_title_description=models.TextField()
+    core_value_2_image=models.ImageField(upload_to='settings/core_value_2_image')
+    core_value_3_title=models.CharField(max_length=255)
+    core_value_3_title_description=models.TextField()
+    core_value_4_image=models.ImageField(upload_to='settings/core_value_3_image')
+
+
+
+    testimony_1=models.ForeignKey(Testemonial, on_delete=models.CASCADE, related_name='testemony_1',)
+    testimony_2=models.ForeignKey(Testemonial, on_delete=models.CASCADE,related_name='testemony_2')
+    testimony_3=models.ForeignKey(Testemonial, on_delete=models.CASCADE, related_name='testemony_3')
+    
+
+    hero_about_us_image=models.ImageField(upload_to='settings/hero_about_us_image')
+    hero_about_us_description=models.CharField(max_length=100)
+    about_image_1=models.ImageField(upload_to='settings/about_image_1')
+    about_image_2=models.ImageField(upload_to='settings/about_image_2')
+    about_image_3=models.ImageField(upload_to='settings/about_image_3')
+    about_story=models.TextField()
+    email=models.EmailField()
+    address=models.TextField()
+    phone=models.CharField(max_length=255)
+    facebook=models.URLField(null=True, blank=True)
+    twitter=models.URLField(null=True, blank=True)
+    instagram=models.URLField(null=True, blank=True)
+    pinterest=models.URLField(null=True, blank=True)
+    open_hours=models.TextField()
+
+    preview_image=models.ImageField(upload_to='settings/preview_image')
+    team=models.ManyToManyField(Artist, related_name='team')
+
+    hero_contact_image=models.ImageField(upload_to='settings/hero_contact_image')
+    contact_description=models.TextField()
+    show=models.BooleanField()
+
+    def save(self, *args, **kwargs):
+        if self.show:
+            # Set show=False for all other instances
+            Setting.objects.filter(show=True).exclude(pk=self.id).update(show=False)
+        super(Setting, self).save(*args, **kwargs)
+
+class ContactRequest(models.Model):
+    name = models.CharField(max_length=255)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Message from {self.name} - {self.email}"
 

@@ -14,45 +14,44 @@
       <div class="card mb-3">
         <div class="card-body">
           <h5 class="card-title">
-            {% if x.default %} Primary Address {% else %} Secondary address {% endif %}
+            {% if order.address.default %} Primary Address {% else %} Secondary address {% endif %}
           </h5>
-          <p class="card-text">{{ x.address | slice: ":20" }}</p>
+          <p class="card-text">{{order.address.address | slice:":20" }}</p>
           <p class="card-text">
             {{ address.country }}, {{ address.state }}, {{ address.zip_code }}
           </p>
           <p class="card-text"><strong>Status:</strong> {{x.status}}</p>
-          {% if x.shipping_price %}
+        
 
-          <p class="card-text"><strong>Fee:</strong> $5.00</p>
+          <p class="card-text"><strong>Fee:</strong> ${{order.address.shipping_price}}</p>
 
-          {% endif %}
-
-          {% if not address.default %}
-          <a
-            href="{% url 'set_default_address' address.id %}"
-            class="btn btn-info"
-            >Define as Default</a
-          >
-          {% endif %}
-          <a href="{% url 'delete_address' address.id %}" class="btn btn-danger"
-            >Delete</a
+          <a href="{% url 'account' %}" class="btn btn-danger"
+            >Manage addresses</a
           >
         </div>
 
-        <h6>Other addresses</h6>
+        <h5 class='m-2'>Other addresses</h5>
 
-        <form method="post" action="{% url 'assign_address' %}">
+        <form method="post" action="{% url 'checkout' %}">
           {% csrf_token %}
           <div class="card mb-3">
             <div class="card-header">
               Choose a Different Address
             </div>
             <div class="card-body">
-              <select class="form-select" name="address">
-                {% for address in addresses %}
-                  <option value="{{ address.id }}" {% if order.address and order.address.id == address.id %}selected{% endif %}>
-                    {{ address | slice: ":20"}} - ${{ address.shipping_price }}
-                  </option>
+              <select class="form-select" name="address_id">
+                 {% for address in addresses %}
+
+                <option class="text-muted" value="{{address.id}}"  
+                {% if address.default%} selected {% endif %}
+                >
+                  {{address.address | slice:":12"}} - ${{address.shipping_price}}
+                </option>
+      
+                {% empty %}
+      
+                  <option class="text-muted" value="0">No more confirmed addresses</option>
+      
                 {% endfor %}
               </select>
               <p><a href="{% url 'account' %}#address">Add a new address</a></p>
@@ -109,26 +108,34 @@
         </li>
       </ul>
 
-      <form class="card p-2" action="{% url 'redeem_promo_code' %}" method="post">
+      {% comment %} <form class="card p-2" action="{% url 'redeem_promo_code' %}" method="post">
         {% csrf_token %}
         <div class="input-group">
           <input type="text" name="promo_code" class="form-control" placeholder="Promo code" />
           <button type="submit" class="btn btn-secondary">Redeem</button>
         </div>
-      </form>
+      </form> {% endcomment %}
 
       <hr class="my-4" />
 
       <h4>Payment</h4>
       <div class="my-3">
-        <a href="{% url 'checkout' %}" class="custom-button">
+      <form action="{% url 'payment' %}" method='post'>
+        {% csrf_token %}
+          <button type="submit" class="custom-button">
           Proceed to payment
-        </a>
+          </button>
+      </form>
         </div>
       </div>
 
     </div>
   </div>
 </div>
+
+{% endblock %}
+
+{% block js %}
+
 
 {% endblock %}

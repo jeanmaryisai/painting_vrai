@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     # 'colorfield'
 
     'core',
+
 ]
 
 MIDDLEWARE = [
@@ -72,6 +73,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'core.context_processors.settings_context',
             ],
         },
     },
@@ -156,3 +158,21 @@ EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTIFICATION_METHOD = 'email'
 LOGIN_URL = '/auth/login/'
+
+#payPal settings
+
+# PAYPAL_RECEIVER_EMAIL = 'sb-p7vc018063228@business.example.com'
+# PAYPAL_TEST = True
+# PAYPAL_CLIENT_ID = 'AYqNE3Z6VdCvPXR8aL44wpFlEJBA1ojyuzSbijDkV_J3Bb9Oft4bLA0wu72w8b38VOK6zCZX0uCeaswh'
+# PAYPAL_SECRET_KEY = 'EOtyhhRouUiBfkN9tv9DJUMrvsd-YkDKpWUPv-_g15wk5uhAG4VIWpMGLsCI8rbXqLRXqPjwrddll4E0'
+
+
+# stripe settings
+STRIPE_SECRET_KEY_TEST='sk_test_51Poxe6P765vfvp0NRl0mrbP4dRz5Q70Y39Fj60ia5zhjr55YxxPiCqx85oh6uMmkP4b1gBhiV2EGQWcop9pk4USy00y3t0CQY2'
+STRIPE_PUBLISHABLE_KEY_TEST='pk_test_51Poxe6P765vfvp0NSBdtgtvk1BSuzgBisEZHwgv6IETmpQcHH75R0UoOimlHQE6X0oIdxITObXlg9jGFfxrkJkyd00y9TPv8MM'
+
+# email settings
+EMAIL_HOST_USER = 'your-email@example.com'
+EMAIL_HOST_PASSWORD = 'your-email-password'
+DEFAULT_FROM_EMAIL = 'no-reply@example.com'
+CONTACT_EMAIL = 'site-owner@example.com'

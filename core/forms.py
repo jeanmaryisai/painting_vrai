@@ -4,6 +4,13 @@ from django import forms
 from .models import Address
 from django.contrib.auth.models import User
 from django.core.validators import validate_email
+from .models import ContactRequest
+
+
+class ContactRequestForm(forms.ModelForm):
+    class Meta:
+        model = ContactRequest
+        fields = ['name', 'email', 'phone', 'message']
 
 class UserUpdateForm(forms.ModelForm):
     first_name = forms.CharField(max_length=30, required=True)
@@ -46,3 +53,4 @@ class AddAddressForm(forms.ModelForm):
             'first_name', 'last_name', 'email', 'address', 'address2', 
             'country', 'state', 'zip_code', 'message', 'default'
         ]
+

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Address, Artist, Category, Tag, Painting, Order, OrderItem, Review, Notification,PromoCode,PromoCodeUsage
+from .models import Faq, Setting,Address, Artist,Testemonial, Category, Tag, Painting, Order, OrderItem, Review, Notification,PromoCode,PromoCodeUsage
 
 
 class PaintingAdmin(admin.ModelAdmin):
@@ -134,7 +134,70 @@ class TagAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
 
 
+
+
+class SettingAdmin(admin.ModelAdmin):
+    list_display = ['name', 'email', 'phone', 'show']
+    list_filter = ['show']
+    search_fields = ['name', 'email']
+    fieldsets = (
+        ('General Information', {
+            'fields': ('name', 'email', 'phone', 'address')
+        }),
+        ('Home Page Settings', {
+            'fields': (
+                'home_painting_hero_1', 'home_painting_hero_2', 'home_painting_hero_3',
+                'home_painting_list_1', 'home_painting_list_2', 'home_painting_list_3',
+                'home_artist_1', 'home_artist_2', 'home_artist_3',
+                'home_image_section_1', 'become_seller_video'
+            )
+        }),
+        ('Story Section', {
+            'fields': (
+                'home_story_1_image', 'home_story_1_title',
+                'home_story_2_image', 'home_story_2_title',
+                'home_story_3_image', 'home_story_3_title',
+                'home_story_4_image', 'home_story_4_title',
+                'home_story_5_image', 'home_story_5_title'
+            )
+        }),
+        ('Core Values', {
+            'fields': (
+                'core_value_1_title', 'core_value_1_title_description', 'core_value_1_image',
+                'core_value_2_title', 'core_value_2_title_description', 'core_value_2_image',
+                'core_value_3_title', 'core_value_3_title_description', 'core_value_4_image'
+            )
+        }),
+        ('Testimonials', {
+            'fields': ('testimony_1', 'testimony_2', 'testimony_3')
+        }),
+        ('About Us', {
+            'fields': ('hero_about_us_image', 'hero_about_us_description', 'about_image_1', 'about_image_2', 'about_image_3', 'about_story')
+        }),
+        ('Social Media', {
+            'fields': ('facebook', 'twitter', 'instagram', 'pinterest')
+        }),
+        ('Other Settings', {
+            'fields': ('open_hours', 'preview_image', 'team', 'hero_contact_image', 'contact_description', 'show')
+        }),
+    )
+
+
+
+@admin.register(Faq)
+class FaqAdmin(admin.ModelAdmin):
+    list_display = ('question', 'show', 'created_at', 'updated_at')
+    list_filter = ('show', 'created_at')
+    search_fields = ('question',)
+
+
+
+admin.site.register(Setting, SettingAdmin)
+
+
+
 admin.site.register(PromoCode, PromoCodeAdmin)
 admin.site.register(Artist, ArtistAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Tag, TagAdmin)
+admin.site.register(Testemonial)

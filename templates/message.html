@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+
+
+{% include 'components/header.html' with background_image=obj.image.url title=obj.title description='A artwork made by <strong>{{obj.artist.name}}</strong>'%}
+<h2>{{message}}</h2>
+
+{% endblock %}
