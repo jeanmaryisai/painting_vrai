@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
 from django.db.models import Q
-from django.http import HttpResponseRedirect,JsonResponse
+from django.http import HttpResponseRedirect
 from .forms import AddAddressForm, AddressForm
 from django.contrib import messages
 from django.contrib.auth.forms import PasswordChangeForm
@@ -11,7 +11,6 @@ from django.views.generic import ListView
 from django.contrib.auth.forms import PasswordChangeForm
 from django.conf import settings 
 from django.views.decorators.csrf import csrf_exempt
-import uuid
 import stripe
 from django.contrib.auth.models import User
 import json
@@ -19,7 +18,63 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail
 from django.conf import settings
-from .forms import ContactRequestForm
+from .forms import ContactRequestForm,SellerRequestForm
+
+
+def seller_request(request):
+    if request.method == 'POST':
+        form = SellerRequestForm(request.POST)
+        if form.is_valid():
+            # Get cleaned form data
+            full_name = form.cleaned_data['fullName']
+            email = form.cleaned_data['email']
+            phone = form.cleaned_data['phone']
+            business_name = form.cleaned_data['businessName']
+            country = form.cleaned_data['country']
+            description = form.cleaned_data.get('description', '')
+            message = form.cleaned_data.get('message', '')
+            website = form.cleaned_data.get('website', '')
+            seller_request = form.save()
+
+            # Prepare email content
+            subject = "New Seller Request"
+            email_message = f"""
+            A new seller request has been submitted on your site.
+
+            Full Name: {full_name}
+            Email: {email}
+            Phone: {phone}
+            Business Name: {business_name}
+            Country: {country}
+            Business Description: {description}
+            Message: {message}
+            Website: {website}
+            """
+
+            # Send email to site owner
+            send_mail(
+                subject,
+                email_message,
+                settings.DEFAULT_FROM_EMAIL,  # From email
+                [settings.CONTACT_EMAIL],  # To email
+                fail_silently=False,
+            )
+
+            # Optionally, send a confirmation email to the user (the form submitter)
+            send_mail(
+                "Thank you for your request",
+                "Thank you for your interest in becoming a seller on our platform. We will review your request and get back to you shortly.",
+                settings.DEFAULT_FROM_EMAIL,  # From email
+                [email],  # To email
+                fail_silently=False,
+            )
+            
+            # Show success message and redirect
+            messages.success(request, 'Your request has been submitted successfully!')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))  # Redirect to a relevant page, like home or a confirmation page
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
 
 def contact(request):
     if request.method == 'POST':

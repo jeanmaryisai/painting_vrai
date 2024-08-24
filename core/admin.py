@@ -1,6 +1,19 @@
 from django.contrib import admin
-from .models import Faq, Setting,Address, Artist,Testemonial, Category, Tag, Painting, Order, OrderItem, Review, Notification,PromoCode,PromoCodeUsage
+from .models import SellerRequest,Faq, Setting,Address, Artist,Testemonial, Category, Tag, Painting, Order, OrderItem, Review, Notification,PromoCode,PromoCodeUsage
 
+@admin.register(SellerRequest)
+class SellerRequestAdmin(admin.ModelAdmin):
+    list_display = ('full_name', 'email', 'phone', 'business_name', 'country', 'created_at')
+    search_fields = ('full_name', 'email', 'business_name', 'country')
+    list_filter = ('country', 'created_at')
+    readonly_fields = ('full_name', 'email', 'phone', 'business_name', 'country', 'description', 'message', 'website', 'created_at')
+    ordering = ('-created_at',)
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 class PaintingAdmin(admin.ModelAdmin):
     list_display = ('title', 'artist', 'category', 'price', 'created_at', 'isNew', 'show')

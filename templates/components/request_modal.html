@@ -12,36 +12,36 @@
             {% csrf_token %}
             <div class="mb-3">
               <label for="fullName" class="form-label">Full Name</label>
-              <input type="text" class="form-control" id="fullName" placeholder="John Doe" required>
+              <input type="text" name="fullName" class="form-control" id="fullName" placeholder="John Doe" required>
             </div>
             <div class="mb-3">
               <label for="email" class="form-label">Email Address</label>
-              <input type="email" class="form-control" id="email" placeholder="email@example.com" required>
+              <input type="email" name="email" class="form-control" id="email" placeholder="email@example.com" required>
             </div>
             <div class="mb-3">
               <label for="phone" class="form-label">Phone Number</label>
-              <input type="text" class="form-control" id="phone" placeholder="+1234567890" required>
+              <input type="text" name="phone" class="form-control" id="phone" placeholder="+1234567890" required>
             </div>
             <div class="mb-3">
               <label for="businessName" class="form-label">Business Name</label>
-              <input type="text" class="form-control" id="businessName" placeholder="Your Business Name or type freelance" required>
+              <input type="text" class="form-control" name="businessName" id="businessName" placeholder="Your Business Name or type freelance" required>
             </div>
   
             <div class="mb-3">
               <label for="Country" class="form-label">Country</label>
-              <input type="text" class="form-control" id="Country" placeholder="Your Business Name or type freelance" required>
+              <input type="text" class="form-control" id="Country" name="country" placeholder="Your Business Name or type freelance" required>
             </div>
             <div class="mb-3">
               <label for="description" class="form-label">Business Description(Optional)</label>
-              <textarea class="form-control" id="description" rows="3" placeholder="Tell us about your business" required></textarea>
+              <textarea class="form-control" id="description" rows="3" name="description" placeholder="Tell us about your business" required></textarea>
             </div>
             <div class="mb-3">
               <label for="Message" class="form-label">Leave here a custom Message for us.</label>
-              <textarea class="form-control" id="Message" rows="3" placeholder="Leave a message here" required></textarea>
+              <textarea class="form-control" id="Message" rows="3" name="message" placeholder="Leave a message here" required></textarea>
             </div>
             <div class="mb-3">
               <label for="website" class="form-label">Website (optional)</label>
-              <input type="url" class="form-control" id="website" placeholder="http://yourbusinesswebsite.com">
+              <input type="url" class="form-control" id="website" name="website" placeholder="http://yourbusinesswebsite.com">
             </div>
             <button type="submit" class="custom-button">Submit Request</button>
           </form>

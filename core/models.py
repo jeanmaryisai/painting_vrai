@@ -334,4 +334,18 @@ class ContactRequest(models.Model):
 
     def __str__(self):
         return f"Message from {self.name} - {self.email}"
+    
+class SellerRequest(models.Model):
+    full_name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20)
+    business_name = models.CharField(max_length=100)
+    country = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
+    message = models.TextField(blank=True, null=True)
+    website = models.URLField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.full_name
 

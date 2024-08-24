@@ -5,7 +5,21 @@ from .models import Address
 from django.contrib.auth.models import User
 from django.core.validators import validate_email
 from .models import ContactRequest
+from .models import SellerRequest
 
+class SellerRequestForm(forms.ModelForm):
+    class Meta:
+        model = SellerRequest
+        fields = [
+            'full_name',
+            'email',
+            'phone',
+            'business_name',
+            'country',
+            'description',
+            'message',
+            'website',
+        ]
 
 class ContactRequestForm(forms.ModelForm):
     class Meta:

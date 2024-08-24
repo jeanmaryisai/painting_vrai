@@ -226,13 +226,9 @@
               </li>
               <li><a href="{% url 'about' %}" data-scroll-to>About</a></li>
               <li><a href="{% url 'contact' %}" data-scroll-to>Contact</a></li>
-              {% if request.user.is_authenticated %}
               <li><a href="{% url 'cart' %}" data-scroll-to>Cart</a></li>
-              <li><a href="{% url 'account' %}" data-scroll-to>Contact</a></li>
-              {% else %}
-              <li><a href="{% url 'login' %}">Login</a></li>
-              {% endif %}
-            </ul>
+              <li><a href="{% url 'account' %}" data-scroll-to>Account</a></li>
+              
           </div>
           <!-- end site-menu -->
         </div>
@@ -261,7 +257,6 @@
         <!-- end site-menu -->
         <div class="search-button"><i class="far fa-search" style="font-size: x-large;"></i></div>
         <div class="m-3">
-          {% if request.user.is_authenticated %}
           <a href="{% url 'cart' %}"><i class="fa fa-shopping-cart" style="font-size: x-large;"
               aria-hidden="true"></i></a>
         </div>
@@ -269,11 +264,6 @@
         <a href="{% url 'account' %}" class="m-1">
           <img src="{% static 'images/icon04.png' %}" alt="Image" height="37" />
         </a>
-        {% else %}
-        <a href="{% url 'login' %}">
-          Login
-        </a>
-        {% endif %}
         <!-- end search-button -->
         <div class="hamburger-menu">
           <svg class="hamburger" width="30" height="30" viewBox="0 0 30 30">
