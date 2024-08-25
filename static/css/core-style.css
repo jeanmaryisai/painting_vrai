@@ -1,22 +1,12 @@
 /* [Master Stylesheet v-1.0.0] */
 /* :: :: 1.0 Import Fonts */
 @import url(../css/bootstrap.min.css);
-@import url(../css/owl.carousel.css);
-@import url(../css/animate.css);
-@import url(../css/magnific-popup.css);
-@import url(../css/jquery-ui.min.css);
-@import url(../css/nice-select.css);
-@import url(../css/font-awesome.min.css);
-@font-face {
-  font-family: 'helveticaneuebold';
-  src: url("../fonts/helvetica_neu_bold-webfont.woff2") format("woff2"), url("../fonts/helvetica_neu_bold-webfont.woff") format("woff");
-  font-weight: normal;
-  font-style: normal; }
-@font-face {
-  font-family: 'helveticaneuemedium';
-  src: url("../fonts/helveticaneue_medium-webfont.woff2") format("woff2"), url("../fonts/helveticaneue_medium-webfont.woff") format("woff");
-  font-weight: normal;
-  font-style: normal; }
+@import url(../css/fancybox.min.css);
+@import url(../css/fontawesome.min.css);
+@import url(../css/odometer.min.css);
+@import url(../css/style.css);
+@import url(../css/swiper.min.css);
+
 /* :: 2.0 Import All CSS */
 /* :: 3.0 Base CSS */
 * {
@@ -1397,4 +1387,3 @@ img {
 
 /* ##### The End ##### */
 
-/*# sourceMappingURL=core-style.css.map */

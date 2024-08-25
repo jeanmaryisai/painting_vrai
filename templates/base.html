@@ -1,5 +1,5 @@
 {% load static %}
-
+{% load google_translate %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -45,13 +45,15 @@
     <link href="{% static 'ico/favicon.png' %} " rel="shortcut icon" />
     <style>
       .bg-prime { 
-        background-color: #feed01;
-        padding: 10px;
+        background-color: #ffffff39;
+        padding: 0px 15px;
         border-radius: 10px;
         align-items: center;
         align-content: center; 
+        justify-content: space-between;
         display: flex;
         flex-direction: row;
+        /* margin-left: 20px; */
       }
       button {
 
@@ -223,6 +225,7 @@
             <ul>
               <li><a href="#">English</a></li>
               <li><a href="#">Kreyol</a></li>
+              <li>{% google_translate type='vertical' language='en' %}</li>
             </ul>
           </div>
           <!-- end custom-menu -->
@@ -255,7 +258,7 @@
           </ul>
         </div>
         <!-- end custom-menu -->
-        <div class="site-menu">
+        <div class="site-menu" style="margin-right:100px;">
           <ul>
             <li><a href="{% url 'painting_list' %}" data-scroll-to>Shop</a></li>
             <li><a href="{% url 'artist_list' %}" data-scroll-to>Our Artist</a></li>
@@ -264,7 +267,7 @@
           </ul>
         </div>
         <!-- end site-menu -->
-         <div class="bg-prime ">
+        <div class="bg-prime ">
         <div class=" " ><i class="far fa-search " style="font-size: x-large;"></i></div>
         <div class="m-3">
           <a href="{% url 'cart' %}"><i class="fa fa-shopping-cart" style="font-size: x-large;"

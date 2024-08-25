@@ -1,4 +1,4 @@
-from .models import Setting,TermsAndConditions_paragraph,PrivacyPolicy_paragraph, Painting, Order, OrderItem, Review, PromoCode,Testemonial, Faq,PromoCodeUsage, Category,Artist, Address,Notification
+from .models import Setting,TermsAndConditions_paragraph,PrivacyPolicy_paragraph, Painting, Order, OrderItem, Review, PromoCode,Testemonial, Faq, Category,Artist, Address,Notification
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
@@ -270,15 +270,19 @@ def move_to_cart(request, painting_id):
 
 @login_required
 def redeem_promo_code_view(request):
-    if request.POST.get('promo_code') and (request.POST.get('promo_code')!= ""):
+    if request.POST.get('coupon') and (request.POST.get('coupon')!= ""):
         order = Order.objects.get(user=request.user, status='PENDING')
-        promo_code = request.POST.get('promo_code')
+        
+        promo_code = request.POST.get('coupon')
         try:
             code = PromoCode.objects.get(code=promo_code, active=True)
-            if PromoCodeUsage.objects.filter(promo_code=code, user=request.user).count() < code.usage_limit:
-                PromoCodeUsage.objects.create(promo_code=code, user=request.user)
+            if Order.objects.filter(promo_code=promo_code).count() < code.usage_limit:
                 order.promo_code = code
+                print('Promo Code',order.promo_code.code)
                 order.save()
+                Order.objects.filter(user=request.user, status='PENDING').update(promo_code=code)
+                
+                print('Promo Code',order.promo_code.code)
                 messages.success(request, f'Promo code {promo_code} applied successfully!')
             else:
                 messages.error(request, 'You have reached the usage limit for this promo code.')
@@ -491,7 +495,7 @@ def payment(request):
                 consent_collection={"terms_of_service": "required"},
                 custom_text={
                     "terms_of_service_acceptance": {
-                    "message": "I agree to the [Terms of Service](https://example.com/terms)",
+                    "message": "I agree to the [Terms of Service](https://{YOUR_DOMAIN}/about?q=terms)",
                     },
                 },
                 # automatic_tax={"enabled": True},

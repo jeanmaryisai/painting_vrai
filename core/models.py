@@ -16,15 +16,10 @@ class PromoCode(models.Model):
     discount = models.DecimalField(max_digits=5, decimal_places=2)
     active = models.BooleanField(default=True)
     usage_limit = models.PositiveIntegerField(default=1)
-    users = models.ManyToManyField(User, through='PromoCodeUsage')
 
     def __str__(self):
         return self.code
-
-class PromoCodeUsage(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    promo_code = models.ForeignKey(PromoCode, on_delete=models.CASCADE)
-    used_at = models.DateTimeField(auto_now_add=True)
+    
 
 
 class Artist(models.Model):
@@ -188,18 +183,18 @@ class Order(models.Model):
     def __str__(self):
         return f'Order #{self.pk} - {self.user.username}'
     
-    def save(self, *args, **kwargs):
-        # Automatically set the dates based on the status
-        if self.status == 'PROCESSING' and not self.payed_at:
-            self.payed_at = timezone.now()
+    # def save(self, *args, **kwargs):
+    #     # Automatically set the dates based on the status
+    #     if self.status == 'PROCESSING' and not self.payed_at:
+    #         self.payed_at = timezone.now()
 
-        if self.status == 'SHIPPED' and not self.shipped_at:
-            self.shipped_at = timezone.now()
+    #     if self.status == 'SHIPPED' and not self.shipped_at:
+    #         self.shipped_at = timezone.now()
 
-        if self.status == 'DELIVERED' and not self.delivered_at:
-            self.delivered_at = timezone.now()
-        # Finally, save the object
-        super().save(*args, **kwargs)
+    #     if self.status == 'DELIVERED' and not self.delivered_at:
+    #         self.delivered_at = timezone.now()
+    #     # Finally, save the object
+    #     super().save(*args, **kwargs)
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)

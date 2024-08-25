@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import PrivacyPolicy_paragraph,TermsAndConditions_paragraph, ContactRequest, SellerRequest,Faq, Setting,Address, Artist,Testemonial, Category, Tag, Painting, Order, OrderItem, Review, Notification,PromoCode,PromoCodeUsage
+from .models import PrivacyPolicy_paragraph,TermsAndConditions_paragraph, ContactRequest, SellerRequest,Faq, Setting,Address, Artist,Testemonial, Category, Tag, Painting, Order, OrderItem, Review, Notification,PromoCode
 
 @admin.register(SellerRequest)
 class SellerRequestAdmin(admin.ModelAdmin):
@@ -134,7 +134,7 @@ class ReviewAdmin(admin.ModelAdmin):
 admin.site.register(Review, ReviewAdmin)
 
 class PromoCodeUsageInline(admin.TabularInline):
-    model = PromoCodeUsage
+    model = Order
     extra = 1
 
 class PromoCodeAdmin(admin.ModelAdmin):

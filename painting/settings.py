@@ -22,17 +22,28 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-=**11ny_!)k)s@ko18won427klz#6c3fep8kr_0u&%+56ce8s&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
+from dotenv import load_dotenv
+
+# Load the .env file
+load_dotenv()
+
+# Example settings using your provided .env values
+
+SECRET_KEY = os.getenv('SECRET_KEY')
+
+STRIPE_SECRET_KEY_TEST = os.getenv('STRIPE_SECRET_KEY_TEST')
+STRIPE_PUBLISHABLE_KEY_TEST = os.getenv('STRIPE_PUBLISHABLE_KEY_TEST')
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    
     "admin_interface",
     'colorfield',
     'allauth',
@@ -46,13 +57,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # 'colorfield',
-
+    'google_translate',
     'core',
 
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -135,6 +148,8 @@ STATIC_URL = '/static/'
 MEDIA_URL='/images/'
 STATICFILES_DIRS=[os.path.join(BASE_DIR,'static')]
 MEDIA_ROOT= os.path.join(BASE_DIR,'images')
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -163,14 +178,6 @@ LOGIN_URL = '/auth/login/'
 
 
 
-# stripe settings
-STRIPE_SECRET_KEY_TEST='sk_test_51Poxe6P765vfvp0NRl0mrbP4dRz5Q70Y39Fj60ia5zhjr55YxxPiCqx85oh6uMmkP4b1gBhiV2EGQWcop9pk4USy00y3t0CQY2'
-STRIPE_PUBLISHABLE_KEY_TEST='pk_test_51Poxe6P765vfvp0NSBdtgtvk1BSuzgBisEZHwgv6IETmpQcHH75R0UoOimlHQE6X0oIdxITObXlg9jGFfxrkJkyd00y9TPv8MM'
 
-# email settings
-EMAIL_HOST_USER = 'your-email@example.com'
-EMAIL_HOST_PASSWORD = 'your-email-password'
-DEFAULT_FROM_EMAIL = 'no-reply@example.com'
-CONTACT_EMAIL = 'site-owner@example.com'
 CKEDITOR_BASEPATH = "/stactic/ckeditor/ckeditor/"
 CKEDITOR_UPLOAD_PATH = "uploads/"
