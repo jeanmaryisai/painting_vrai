@@ -11,7 +11,7 @@
     <div class="row align-items-center">
       <div class="col-12">
         <div class="section-title text-center">
-          <figure><img src="{% static 'images/title-shape.png' %}" alt="Image"></figure>
+          <figure><img src="{% static 'images/title-shape.png' %}" alt="Image" loading="lazy"></figure>
           <h2>Painting Haitian </h2>
         </div>
         <!-- end section-title -->
@@ -28,17 +28,17 @@
           <div class="row">
             <div class="col-md-4">
               <figure class="image-box" data-scroll data-scroll-speed="0"> <img
-                  src="{{ setting.about_image_1.url }}" alt="Image"> </figure>
+                  src="{{ setting.about_image_1.url }}" loading="lazy" alt="Image"> </figure>
             </div>
             <!-- end col-3 -->
             <div class="col-md-4">
               <figure class="image-box" data-scroll data-scroll-speed="0"> <img
-                  src="{{ setting.about_image_2.url }}" alt="Image"> </figure>
+                  src="{{ setting.about_image_2.url }}" loading="lazy" alt="Image"> </figure>
             </div>
             <!-- end col-3 -->
             <div class="col-md-4">
               <figure class="image-box" data-scroll data-scroll-speed="0"> <img
-                  src="{{ setting.about_image_3.url }}" alt="Image"> </figure>
+                  src="{{ setting.about_image_3.url }}" loading="lazy" alt="Image"> </figure>
             </div>
             <!-- end col-3 -->
           </div>
@@ -52,17 +52,17 @@
           <div class="row">
             <div class="col-md-4">
               <figure class="image-box" data-scroll data-scroll-speed="0"> <img
-                  src="{{ setting.about_image_1.url }}" alt="Image"> </figure>
+                  src="{{ setting.about_image_1.url }}" loading="lazy" alt="Image"> </figure>
             </div>
             <!-- end col-3 -->
             <div class="col-md-4">
               <figure class="image-box" data-scroll data-scroll-speed="0"> <img
-                  src="{{ setting.about_image_2.url }}" alt="Image"> </figure>
+                  src="{{ setting.about_image_2.url }}" loading="lazy" alt="Image"> </figure>
             </div>
             <!-- end col-3 -->
             <div class="col-md-4">
               <figure class="image-box" data-scroll data-scroll-speed="0"> <img
-                  src="{{ setting.about_image_3.url }}" alt="Image"> </figure>
+                  src="{{ setting.about_image_3.url }}" loading="lazy" alt="Image"> </figure>
             </div>
             <!-- end col-3 -->
           </div>
@@ -94,7 +94,7 @@
 
             {% for x in setting.team.all %}
             <div class="swiper-slide">
-              <figure><img src="{{x.profile.url }}" alt="Image"></figure>
+              <figure><img src="{{x.profile.url }}" alt="Image" loading="lazy"></figure>
               <div class="content-box">
                 <h5>{{x.name}}</h5>
                 <a href="{% url 'artist' x.id %}" class="custom-link">Read More</a>
@@ -165,11 +165,11 @@
           </div>
           <!-- end titles -->
           <ul>
-            <li data-scroll data-scroll-speed="0.5"><img src="{{ setting.about_image_3.url }}" alt="Image"></li>
-            <li data-scroll data-scroll-speed="1"><img src="{{ setting.about_image_1.url }}" alt="Image"></li>
-            <li data-scroll data-scroll-speed="0.5"><img src="{{ setting.about_image_2.url }}" alt="Image"></li>
-            <li data-scroll data-scroll-speed="1"><img src="{{ setting.about_image_1.url }}" alt="Image"></li>
-            <li data-scroll data-scroll-speed="0.5"><img src="{{ setting.about_image_2.url }}" alt="Image"></li>
+            <li data-scroll data-scroll-speed="0.5"><img loading="lazy" src="{{ setting.about_image_3.url }}" alt="Image"></li>
+            <li data-scroll data-scroll-speed="1"><img loading="lazy" src="{{ setting.about_image_1.url }}" alt="Image"></li>
+            <li data-scroll data-scroll-speed="0.5"><img loading="lazy" src="{{ setting.about_image_2.url }}" alt="Image"></li>
+            <li data-scroll data-scroll-speed="1"><img loading="lazy" src="{{ setting.about_image_1.url }}" alt="Image"></li>
+            <li data-scroll data-scroll-speed="0.5"><img loading="lazy" src="{{ setting.about_image_2.url }}" alt="Image"></li>
           </ul>
         </div>
         <!-- end side-arts -->
@@ -233,7 +233,7 @@
     <div class="row">
       <div class="col-12">
         <div class="section-title text-center">
-          <figure><img src="{% static 'images/title-shape.png' %}" alt="Image"></figure>
+          <figure><img src="{% static 'images/title-shape.png' %}" alt="Image" ></figure>
           <h6>Haitian Art Display </h6>
           <h2>Featured Artists</h2>
         </div>
