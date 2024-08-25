@@ -1,4 +1,4 @@
-from .models import Painting, Order, OrderItem, Review, PromoCode,Testemonial, Faq,PromoCodeUsage, Category,Artist, Address,Notification
+from .models import Setting,TermsAndConditions_paragraph,PrivacyPolicy_paragraph, Painting, Order, OrderItem, Review, PromoCode,Testemonial, Faq,PromoCodeUsage, Category,Artist, Address,Notification
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
@@ -24,12 +24,13 @@ from .forms import ContactRequestForm,SellerRequestForm
 def seller_request(request):
     if request.method == 'POST':
         form = SellerRequestForm(request.POST)
+        print(request.POST)
         if form.is_valid():
             # Get cleaned form data
-            full_name = form.cleaned_data['fullName']
+            full_name = form.cleaned_data['full_name']
             email = form.cleaned_data['email']
             phone = form.cleaned_data['phone']
-            business_name = form.cleaned_data['businessName']
+            business_name = form.cleaned_data['business_name']
             country = form.cleaned_data['country']
             description = form.cleaned_data.get('description', '')
             message = form.cleaned_data.get('message', '')
@@ -104,7 +105,14 @@ def contact(request):
     return render(request, 'contact.html', {'form': form})
 
 def about(request):
-    return render(request, 'about.html',{'faq': Faq.objects.filter(show=True)})
+    faq=Faq.objects.filter(show=True)
+    if request.GET.get('q')=='privacy':
+        setting=get_object_or_404(Setting,show=True)
+        return render(request, 'policies.html', {'p': PrivacyPolicy_paragraph.objects.filter(Settings=setting),'title':'Privacy Policy'})
+    if request.GET.get('q')=='terms':
+        setting=get_object_or_404(Setting,show=True)
+        return render(request, 'policies.html', {'faq':faq,'p': TermsAndConditions_paragraph.objects.filter(Settings=setting),'title':'Terms and Conditions'})
+    return render(request, 'about.html',{'faq': faq})
 
 def home(request):
     return render(request, 'index.html',{'testimonies': Testemonial.objects.all()})

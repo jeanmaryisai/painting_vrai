@@ -27,12 +27,14 @@ SECRET_KEY = 'django-insecure-=**11ny_!)k)s@ko18won427klz#6c3fep8kr_0u&%+56ce8s&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    "admin_interface",
+    'colorfield',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -43,7 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'colorfield'
+    # 'colorfield',
 
     'core',
 
@@ -170,3 +172,5 @@ EMAIL_HOST_USER = 'your-email@example.com'
 EMAIL_HOST_PASSWORD = 'your-email-password'
 DEFAULT_FROM_EMAIL = 'no-reply@example.com'
 CONTACT_EMAIL = 'site-owner@example.com'
+CKEDITOR_BASEPATH = "/stactic/ckeditor/ckeditor/"
+CKEDITOR_UPLOAD_PATH = "uploads/"

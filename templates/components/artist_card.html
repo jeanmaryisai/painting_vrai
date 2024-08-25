@@ -10,7 +10,7 @@
             <b>{{ number }}.</b>
             <h4>{{ title }}</h4>
             <div class="expand">
-                <p>{{ description }}</p>
+                <p>{{ description | slice:":150"}}....</p>
                 <a href="{% url 'artist' link_url %}" class="custom-link">Learn More</a>
             </div>
             <!-- end expand -->

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div style="display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center;">
+    <div>
+        <h1>400 - Bad Request</h1>
+        <p>Your request is invalid or malformed.</p>
+        <a href="{% url 'home' %}">Go back to Home</a>
+    </div>
+</div>
+{% endblock %}

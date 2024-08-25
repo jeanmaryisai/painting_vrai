@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+ {% load static %} 
+ {% block body %} 
+ {% include 'components/header.html' with background_image=setting.hero_about_us_image.url title=title description=setting.hero_about_us_description %}
+
+<div class="container mt-5">
+    {% include "components/messages.html" with messages=messages %} 
+
+  
+{% for x in p %}
+<h3>{{x.title}}</h3>
+<p>{{x.paragraph}}</p>
+<br>
+
+{% endfor%}
+<br>
+{% include 'components/faq.html' with faq=faq %}
+</div>
+
+
+
+{% endblock %}

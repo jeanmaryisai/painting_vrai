@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import SellerRequest,Faq, Setting,Address, Artist,Testemonial, Category, Tag, Painting, Order, OrderItem, Review, Notification,PromoCode,PromoCodeUsage
+from .models import PrivacyPolicy_paragraph,TermsAndConditions_paragraph, ContactRequest, SellerRequest,Faq, Setting,Address, Artist,Testemonial, Category, Tag, Painting, Order, OrderItem, Review, Notification,PromoCode,PromoCodeUsage
 
 @admin.register(SellerRequest)
 class SellerRequestAdmin(admin.ModelAdmin):
@@ -12,8 +12,20 @@ class SellerRequestAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
 
-    def has_delete_permission(self, request, obj=None):
+    
+
+@admin.register(ContactRequest)
+class ContactRequestAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'phone',  'created_at')
+    search_fields = ('name', 'email', 'phone')
+    list_filter = ('created_at',)
+    readonly_fields = ('name', 'email', 'phone',   'message', 'created_at')
+    ordering = ('-created_at','name',)
+
+    def has_add_permission(self, request):
         return False
+
+ 
 
 class PaintingAdmin(admin.ModelAdmin):
     list_display = ('title', 'artist', 'category', 'price', 'created_at', 'isNew', 'show')
@@ -146,6 +158,15 @@ class TagAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     prepopulated_fields = {'slug': ('name',)}
 
+class ParagraphPoliciesInline(admin.StackedInline):
+    model = PrivacyPolicy_paragraph
+    extra = 1 
+    classes = ('collapse',)
+
+class TermsAndConditionsParagraphInline(admin.TabularInline):
+    model = TermsAndConditions_paragraph
+    extra = 1 
+    classes = ('collapse',)
 
 
 
@@ -194,6 +215,14 @@ class SettingAdmin(admin.ModelAdmin):
             'fields': ('open_hours', 'preview_image', 'team', 'hero_contact_image', 'contact_description', 'show')
         }),
     )
+    inlines = [
+        ParagraphPoliciesInline,TermsAndConditionsParagraphInline
+    ]
+    
+    # Customize the display of paragraphs for Privacy Policy and Terms and Conditions
+    # filter_horizontal = ('privacy_policy_paragraphes', 'terms_and_conditions_paragraphes')
+
+
 
 
 

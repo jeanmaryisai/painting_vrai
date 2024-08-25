@@ -7,7 +7,6 @@ from django.utils import timezone
 from datetime import timedelta
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
-# from colorfield.fields import ColorField
 
 
 
@@ -252,6 +251,10 @@ class Testemonial(models.Model):
         return f'Testimonial by {self.author} - {self.content[:100]}...'
 
 
+
+
+    
+
 class Setting(models.Model):
     name = models.CharField(max_length=255)
     home_painting_hero_1= models.ForeignKey(Painting, on_delete=models.CASCADE, related_name='home_painting_1',)
@@ -319,11 +322,23 @@ class Setting(models.Model):
     contact_description=models.TextField()
     show=models.BooleanField()
 
+
     def save(self, *args, **kwargs):
         if self.show:
             # Set show=False for all other instances
             Setting.objects.filter(show=True).exclude(pk=self.id).update(show=False)
         super(Setting, self).save(*args, **kwargs)
+
+
+class PrivacyPolicy_paragraph(models.Model):
+    Settings = models.ForeignKey(Setting, on_delete=models.CASCADE)
+    title=models.CharField(max_length=255)
+    paragraph = models.TextField()
+
+class TermsAndConditions_paragraph(models.Model):
+    Settings = models.ForeignKey(Setting, on_delete=models.CASCADE)
+    title=models.CharField(max_length=255)
+    paragraph = models.TextField()
 
 class ContactRequest(models.Model):
     name = models.CharField(max_length=255)

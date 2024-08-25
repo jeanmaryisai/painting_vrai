@@ -44,6 +44,15 @@
     <link href="{% static 'ico/apple-touch-icon-57-precomposed.png' %} " rel="apple-touch-icon" />
     <link href="{% static 'ico/favicon.png' %} " rel="shortcut icon" />
     <style>
+      .bg-prime { 
+        background-color: #feed01;
+        padding: 10px;
+        border-radius: 10px;
+        align-items: center;
+        align-content: center; 
+        display: flex;
+        flex-direction: row;
+      }
       button {
 
         color: #ffffff;
@@ -255,7 +264,8 @@
           </ul>
         </div>
         <!-- end site-menu -->
-        <div class="search-button"><i class="far fa-search" style="font-size: x-large;"></i></div>
+         <div class="bg-prime ">
+        <div class=" " ><i class="far fa-search " style="font-size: x-large;"></i></div>
         <div class="m-3">
           <a href="{% url 'cart' %}"><i class="fa fa-shopping-cart" style="font-size: x-large;"
               aria-hidden="true"></i></a>
@@ -272,6 +282,7 @@
             <path class="line line-bottom" d="M0,21h30" />
           </svg>
         </div>
+      </div>
         <!-- end hamburger-menu -->
         <div class="">
 
@@ -298,7 +309,8 @@
               <ul class="footer-menu">
                 <li><a href="{% url 'about' %}">About us </a></li>
                 <li><a href="{% url 'contact' %}">Contact us</a></li>
-                <li><a href="#">Privacy Policies</a></li>
+                <li><a href="{% url 'about' %}?q=privacy">Privacy Policies</a></li>
+                <li><a href="{% url 'about' %}?q=terms">Terms and Conditions</a></li>
                 <li><a href="{% url 'painting_list' %}">Shop</a></li>
               </ul>
             </div>
@@ -355,8 +367,9 @@
               <h6 class="widget-title">Visit Us Now</h6>
               <address class="address">
                 {{setting.address}}
-                <i class="fas fa-info-circle"></i> {{setting.phone}}
+
               </address>
+              <a href="tel:{{setting.phone}}"><i class="fas fa-info-circle"></i> {{setting.phone}}</a>
             </div>
             <!-- end col-4 -->
           </div>

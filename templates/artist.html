@@ -3,7 +3,7 @@
 
 {% block body %}
 
-{% include 'components/header.html' with background_image='images/birmingham-museums-trust-pWVJHDiAonU-unsplash.jpg' title='Marvens Villial\'s Work' description='Born in Haiti   ' %}
+{% include 'components/header.html' with background_image=obj.profile.url title=obj.name description=obj.bio %}
 
 
 <section class="content-section" data-background="#fffbf7">
@@ -19,8 +19,9 @@
         </div>
       <!-- end col-6 -->
       <div class="col-lg-6">
-        <figure class="side-image" data-scroll data-scroll-speed="1"> <img src="{{ obj.profile.url }}"  style="width: 100%;
-          height: 7000 px;
+        <figure class="side-image" data-scroll data-scroll-speed="1"> <img src="{{ obj.profile.url }}"  
+        style="width: 100%;
+          height:500px;
           object-fit: cover;" alt="Image"> </figure>
       </div>
       <!-- end col-6 -->
@@ -32,6 +33,7 @@
     <!-- end content-section -->
 	     <section class="content-section">
       <div class="container">
+        <h2>The art</h2>
         
         <div class="row justify-content-center">
 
