@@ -1,31 +1,39 @@
 {% load static %}
+{% load imagekit %}
 
 <!-- product_card.html -->
 <div class="col-lg-4 col-md-6">
+    <br><br>
     <div class="exhibition-box" data-scroll data-scroll-speed="1">
         <figure>
-            <a href="{% url 'painting' slug %}">
-                <img src="{{ image  }}" alt="Image" height="300"
-                style="   width: 100%;
-                height: 300 px;
-                object-fit: cover;"
-                loading="lazy">
+            <a href="{% url 'painting' x.slug %}">
+                
+                <picture>
+                    <img src="{{ painting.painting.small.url }}" srcset="
+                    {{ painting.painting.small.url }} 500w, 
+                    {{ painting.painting.medium.url }} 1000w, 
+                    {{ painting.painting.original_image.url }}  1500w"
+                    sizes="(max-width: 425px) 90vw, (max-width: 768px) 50vw,(max-width:992px) 25vw" 
+                    alt="Painting:{{x.title}} made by {{x.author.name}}"
+                    loading="lazy" style="height:300px; width:  100%; object-fit: cover;">
+                </picture>
+
             </a>
             <div class="info">
                 <figure class="i">
                     <img src="{% static 'images/icon-info.png' %}" alt="Image">
                 </figure>
-                <span><a href="{% url 'add_to_cart' id %}">add to cart</a></span>
+                <span><a href="{% url 'add_to_cart' x.id %}">add to cart </a></span>
             </div>
             <!-- end info -->
         </figure>
         <div class="content-box">
-            <h4><a href="{% url 'painting' slug %}">{{ title }}</a></h4>
-            <p>{{ description | slice:":80" }} ....<br><br></p>
-            
-            <p><a class="custom-link" href="{% url 'add_to_wishlist' id %}">Add to wishlist</a></span>
+            <h4><a href="{% url 'painting' x.slug %}">{{ x.title }}</a></h4>
+            <p>{{ x.description | slice:":80" }} . ,,{{ x.painting }}....<br><br></p>
+
+            <p><a class="custom-link" href="{% url 'add_to_wishlist' x.id %}">Add to wishlist</a></span>
             </p>
-            
+
         </div>
         <!-- end content-box -->
     </div>

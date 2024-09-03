@@ -15,24 +15,24 @@
   <div class="swiper-container slider-images">
     <div class="swiper-wrapper">
       <div class="swiper-slide gradient"
-        data-background="{% static 'images/birmingham-museums-trust-aIs9zmgTEl4-unsplash.jpg' %}"
+        data-background="{{setting.home_painting_hero_1.painting.medium.url}}"
         >
         <div class="mobile-slide gradient"
-          data-background="{% static 'images/birmingham-museums-trust-zWE5pOLWkio-unsplash.jpg' %}"
+          data-background="{{setting.home_painting_hero_1.painting.medium.url}}"
           ></div>
       </div>
       <div class="swiper-slide gradient"
-        data-background="{{setting.home_painting_hero_1.image.url}}"
+        data-background="{{setting.home_painting_hero_2.painting.medium.url}}"
         >
         <div class="mobile-slide gradient"
-          data-background="{{setting.home_painting_hero_1.image.url}}"
+          data-background="{{setting.home_painting_hero_2.painting.medium.url}}"
           ></div>
       </div>
       <div class="swiper-slide gradient"
-        data-background="{{setting.home_painting_hero_1.image.url}}"
+        data-background="{{setting.home_painting_hero_3.painting.medium.url}}"
         >
         <div class="mobile-slide gradient"
-          data-background="{{setting.home_painting_hero_1.image.url}}"
+          data-background="{{setting.home_painting_hero_3.painting.medium.url}}"
           ></div>
       </div>
     </div>
@@ -227,11 +227,10 @@
     <!-- end row -->
     <div class="row justify-content-center">
 
-      {% include 'components/product_card.html' with slug=setting.home_painting_list_1.slug image=setting.home_painting_list_1.image.url product_title=setting.home_painting_list_1.title id=setting.home_painting_list_1.id description=setting.home_painting_list_1.description %}
+      {% include 'components/product_card.html' with x=setting.home_painting_list_1 %}
+      {% include 'components/product_card.html' with x=setting.home_painting_list_2 %}
+      {% include 'components/product_card.html' with x=setting.home_painting_list_3 %}
 
-      {% include 'components/product_card.html' with slug=setting.home_painting_list_2.slug image=setting.home_painting_list_2.image.url product_title=setting.home_painting_list_2.title id=setting.home_painting_list_2.id description=setting.home_painting_list_2.description %}
-
-      {% include 'components/product_card.html' with slug=setting.home_painting_list_3.slug image=setting.home_painting_list_3.image.url product_title=setting.home_painting_list_3.title id=setting.home_painting_list_3.id description=setting.home_painting_list_3.description %}
     </div>
     <br><br>
     <div class="justify-content-center d-flex align-items-center">
@@ -269,10 +268,10 @@
   <div class="container-fluid px-0">
     <!-- templates/main_template.html -->
     <div class="row g-0">
-      {% include 'components/artist_card.html' with scroll_speed='-1' image_src=setting.home_artist_1.profile.url number='01' title=setting.home_artist_1.name description=setting.home_artist_1.bio link_url=setting.home_artist_1.id %}
-      {% include 'components/artist_card.html' with scroll_speed='-1' image_src=setting.home_artist_2.profile.url number='02' title=setting.home_artist_2.name description=setting.home_artist_2.bio link_url=setting.home_artist_2.id %}
-      {% include 'components/artist_card.html' with scroll_speed='-1' image_src=setting.home_artist_3.profile.url number='03' title=setting.home_artist_3.name description=setting.home_artist_3.bio link_url=setting.home_artist_3.id %}
-
+      {% include 'components/artist_card.html' with scroll_speed='-1' x=setting.home_artist_1 number='01' %}
+      {% include 'components/artist_card.html' with scroll_speed='-1' x=setting.home_artist_2 number='02' %}
+      {% include 'components/artist_card.html' with scroll_speed='-1' x=setting.home_artist_3 number='03' %}
+    
 
     </div>
     <br><br>

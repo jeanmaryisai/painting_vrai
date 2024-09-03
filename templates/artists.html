@@ -42,7 +42,7 @@
         {% endif %}
 
         {% for x in artists %}
-          {% include 'components/artist_card.html' with scroll_speed='1' image_src=x.profile.url number=forloop.counter title=x.name description=x.bio link_url=x.id %}
+          {% include 'components/artist_card.html' with scroll_speed='1' x=x number=forloop.counter %}
 
 {% empty %}
 <h2>No Artist yet</h2>

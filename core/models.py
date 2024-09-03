@@ -8,6 +8,12 @@ from datetime import timedelta
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
+from imagekit.models import ProcessedImageField
+from imagekit.processors import ResizeToFill, ResizeToFit
+from imagekit.models import ImageSpecField
+from imagekit.processors import SmartResize, ResizeToFill, ResizeToFit
+
+
 
 
 
@@ -26,7 +32,18 @@ class Artist(models.Model):
     name = models.CharField(max_length=100)
     bio = models.TextField()
     birth_date = models.DateField(null=True, blank=True)
-    profile=models.ImageField(upload_to='profile/')
+    profile=ProcessedImageField(upload_to='profiles/', processors=[ResizeToFit(1500, 1500)], format='WEBP', options={'quality': 95})
+    small = ImageSpecField(source='profile',
+                           processors=[ResizeToFit(500, 500)],
+                           format='WEBP',
+                           options={'quality': 90})
+
+    # WebP version
+    medium = ImageSpecField(source='profile',
+                          processors=[ResizeToFit(1000, 1000)],
+                          format='WEBP',
+                          options={'quality': 95})
+    
 
     def __str__(self):
         return self.name
@@ -52,13 +69,13 @@ class Painting(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='paintings/')
     created_at = models.DateTimeField(auto_now_add=True)
     tags=models.ManyToManyField(Tag)
     slug = models.SlugField(unique=True)
     show=models.BooleanField(default=True)
     # canvas_color = ColorField(default='#FFFFFF')
     fav=models.ManyToManyField(User,blank=True)
+    # img=models.OneToOneField(Image, on_delete=models.CASCADE,null=True, blank=True)
 
     def __str__(self):
         return self.title
@@ -67,7 +84,29 @@ class Painting(models.Model):
     def isNew(self):
         return self.created_at >= timezone.now() - timedelta(days=90)
 
+class Image(models.Model):
+    original_image = ProcessedImageField(upload_to='paintings/', processors=[ResizeToFit(1500, 1500)], format='WEBP', options={'quality': 95})
+    painting=models.OneToOneField(Painting,null=True, blank=True,on_delete=models.CASCADE,related_name='painting')
+    # Large size (e.g., 1200x1200 pixels)
+    thumbnail=ImageSpecField(
+        source='original_image',
+        processors=[ResizeToFill(150, 150)],
+        format='WEBP',
+        options={'quality': 60}
+    )
+    small = ImageSpecField(source='original_image',
+                           processors=[ResizeToFit(500, 500)],
+                           format='WEBP',
+                           options={'quality': 95})
 
+    # WebP version
+    medium = ImageSpecField(source='original_image',
+                          processors=[ResizeToFit(1000, 1000)],
+                          format='WEBP',
+                          options={'quality': 95})
+
+    def __str__(self):
+        return self.original_image.name
 class Address(models.Model):
     STATUS_CHOICES = (
         ('CONFIRMED', 'Confirmed'),
@@ -262,31 +301,31 @@ class Setting(models.Model):
     home_artist_2= models.ForeignKey(Artist, on_delete=models.CASCADE, related_name='home_artist_2',)
     home_artist_3= models.ForeignKey(Artist, on_delete=models.CASCADE, related_name='home_artist_3',)
 
-    home_image_section_1=models.ImageField(upload_to='settings/home_image_section')
+    home_image_section_1=ProcessedImageField(upload_to='settings/home_image_section_1', processors=[ResizeToFit(800, 800)], format='WEBP', options={'quality': 95})
     become_seller_video=models.FileField(upload_to='settings/become_seller_video')
     
 
     
-    home_story_1_image=models.ImageField(upload_to='settings/home_story_1_image')
+    home_story_1_image=ProcessedImageField(upload_to='settings/home_story_1_image', processors=[ResizeToFit(1200, 1200)], format='WEBP', options={'quality': 95})
     home_story_1_title=models.CharField(max_length=255)
-    home_story_2_image=models.ImageField(upload_to='settings/home_story_2_image')
+    home_story_2_image=ProcessedImageField(upload_to='settings/home_story_2_image', processors=[ResizeToFit(1200, 1200)], format='WEBP', options={'quality': 95})
     home_story_2_title=models.CharField(max_length=255)
-    home_story_3_image=models.ImageField(upload_to='settings/home_story_3_image')
+    home_story_3_image=ProcessedImageField(upload_to='settings/home_story_3_image', processors=[ResizeToFit(1200, 1200)], format='WEBP', options={'quality': 95})
     home_story_3_title=models.CharField(max_length=255)
-    home_story_4_image=models.ImageField(upload_to='settings/home_story_4__image')
+    home_story_4_image=ProcessedImageField(upload_to='settings/home_story_4_image', processors=[ResizeToFit(1200, 1200)], format='WEBP', options={'quality': 95})
     home_story_4_title=models.CharField(max_length=255)
-    home_story_5_image=models.ImageField(upload_to='settings/home_story_5_image')
+    home_story_5_image=ProcessedImageField(upload_to='settings/home_story_5_image', processors=[ResizeToFit(1200, 1200)], format='WEBP', options={'quality': 95})
     home_story_5_title=models.CharField(max_length=255)
 
     core_value_1_title=models.CharField(max_length=255)
     core_value_1_title_description=models.TextField()
-    core_value_1_image=models.ImageField(upload_to='settings/core_value_1_image')
+    core_value_1_image=ProcessedImageField(upload_to='settings/core_value_1_image', processors=[ResizeToFit(800, 800)], format='WEBP', options={'quality': 95})
     core_value_2_title=models.CharField(max_length=255)
     core_value_2_title_description=models.TextField()
-    core_value_2_image=models.ImageField(upload_to='settings/core_value_2_image')
+    core_value_2_image=ProcessedImageField(upload_to='settings/core_value_2_image', processors=[ResizeToFit(800, 800)], format='WEBP', options={'quality': 95})
     core_value_3_title=models.CharField(max_length=255)
     core_value_3_title_description=models.TextField()
-    core_value_4_image=models.ImageField(upload_to='settings/core_value_3_image')
+    core_value_4_image=ProcessedImageField(upload_to='settings/core_value_3_image', processors=[ResizeToFit(800, 800)], format='WEBP', options={'quality': 95})
 
 
 
@@ -295,11 +334,11 @@ class Setting(models.Model):
     testimony_3=models.ForeignKey(Testemonial, on_delete=models.CASCADE, related_name='testemony_3')
     
 
-    hero_about_us_image=models.ImageField(upload_to='settings/hero_about_us_image')
+    hero_about_us_image=ProcessedImageField(upload_to='settings/hero_about_us_image', processors=[ResizeToFit(1000, 1000)], format='WEBP', options={'quality': 95})
     hero_about_us_description=models.CharField(max_length=100)
-    about_image_1=models.ImageField(upload_to='settings/about_image_1')
-    about_image_2=models.ImageField(upload_to='settings/about_image_2')
-    about_image_3=models.ImageField(upload_to='settings/about_image_3')
+    about_image_1=ProcessedImageField(upload_to='settings/about_image_1', processors=[ResizeToFit(800, 800)], format='WEBP', options={'quality': 95})
+    about_image_2=ProcessedImageField(upload_to='settings/about_image_2', processors=[ResizeToFit(800, 800)], format='WEBP', options={'quality': 95})
+    about_image_3=ProcessedImageField(upload_to='settings/about_image_3', processors=[ResizeToFit(800, 800)], format='WEBP', options={'quality': 95})
     about_story=models.TextField()
     email=models.EmailField()
     address=models.TextField()
@@ -310,10 +349,10 @@ class Setting(models.Model):
     pinterest=models.URLField(null=True, blank=True)
     open_hours=models.TextField()
 
-    preview_image=models.ImageField(upload_to='settings/preview_image')
+    preview_image=ProcessedImageField(upload_to='settings/preview_image', processors=[ResizeToFit(300, 300)], format='WEBP', options={'quality': 95})
     team=models.ManyToManyField(Artist, related_name='team')
 
-    hero_contact_image=models.ImageField(upload_to='settings/hero_contact_image')
+    hero_contact_image=ProcessedImageField(upload_to='settings/hero_contact_image', processors=[ResizeToFit(1000, 1000)], format='WEBP', options={'quality': 95})
     contact_description=models.TextField()
     show=models.BooleanField()
 

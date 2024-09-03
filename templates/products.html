@@ -20,7 +20,7 @@
             <div class="row justify-content-center">
 
               {% for painting in page_obj %} 
-              {% include 'components/product_card.html' with title=painting.title description=painting.description image=painting.image.url slug=painting.slug id=painting.id %}
+              {% include 'components/product_card.html' with x=painting %}
 
               {% empty %}
 

@@ -4,14 +4,27 @@
 <div class="col-lg-4">
     <div class="image-icon-box" data-scroll data-scroll-speed="{{ scroll_speed }}">
         <figure class="content-image">
-            <img src="{{ image_src }}" alt="Image" height="500" style="object-fit: cover;" loading="lazy"/>
+
+            <!-- <img src="{{ x.profile.url }}" alt="Profile Image of {{x.name}}" height="500" style="object-fit: cover;" loading="lazy"/> -->
+        
+            
+                <img src="{{ x.medium.url }}" srcset="
+                {{ x.small.url }} 500w, 
+                {{ x.medium.url }} 1000w, 
+                {{ x.profile.url }}  1500w"
+                sizes="(max-width: 425px) 100vw, (max-width: 768px) 50vw,(max-width:992px) 33vw" 
+                alt="Profile Image of {{x.name}}"
+                loading="lazy" style="height:500px; width:  100%; object-fit: cover;">
+              
+        
+        
         </figure>
         <div class="content-box">
-            <b>{{ number }}.</b>
-            <h4>{{ title }}</h4>
+            <b>{{ number }}</b>
+            <h4>{{ x.name }}</h4>
             <div class="expand">
-                <p>{{ description | slice:":150"}}....</p>
-                <a href="{% url 'artist' link_url %}" class="custom-link">Learn More</a>
+                <p>{{ x.bio | slice:":150"}}....</p>
+                <a href="{% url 'artist' x.id %}" class="custom-link">Learn More</a>
             </div>
             <!-- end expand -->
         </div>

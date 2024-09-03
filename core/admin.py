@@ -1,5 +1,9 @@
 from django.contrib import admin
-from .models import PrivacyPolicy_paragraph,TermsAndConditions_paragraph, ContactRequest, SellerRequest,Faq, Setting,Address, Artist,Testemonial, Category, Tag, Painting, Order, OrderItem, Review, Notification,PromoCode
+from .models import Image,PrivacyPolicy_paragraph,TermsAndConditions_paragraph, ContactRequest, SellerRequest,Faq, Setting,Address, Artist,Testemonial, Category, Tag, Painting, Order, OrderItem, Review, Notification,PromoCode
+
+class ImageInline(admin.TabularInline):
+    model=Image
+    fields=('original_image',)
 
 @admin.register(SellerRequest)
 class SellerRequestAdmin(admin.ModelAdmin):
@@ -27,6 +31,7 @@ class ContactRequestAdmin(admin.ModelAdmin):
 
  
 
+
 class PaintingAdmin(admin.ModelAdmin):
     list_display = ('title', 'artist', 'category', 'price', 'created_at', 'isNew', 'show')
     list_filter = ('artist', 'category', 'tags', 'created_at', 'show')
@@ -36,14 +41,14 @@ class PaintingAdmin(admin.ModelAdmin):
 
     fieldsets = (
         (None, {
-            'fields': ('title', 'description', 'price', 'artist', 'category', 'image', 'tags', 'slug', 'show', 'fav')
+            'fields': ('title', 'description', 'price', 'artist', 'category', 'tags', 'slug', 'show', 'fav',)
         }),
         ('Advanced options', {
             'classes': ('collapse',),
             'fields': ('created_at',),
         }),
     )
-
+    inlines=[ImageInline]
     readonly_fields = ('created_at',)
 
 admin.site.register(Painting, PaintingAdmin)
@@ -243,3 +248,4 @@ admin.site.register(Artist, ArtistAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Testemonial)
+admin.site.register(Image)

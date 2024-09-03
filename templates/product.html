@@ -4,7 +4,7 @@
 {% block body %}
 
 
-{% include 'components/header.html' with background_image=obj.image.url title=obj.title description='A artwork made by <strong>{{obj.artist.name}}</strong>'%}
+{% include 'components/header.html' with background_image=obj.painting.small.url title=obj.title description=obj.artist.name %}
 
 <section class="content-section no-spacing">
   <div class="container"
@@ -12,8 +12,16 @@
   {% include "components/messages.html" with messages=messages %} 
     <div class="row">
       <div class="col-12">
-        <figure class="image-box" data-scroll data-scroll-speed="1"> <img src="{% static obj.image.url %}" alt="Image"> </figure>
-      </div><
+        <figure class="image-box" data-scroll data-scroll-speed="1"> 
+       
+
+                    <img src="{{ obj.painting.medium.url }}" srcset="
+                    {{ obj.painting.small.url }} 400w, 
+                    {{ obj.painting.medium.url }} 800w, 
+                    {{ obj.painting.original_image.url }}  1200w"
+                    alt="Painting:{{obj.title}} made by {{obj.author.name}}"
+                    loading="lazy" style="height:100vh; width:  100%; object-fit: cover;"></figure>
+      </div>
       <!-- end col-12 -->
     </div>
     <!-- end row -->

@@ -243,9 +243,9 @@
     </div>
     <!-- end row -->
     <div class="row justify-content-center">
-      {% include 'components/artist_card.html' with scroll_speed='-1'  image_src=setting.home_artist_1.profile.url number='01' title=setting.home_artist_1.name description=setting.home_artist_1.bio link_url=setting.home_artist_1.id %}
-      {% include 'components/artist_card.html' with scroll_speed='-1'  image_src=setting.home_artist_2.profile.url number='02' title=setting.home_artist_2.name description=setting.home_artist_2.bio link_url=setting.home_artist_2.id %}
-      {% include 'components/artist_card.html' with scroll_speed='-1'  image_src=setting.home_artist_3.profile.url number='03' title=setting.home_artist_3.name description=setting.home_artist_3.bio link_url=setting.home_artist_3.id %}
+      {% include 'components/artist_card.html' with scroll_speed='-1'  x=setting.home_artist_1 number='01' %}
+      {% include 'components/artist_card.html' with scroll_speed='-1'  x=setting.home_artist_2 number='02' %}
+      {% include 'components/artist_card.html' with scroll_speed='-1'  x=setting.home_artist_3 number='03' %}
     
       <!-- end col-4 -->
     </div>

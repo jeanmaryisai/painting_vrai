@@ -132,6 +132,7 @@ class PaintingListView(ListView):
         context = super().get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
         context['query'] = self.request.GET.get('q')
+        print(Painting.objects.all())
         return context
     
     def get_queryset(self):
