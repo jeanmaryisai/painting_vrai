@@ -94,7 +94,7 @@
 
             {% for x in setting.team.all %}
             <div class="swiper-slide">
-              <figure><img src="{{x.profile.url }}" alt="Image" loading="lazy"></figure>
+              <figure><img src="{{x.profile.url }}" alt="Profile image of the artist {{x.name}}" style="height: 600px;object-fit: cover;"  loading="lazy"></figure>
               <div class="content-box">
                 <h5>{{x.name}}</h5>
                 <a href="{% url 'artist' x.id %}" class="custom-link">Read More</a>
@@ -138,8 +138,8 @@
               <figure> <img src="{% static 'images/icon02.png' %}" alt="Image"> </figure>
               <div class="content">
                 <h5>Book Online</h5>
-                <p>Some exhibitions and events carry <br>
-                  a separate charge</p>
+                <p>Everery Location must be approve first, please <a href="{% url 'contact' %}">contact us</a> to register your address <br>
+                  </p>
                 <!-- <a href="#">Join Now and Book Online</a> -->
               </div>
               <!-- end content -->
@@ -165,11 +165,11 @@
           </div>
           <!-- end titles -->
           <ul>
-            <li data-scroll data-scroll-speed="0.5"><img loading="lazy" src="{{ setting.about_image_3.url }}" alt="Image"></li>
-            <li data-scroll data-scroll-speed="1"><img loading="lazy" src="{{ setting.about_image_1.url }}" alt="Image"></li>
-            <li data-scroll data-scroll-speed="0.5"><img loading="lazy" src="{{ setting.about_image_2.url }}" alt="Image"></li>
-            <li data-scroll data-scroll-speed="1"><img loading="lazy" src="{{ setting.about_image_1.url }}" alt="Image"></li>
-            <li data-scroll data-scroll-speed="0.5"><img loading="lazy" src="{{ setting.about_image_2.url }}" alt="Image"></li>
+            <li data-scroll data-scroll-speed="0.5"><img loading="lazy" src="{{ setting.about_image_3.url }}" alt="painting "></li>
+            <li data-scroll data-scroll-speed="1"><img loading="lazy" src="{{ setting.about_image_1.url }}" alt="painting "></li>
+            <li data-scroll data-scroll-speed="0.5"><img loading="lazy" src="{{ setting.about_image_2.url }}" alt="painting "></li>
+            <li data-scroll data-scroll-speed="1"><img loading="lazy" src="{{ setting.about_image_1.url }}" alt="painting "></li>
+            <li data-scroll data-scroll-speed="0.5"><img loading="lazy" src="{{ setting.about_image_2.url }}" alt="painting "></li>
           </ul>
         </div>
         <!-- end side-arts -->
