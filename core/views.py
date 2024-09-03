@@ -452,8 +452,8 @@ def payment(request):
                 messages.error(request, 'Invalid Address. Please select a confirmed address')
                 return redirect('cart')
 
-
-        YOUR_DOMAIN='http://127.0.0.1:8000'
+        # TODO: implement logic to get the host
+        YOUR_DOMAIN='paintingvrai-production.up.railway.app'
         stripe.api_key = settings.STRIPE_SECRET_KEY_TEST
         try:
             
@@ -502,8 +502,8 @@ def payment(request):
                 # automatic_tax={"enabled": True},
                 # ui_mode="embedded",
                 
-                success_url=YOUR_DOMAIN+'/payment/processing/',
-                cancel_url=YOUR_DOMAIN+'/payment/cancel/',
+                success_url='https://'+YOUR_DOMAIN+'/payment/processing/',
+                cancel_url='https://'+YOUR_DOMAIN+'/payment/cancel/',
             )
         except Exception as e:
             print(e)  # Log the error for debugging
