@@ -453,7 +453,7 @@ def payment(request):
                 return redirect('cart')
 
         # TODO: implement logic to get the host
-        YOUR_DOMAIN='paintingvrai-production.up.railway.app'
+        YOUR_DOMAIN=request.build_absolute_uri('/')
         stripe.api_key = settings.STRIPE_SECRET_KEY_TEST
         try:
             
@@ -496,14 +496,14 @@ def payment(request):
                 consent_collection={"terms_of_service": "required"},
                 custom_text={
                     "terms_of_service_acceptance": {
-                    "message": "I agree to the [Terms of Service](https://{YOUR_DOMAIN}/about?q=terms)",
+                    "message": f"I agree to the [Terms of Service]({YOUR_DOMAIN}about?q=terms)",
                     },
                 },
                 # automatic_tax={"enabled": True},
                 # ui_mode="embedded",
                 
-                success_url='https://'+YOUR_DOMAIN+'/payment/processing/',
-                cancel_url='https://'+YOUR_DOMAIN+'/payment/cancel/',
+                success_url=YOUR_DOMAIN+'payment/processing/',
+                cancel_url=YOUR_DOMAIN+'/payment/cancel/',
             )
         except Exception as e:
             print(e)  # Log the error for debugging
