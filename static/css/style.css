@@ -4238,6 +4238,11 @@ button[type="submit"] i {
   transition: background 0.3s ease-in-out;
 }
 
+.blur-load{
+  background-position: center;
+  background-size: cover;
+  height:300px; width:  100%;
+}
 
 
 

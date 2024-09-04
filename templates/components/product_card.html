@@ -7,7 +7,7 @@
     <div class="exhibition-box" data-scroll data-scroll-speed="1">
         <figure>
             <a href="{% url 'painting' x.slug %}">
-                
+                <div class="blur-load" style="background-image: url({{x.painting.loading.url}});">
                 <picture>
                     <img src="{{ x.painting.small.url }}" srcset="
                     {{ x.painting.small.url }} 500w, 
@@ -17,7 +17,7 @@
                     alt="Painting:{{x.title}} made by {{x.author.name}}"
                     loading="lazy" style="height:300px; width:  100%; object-fit: cover;">
                 </picture>
-
+            </div>
             </a>
             <div class="info" ">
                 <figure class="i" style="background-color: #94ffc4; padding:10px ;">
@@ -28,7 +28,7 @@
         </figure>
         <div class="content-box">
             <h4><a href="{% url 'painting' x.slug %}">{{ x.title }}</a></h4>
-            <p>{{ x.description | slice:":80" }} . ,,{{ x.painting }}....<br><br></p>
+            <p>{{ x.description | slice:":120" }}....<br><br></p>
 
             <p><a class="custom-link" href="{% url 'add_to_wishlist' x.id %}">Add to wishlist</a></span>
             </p>
@@ -38,4 +38,6 @@
     </div>
     <!-- end exhibition-box -->
 </div>
+
+
 <!-- end col-4 -->

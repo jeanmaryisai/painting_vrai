@@ -40,9 +40,13 @@ class Artist(models.Model):
 
     # WebP version
     medium = ImageSpecField(source='profile',
-                          processors=[ResizeToFit(1000, 1000)],
+                          processors=[ResizeToFit(500, 500)],
                           format='WEBP',
-                          options={'quality': 95})
+                          options={'quality': 85})
+    loading = ImageSpecField(source='profile',
+                          processors=[ResizeToFit(20, 20)],
+                          format='WEBP',
+                          options={'quality': 55})
     
 
     def __str__(self):
@@ -95,15 +99,20 @@ class Image(models.Model):
         options={'quality': 60}
     )
     small = ImageSpecField(source='original_image',
-                           processors=[ResizeToFit(500, 500)],
+                           processors=[ResizeToFit(300, 300)],
                            format='WEBP',
-                           options={'quality': 95})
+                           options={'quality': 60})
 
     # WebP version
     medium = ImageSpecField(source='original_image',
-                          processors=[ResizeToFit(1000, 1000)],
+                          processors=[ResizeToFit(500, 500)],
                           format='WEBP',
-                          options={'quality': 95})
+                          options={'quality': 80})
+    
+    loading=ImageSpecField(source='original_image',
+                          processors=[ResizeToFit(20, 20)],
+                          format='WEBP',
+                          options={'quality': 40})
 
     def __str__(self):
         return self.original_image.name
@@ -301,32 +310,36 @@ class Setting(models.Model):
     home_artist_2= models.ForeignKey(Artist, on_delete=models.CASCADE, related_name='home_artist_2',)
     home_artist_3= models.ForeignKey(Artist, on_delete=models.CASCADE, related_name='home_artist_3',)
 
-    home_image_section_1=ProcessedImageField(upload_to='settings/home_image_section_1', processors=[ResizeToFit(800, 800)], format='WEBP', options={'quality': 95})
+    home_image_section_1=ProcessedImageField(upload_to='settings/home_image_section_1', processors=[ResizeToFit(800, 800)], format='WEBP', options={'quality': 85})
     become_seller_video=models.FileField(upload_to='settings/become_seller_video')
     
 
     
-    home_story_1_image=ProcessedImageField(upload_to='settings/home_story_1_image', processors=[ResizeToFit(1200, 1200)], format='WEBP', options={'quality': 95})
+    home_story_1_image=ProcessedImageField(upload_to='settings/home_story_1_image', processors=[ResizeToFit(1200, 1200)], format='WEBP', options={'quality': 85})
     home_story_1_title=models.CharField(max_length=255)
-    home_story_2_image=ProcessedImageField(upload_to='settings/home_story_2_image', processors=[ResizeToFit(1200, 1200)], format='WEBP', options={'quality': 95})
+    home_story_2_image=ProcessedImageField(upload_to='settings/home_story_2_image', processors=[ResizeToFit(1200, 1200)], format='WEBP', options={'quality': 85})
     home_story_2_title=models.CharField(max_length=255)
-    home_story_3_image=ProcessedImageField(upload_to='settings/home_story_3_image', processors=[ResizeToFit(1200, 1200)], format='WEBP', options={'quality': 95})
+    home_story_3_image=ProcessedImageField(upload_to='settings/home_story_3_image', processors=[ResizeToFit(1200, 1200)], format='WEBP', options={'quality': 85})
     home_story_3_title=models.CharField(max_length=255)
-    home_story_4_image=ProcessedImageField(upload_to='settings/home_story_4_image', processors=[ResizeToFit(1200, 1200)], format='WEBP', options={'quality': 95})
+    home_story_4_image=ProcessedImageField(upload_to='settings/home_story_4_image', processors=[ResizeToFit(1200, 1200)], format='WEBP', options={'quality': 85})
     home_story_4_title=models.CharField(max_length=255)
-    home_story_5_image=ProcessedImageField(upload_to='settings/home_story_5_image', processors=[ResizeToFit(1200, 1200)], format='WEBP', options={'quality': 95})
+    home_story_5_image=ProcessedImageField(upload_to='settings/home_story_5_image', processors=[ResizeToFit(1200, 1200)], format='WEBP', options={'quality': 85})
     home_story_5_title=models.CharField(max_length=255)
 
     core_value_1_title=models.CharField(max_length=255)
     core_value_1_title_description=models.TextField()
-    core_value_1_image=ProcessedImageField(upload_to='settings/core_value_1_image', processors=[ResizeToFit(800, 800)], format='WEBP', options={'quality': 95})
+    core_value_1_image=ProcessedImageField(upload_to='settings/core_value_1_image', processors=[ResizeToFit(800, 800)], format='WEBP', options={'quality': 85})
     core_value_2_title=models.CharField(max_length=255)
     core_value_2_title_description=models.TextField()
-    core_value_2_image=ProcessedImageField(upload_to='settings/core_value_2_image', processors=[ResizeToFit(800, 800)], format='WEBP', options={'quality': 95})
+    core_value_2_image=ProcessedImageField(upload_to='settings/core_value_2_image', processors=[ResizeToFit(800, 800)], format='WEBP', options={'quality': 85})
     core_value_3_title=models.CharField(max_length=255)
     core_value_3_title_description=models.TextField()
-    core_value_4_image=ProcessedImageField(upload_to='settings/core_value_3_image', processors=[ResizeToFit(800, 800)], format='WEBP', options={'quality': 95})
+    core_value_4_image=ProcessedImageField(upload_to='settings/core_value_3_image', processors=[ResizeToFit(800, 800)], format='WEBP', options={'quality': 85})
 
+    loading = ImageSpecField(source='core_value_1_image',
+                          processors=[ResizeToFit(1, 1)],
+                          format='WEBP',
+                          options={'quality': 55})
 
 
     testimony_1=models.ForeignKey(Testemonial, on_delete=models.CASCADE, related_name='testemony_1',)
@@ -334,11 +347,11 @@ class Setting(models.Model):
     testimony_3=models.ForeignKey(Testemonial, on_delete=models.CASCADE, related_name='testemony_3')
     
 
-    hero_about_us_image=ProcessedImageField(upload_to='settings/hero_about_us_image', processors=[ResizeToFit(1000, 1000)], format='WEBP', options={'quality': 95})
+    hero_about_us_image=ProcessedImageField(upload_to='settings/hero_about_us_image', processors=[ResizeToFit(1000, 1000)], format='WEBP', options={'quality': 85})
     hero_about_us_description=models.CharField(max_length=100)
-    about_image_1=ProcessedImageField(upload_to='settings/about_image_1', processors=[ResizeToFit(800, 800)], format='WEBP', options={'quality': 95})
-    about_image_2=ProcessedImageField(upload_to='settings/about_image_2', processors=[ResizeToFit(800, 800)], format='WEBP', options={'quality': 95})
-    about_image_3=ProcessedImageField(upload_to='settings/about_image_3', processors=[ResizeToFit(800, 800)], format='WEBP', options={'quality': 95})
+    about_image_1=ProcessedImageField(upload_to='settings/about_image_1', processors=[ResizeToFit(800, 800)], format='WEBP', options={'quality': 85})
+    about_image_2=ProcessedImageField(upload_to='settings/about_image_2', processors=[ResizeToFit(800, 800)], format='WEBP', options={'quality': 85})
+    about_image_3=ProcessedImageField(upload_to='settings/about_image_3', processors=[ResizeToFit(800, 800)], format='WEBP', options={'quality': 85})
     about_story=models.TextField()
     email=models.EmailField()
     address=models.TextField()

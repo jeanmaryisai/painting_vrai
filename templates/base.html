@@ -22,7 +22,7 @@
       content="Explore our collection of original Haitian paintings. Purchase unique art pieces crafted by local Haitian artists.">
 
 
-    <meta property="og:image" content="{{setting.preview_image.url }}" />
+    <!-- <meta property="og:image" content="{{setting.preview_images.url }}" /> -->
     <meta property="og:type" content="Online Stoore" />
     <!-- <meta property="og:url" content="http://" /> -->
 
@@ -34,7 +34,7 @@
     <meta name="twitter:description"
       content="Explore and purchase authentic Haitian paintings at HAitian Art Display , where art meets culture. Discover vibrant pieces that tell the rich history and culture of Haiti." />
 
-    <meta name="twitter:image" content="{{ setting.preview_image.url }}" />
+    <!-- <meta name="twitter:image" content="{{ setting.preview_image.url }}" /> -->
 
     <!-- FAVICON FILES -->
     <link href="{% static 'ico/apple-touch-icon-144-precomposed.png' %} " rel="apple-touch-icon" sizes="144x144" />
@@ -207,7 +207,14 @@ class="page-loade"
         <div class="inner">
           <div class="widget">
             <figure>
-              <img src="{{ setting.hero_about_us_image.url }}" alt="Image" />
+              <img 
+              srcset="
+              {{setting.loading.url}} 750w,
+              {{setting.hero_about_us_image.url}} 1200w"
+              
+              src="{{ setting.hero_about_us_image.url }}"
+              
+              alt="Image" />
             </figure>
             <p>
               {{setting.about_story | slice:":350"}}
@@ -277,25 +284,19 @@ class="page-loade"
         <!-- end site-menu -->
         <div class="bg-prime ">
         <div class=" " >
-          <svg width="40" height="40" viewBox="0 -0.5 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M7.30524 15.7137C6.4404 14.8306 5.85381 13.7131 5.61824 12.4997C5.38072 11.2829 5.50269 10.0233 5.96924 8.87469C6.43181 7.73253 7.22153 6.75251 8.23924 6.05769C10.3041 4.64744 13.0224 4.64744 15.0872 6.05769C16.105 6.75251 16.8947 7.73253 17.3572 8.87469C17.8238 10.0233 17.9458 11.2829 17.7082 12.4997C17.4727 13.7131 16.8861 14.8306 16.0212 15.7137C14.8759 16.889 13.3044 17.5519 11.6632 17.5519C10.0221 17.5519 8.45059 16.889 7.30524 15.7137V15.7137Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M11.6702 7.20292C11.2583 7.24656 10.9598 7.61586 11.0034 8.02777C11.0471 8.43968 11.4164 8.73821 11.8283 8.69457L11.6702 7.20292ZM13.5216 9.69213C13.6831 10.0736 14.1232 10.2519 14.5047 10.0904C14.8861 9.92892 15.0644 9.4888 14.9029 9.10736L13.5216 9.69213ZM16.6421 15.0869C16.349 14.7943 15.8741 14.7947 15.5815 15.0879C15.2888 15.381 15.2893 15.8559 15.5824 16.1485L16.6421 15.0869ZM18.9704 19.5305C19.2636 19.8232 19.7384 19.8228 20.0311 19.5296C20.3237 19.2364 20.3233 18.7616 20.0301 18.4689L18.9704 19.5305ZM11.8283 8.69457C12.5508 8.61801 13.2384 9.02306 13.5216 9.69213L14.9029 9.10736C14.3622 7.83005 13.0496 7.05676 11.6702 7.20292L11.8283 8.69457ZM15.5824 16.1485L18.9704 19.5305L20.0301 18.4689L16.6421 15.0869L15.5824 16.1485Z" fill="#000000"/>
-            </svg>
+        
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M11 6C13.7614 6 16 8.23858 16 11M16.6588 16.6549L21 21M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z" stroke="#000000" stroke-width="0.528" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+        
         </div>
         <div class="m-3">
           <a href="{% url 'cart' %}">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M16.25 22.5C17.2165 22.5 18 21.7165 18 20.75C18 19.7835 17.2165 19 16.25 19C15.2835 19 14.5 19.7835 14.5 20.75C14.5 21.7165 15.2835 22.5 16.25 22.5Z" fill="#292D32"/>
-              <path d="M8.25 22.5C9.2165 22.5 10 21.7165 10 20.75C10 19.7835 9.2165 19 8.25 19C7.2835 19 6.5 19.7835 6.5 20.75C6.5 21.7165 7.2835 22.5 8.25 22.5Z" fill="#292D32"/>
-              <path opacity="0.4" d="M4.84 3.94L4.64 6.39C4.6 6.86 4.97 7.25 5.44 7.25H20.75C21.17 7.25 21.52 6.92999 21.55 6.50999C21.68 4.73999 20.33 3.3 18.56 3.3H6.28999C6.18999 2.86 5.98999 2.44 5.67999 2.09C5.18999 1.56 4.49 1.25 3.77 1.25H2C1.59 1.25 1.25 1.59 1.25 2C1.25 2.41 1.59 2.75 2 2.75H3.74001C4.05001 2.75 4.34 2.88001 4.55 3.10001C4.76 3.33001 4.86 3.63 4.84 3.94Z" fill="#292D32"/>
-              <path d="M20.5101 8.75H5.17006C4.75006 8.75 4.41005 9.07 4.37005 9.48L4.01005 13.83C3.87005 15.53 5.21006 17 6.92006 17H18.0401C19.5401 17 20.8601 15.77 20.9701 14.27L21.3001 9.60001C21.3401 9.14001 20.9801 8.75 20.5101 8.75Z" fill="#292D32"/>
-              </svg>
-            
+            <svg width="45" height="45" viewBox="0 0 1000.00 1000.00" data-name="Layer 2" id="Layer_2" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><defs><style>.cls-1{fill:none;stroke:#020202;stroke-linecap:round;stroke-miterlimit:10;stroke-width:25;}</style></defs><path class="cls-1" d="M429.36,362.5h319.9a26.71,26.71,0,0,1,25.82,33.55L727.4,555.46a26.71,26.71,0,0,1-25.82,19.87H413a26.7,26.7,0,0,1-25.39-18.43L276,236.65a26.73,26.73,0,0,0-25.4-18.43h0a26.55,26.55,0,0,0-25.45,18.6c-2.42,7.88-1.53,15.59,10.13,17.05"></path><path class="cls-1" d="M661.35,676.83H407.17a50.9,50.9,0,0,1-50.75-50.75h0a50.9,50.9,0,0,1,50.75-50.75H692.26"></path><circle class="cls-1" cx="445.55" cy="746.02" r="35.76"></circle><circle class="cls-1" cx="624.33" cy="746.02" r="35.76"></circle><line class="cls-1" x1="718.55" x2="657" y1="362.5" y2="575.33"></line></g></svg>
             </a>
         </div>
 
         <a href="{% url 'account' %}" class="m-1">
-          <svg fill="#000000" width="40" height="40" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Account Settings</title><path d="M9.6,3.32a3.86,3.86,0,1,0,3.86,3.85A3.85,3.85,0,0,0,9.6,3.32M16.35,11a.26.26,0,0,0-.25.21l-.18,1.27a4.63,4.63,0,0,0-.82.45l-1.2-.48a.3.3,0,0,0-.3.13l-1,1.66a.24.24,0,0,0,.06.31l1,.79a3.94,3.94,0,0,0,0,1l-1,.79a.23.23,0,0,0-.06.3l1,1.67c.06.13.19.13.3.13l1.2-.49a3.85,3.85,0,0,0,.82.46l.18,1.27a.24.24,0,0,0,.25.2h1.93a.24.24,0,0,0,.23-.2l.18-1.27a5,5,0,0,0,.81-.46l1.19.49c.12,0,.25,0,.32-.13l1-1.67a.23.23,0,0,0-.06-.3l-1-.79a4,4,0,0,0,0-.49,2.67,2.67,0,0,0,0-.48l1-.79a.25.25,0,0,0,.06-.31l-1-1.66c-.06-.13-.19-.13-.31-.13L19.5,13a4.07,4.07,0,0,0-.82-.45l-.18-1.27a.23.23,0,0,0-.22-.21H16.46M9.71,13C5.45,13,2,14.7,2,16.83v1.92h9.33a6.65,6.65,0,0,1,0-5.69A13.56,13.56,0,0,0,9.71,13m7.6,1.43a1.45,1.45,0,1,1,0,2.89,1.45,1.45,0,0,1,0-2.89Z"/></svg>
+          
+          <svg width="40" height="40" viewBox="0 0 32 32" enable-background="new 0 0 32 32" id="Layer_1" version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" stroke="#000000" stroke-width="0.00032" transform="rotate(0)"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="profile_x2C__person"> <g> <g> <g> <path d="M16,31C7.729,31,1,24.271,1,16S7.729,1,16,1s15,6.729,15,15S24.271,31,16,31z M16,2C8.28,2,2,8.28,2,16 s6.28,14,14,14s14-6.28,14-14S23.72,2,16,2z" fill="#263238"></path> </g> </g> </g> <g> <g id="team_3_"> <g> <g> <g> <g> <path d="M23.64,20.713l-4.762-1.652l-0.323-2.584c-0.215,0.307-0.523,0.546-0.924,0.671l0.293,2.345 c0.023,0.189,0.152,0.349,0.332,0.41l5.055,1.756c0.9,0.314,1.689,1.427,1.689,2.381v-0.007c0,0.276,0.224,0.5,0.5,0.5 c0.275,0,0.499-0.223,0.5-0.498C25.997,22.656,24.94,21.168,23.64,20.713z" fill="#263238"></path> </g> </g> </g> </g> <g> <g> <g> <g> <path d="M6.5,24.532c-0.276,0-0.5-0.224-0.5-0.5v0.007c0-1.379,1.059-2.871,2.359-3.326l4.762-1.641 l0.012-0.28c0.034-0.274,0.289-0.465,0.559-0.434c0.273,0.034,0.468,0.284,0.434,0.559l-0.051,0.589 c-0.023,0.189-0.153,0.348-0.333,0.41l-5.054,1.742C7.789,21.973,7,23.086,7,24.039v-0.007C7,24.309,6.776,24.532,6.5,24.532 z" fill="#263238"></path> </g> </g> </g> </g> <g> <g> <g> <g> <g> <path d="M16,18.039c-2.779,0-4.192-1.844-4.201-6.469c-0.002-1.174,0.123-2.363,1.227-3.469 C13.729,7.396,14.729,7.039,16,7.039s2.271,0.357,2.975,1.063c1.104,1.105,1.229,2.295,1.227,3.469 C20.192,16.195,18.779,18.039,16,18.039z M16,8.039c-1.009,0-1.75,0.252-2.267,0.769c-0.632,0.633-0.938,1.2-0.935,2.761 c0.008,4.018,1.055,5.471,3.201,5.471s3.193-1.453,3.201-5.471c0.003-1.561-0.303-2.128-0.935-2.761 C17.75,8.291,17.009,8.039,16,8.039z" fill="#263238"></path> </g> </g> </g> </g> </g> </g> </g> </g> </g></svg>
         </a>
         <!-- end search-button -->
         <div class="hamburger-menu">
