@@ -314,6 +314,9 @@
 
   let progressBar = document.getElementById('progress-bar'),
     images = document.images,
+    // const allImages = Array.from(document.images);
+    // images = allImages.filter(img => !img.classList.contains('thumbnail'));
+
     imagesAmount = images.length,
     imagesLoaded = 0,
     barCtx = progressBar.getContext('2d'),

@@ -37,8 +37,8 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 STRIPE_SECRET_KEY_TEST = os.getenv('STRIPE_SECRET_KEY_TEST')
 STRIPE_PUBLISHABLE_KEY_TEST = os.getenv('STRIPE_PUBLISHABLE_KEY_TEST')
-ALLOWED_HOSTS = ['localhost', '127.0.0.1','paintingvrai-production.up.railway.app']
-CSRF_TRUSTED_ORIGINS = ['https://*.up.railway.app',]
+ALLOWED_HOSTS = ['localhost', '127.0.0.1','paintingvrai.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://*paintingvrai.up.railway.app',]
 
 
 

@@ -9,7 +9,7 @@
             <a href="{% url 'painting' x.slug %}">
                 <div class="blur-load" style="background-image: url({{x.painting.loading.url}});">
                 <picture>
-                    <img src="{{ x.painting.small.url }}" srcset="
+                    <img src="{{ x.painting.small.url }}" class="thumnailed" srcset="
                     {{ x.painting.small.url }} 500w, 
                     {{ x.painting.medium.url }} 1000w, 
                     {{ x.painting.medium.url }}  1500w"

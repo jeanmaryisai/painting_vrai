@@ -581,4 +581,11 @@ def stripe_webhook(request):
 
   return HttpResponse(status=200)
 
+def payment(request):
+    if request.method == 'POST':
+        data=request.POST.get('payment')
+        
+    else:
+        return render(request,'Cart.html')
+
 

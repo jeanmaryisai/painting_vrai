@@ -96,18 +96,18 @@ class Image(models.Model):
         source='original_image',
         processors=[ResizeToFill(150, 150)],
         format='WEBP',
-        options={'quality': 60}
+        options={'quality': 85}
     )
     small = ImageSpecField(source='original_image',
                            processors=[ResizeToFit(300, 300)],
                            format='WEBP',
-                           options={'quality': 60})
+                           options={'quality': 85})
 
     # WebP version
     medium = ImageSpecField(source='original_image',
                           processors=[ResizeToFit(500, 500)],
                           format='WEBP',
-                          options={'quality': 80})
+                          options={'quality': 85})
     
     loading=ImageSpecField(source='original_image',
                           processors=[ResizeToFit(20, 20)],
